@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Сходи</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <h1>Сходи</h1>
+    <p>
+      Створити ladder (сходи) – об'єкт, який дозволяє підніматися вгору та
+      спускатися:
+    </p>
+
+    <ul>
+      <li>let ladder = {</li>
+      <li>// підніматиме вас на одну сходинку</li>
+      <li>up: function () {},</li>
+      <li>// опускатиме вас на одну сходинку</li>
+      <li>down: function () {},</li>
+      <li>// показує поточну сходинку</li>
+      <li>showStep: function () {},</li>
+      <li>};</li>
+    </ul>
+
+    <p>
+      Тепер, якщо нам потрібно зробити кілька послідовних викликів, ми можемо
+      виконати це так:
+    </p>
+    <ul>
+      <li>ladder.up();</li>
+      <li>ladder.up();</li>
+      <li>ladder.down();</li>
+      <li>ladder.showStep(); // 1</li>
+    </ul>
+    <p>
+      Змініть код методів up, down і showStep таким Таким чином, щоб їх виклик
+      можна було зробити по ланцюжку, наприклад:
+    </p>
+    <ul>
+      <li>ladder.up().up().down().showStep(); // 1</li>
+    </ul>
+    <p>Такий підхід широко використовується в бібліотеках JavaScript.</p>
+    <div class="dance">
+      <h2>Школа Соломона Пляра</h2>
+      <div id="player"></div>
+      <button id="playVideo">Включить видео</button>
+      <script>
+        let player;
+
+        function onYouTubeIframeAPIReady() {
+          player = new YT.Player("player", {
+            height: "360",
+            width: "640",
+            videoId: "cvi40ROu7qo",
+          });
+        }
+
+        document
+          .getElementById("playVideo")
+          .addEventListener("click", function () {
+            player.playVideo();
+          });
+
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(script);
+      </script>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
