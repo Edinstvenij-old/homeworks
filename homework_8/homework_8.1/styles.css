@@ -1,15 +1,6 @@
 body {
-  font-family: Arial, sans-serif;
   line-height: 1.6;
-  margin: 0;
   padding: 20px;
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-h1,
-h2 {
-  color: #444;
 }
 
 .dance {
@@ -21,9 +12,9 @@ h2 {
   margin-top: 20px;
   padding: 25px;
   background: #bee8af;
-  border: 1px solid #ddd;
+  border: 1px solid #7dd38a;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 #player {
@@ -31,29 +22,4 @@ h2 {
   width: 100%;
   max-width: 640px;
   max-height: 500px;
-}
-
-button {
-  display: inline-block;
-  background: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background: #0056b3;
-}
-
-button:active {
-  background: #004080;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

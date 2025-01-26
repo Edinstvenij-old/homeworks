@@ -45,7 +45,6 @@
     <div class="dance">
       <h2>Школа Соломона Пляра</h2>
       <div id="player"></div>
-      <button id="playVideo">Включить видео</button>
       <script>
         let player;
 
@@ -56,12 +55,6 @@
             videoId: "cvi40ROu7qo",
           });
         }
-
-        document
-          .getElementById("playVideo")
-          .addEventListener("click", function () {
-            player.playVideo();
-          });
 
         const script = document.createElement("script");
         script.src = "https://www.youtube.com/iframe_api";
