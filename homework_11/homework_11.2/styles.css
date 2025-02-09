@@ -1,0 +1,16 @@
+.text {
+  font-size: 24px;
+  color: rgb(100, 58, 224);
+}
+.colored {
+  color: red;
+}
+.button {
+  width: 150px;
+  height: 40px;
+  color: rgb(5, 57, 13);
+  background: #77ea8b;
+}
+.button:hover{
+  color: #f32399;
+}
