@@ -60,7 +60,7 @@ document
     }
 
     if (isValid) {
-      console.log({ name, message, phone, email });
+      console.table({ name, message, phone, email });
       alert("Форму успішно відправлено!");
     }
   });
