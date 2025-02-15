@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Валідація з RegEx</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body>
+    <h1>Валідація з RegEx</h1>
+    <p>
+      Доробити валідацію для надсилання повідомлення з використанням регулярних
+      виразів:
+    </p>
+    <ul>
+      <li>Name - обов'язкове текстове поле</li>
+      <li>Message - текстове поле не менше 5 символів</li>
+      <li>Phone number - обов'язкове поле типу phone. З початком на +380</li>
+      <li>Email - email обов'язково повинен мати @ та крапку</li>
+    </ul>
+    <p>Після відправки, в консоль відображаємо дані, які ввів користувач.</p>
+    <p>Під час помилки показувати її під полем.</p>
+    <div class="container">
+      <h2>Форма з валідацією</h2>
+      <form id="contactForm">
+        <label>Ім'я:</label>
+        <input type="text" id="name" name="name" placeholder="Введіть ваше ім'я" />
+        <span class="error" id="nameError"></span>
+
+        <label>Повідомлення:</label>
+        <textarea id="message" name="message" placeholder="Введіть повідомлення"></textarea>
+        <span class="error" id="messageError"></span>
+
+        <label>Телефон:</label>
+        <input type="text" id="phone" name="phone" placeholder="+38(0xx)xxx-xx-xx" />
+        <span class="error" id="phoneError"></span>
+
+        <label>Email:</label>
+        <input type="text" id="email" name="email" placeholder="Введіть ваш email" />
+        <span class="error" id="emailError"></span>
+
+        <button type="submit">Надіслати</button>
+      </form>
+    </div>
+  </body>
+</html>
