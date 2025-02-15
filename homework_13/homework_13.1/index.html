@@ -24,20 +24,39 @@
     <div class="container">
       <h2>Форма з валідацією</h2>
       <form id="contactForm">
-        <label>Ім'я:</label>
-        <input type="text" id="name" name="name" placeholder="Введіть ваше ім'я" />
+        <label for="name">Ім'я:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Введіть ваше ім'я"
+        />
         <span class="error" id="nameError"></span>
 
-        <label>Повідомлення:</label>
-        <textarea id="message" name="message" placeholder="Введіть повідомлення"></textarea>
+        <label for="message">Повідомлення:</label>
+        <textarea
+          id="message"
+          name="message"
+          placeholder="Введіть повідомлення"
+        ></textarea>
         <span class="error" id="messageError"></span>
 
-        <label>Телефон:</label>
-        <input type="text" id="phone" name="phone" placeholder="+38(0xx)xxx-xx-xx" />
+        <label for="phone">Телефон:</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          placeholder="+38(0xx)xxx-xx-xx"
+        />
         <span class="error" id="phoneError"></span>
 
-        <label>Email:</label>
-        <input type="text" id="email" name="email" placeholder="Введіть ваш email" />
+        <label for="email">Email:</label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          placeholder="Введіть ваш email"
+        />
         <span class="error" id="emailError"></span>
 
         <button type="submit">Надіслати</button>

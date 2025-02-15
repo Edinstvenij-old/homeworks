@@ -43,7 +43,7 @@ document
     let phoneRegex = /^\+38\(0\d{2}\)\d{3}-\d{2}-\d{2}$/;
     if (!phoneRegex.test(phone)) {
       document.getElementById("phoneError").textContent =
-        "Неправильний формат телефону. Має бути у форматі +38(0xx)xxx-xx-xx";
+        "Невірний формат телефону. Має бути у форматі +38(0xx)xxx-xx-xx";
       isValid = false;
     } else {
       document.getElementById("phoneError").textContent = "";
@@ -53,7 +53,7 @@ document
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       document.getElementById("emailError").textContent =
-        "Неверный формат email обов'язково повинен мати @ та крапку";
+        "Невірний формат email. Він повинен містити @ та крапку.";
       isValid = false;
     } else {
       document.getElementById("emailError").textContent = "";
