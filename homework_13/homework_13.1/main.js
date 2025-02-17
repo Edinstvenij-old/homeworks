@@ -62,5 +62,7 @@ document
     if (isValid) {
       console.table({ name, message, phone, email });
       alert("Форму успішно відправлено!");
+
+      document.getElementById("contactForm").reset();
     }
   });
