@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Слайдер</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body>
+    <h1>Слайдер</h1>
+    <p>Пишемо свій слайдер зображень, який повинен:</p>
+
+    <l>
+      <li>
+        Відображати зображення та кнопки Next, Prev з боків від зображення.
+      </li>
+      <li>При кліку на Next - показуємо наступне зображення.</li>
+      <li>При кліку на Prev - попереднє</li>
+      <li>
+        При досягненні останнього зображення - ховати кнопку Next. Аналогічно з
+        першим зображенням і кнопкою Prev
+      </li>
+      <li>Кількість слайдів може бути будь-якою</li>
+      <li>Додати можливість навігації через точки під слайдами</li>
+    </l>
+
+    <div class="slider-container">
+      <img id="slider-image" class="slider-image" src="" alt="Slide" />
+      <button id="prev-btn" class="nav-btn">❮</button>
+      <button id="next-btn" class="nav-btn">❯</button>
+    </div>
+    <div class="dots-container" id="dots-container"></div>
+  </body>
+</html>
