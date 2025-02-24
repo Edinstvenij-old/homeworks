@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ДЗ 15.1.</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h2>TODO з WebStorage</h2>
+        <p>Доробити TODO лист, в якому буде можливість:</p>
+        <ol>
+          <li>Додати завдання</li>
+          <li>Видалити завдання</li>
+          <li>Відзначити як виконану</li>
+          <li>Усі дані повинні зберегтися після перезавантаження сторінки.</li>
+        </ol>
+        <p>Приклад:</p>
+      </div>
+      <h1>TodoList</h1>
+      <form class="form js--form">
+        <input
+          type="text"
+          name="value"
+          required
+          class="form__input js--form__input"
+        />
+        <button type="submit" class="form__btn">Додати</button>
+      </form>
+      <ul class="js--todos-wrapper"></ul>
+    </div>
+  </body>
+</html>
