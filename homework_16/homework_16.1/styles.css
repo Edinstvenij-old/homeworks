@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+th {
+  background: #f4f4f4;
+}
+.editable {
+  cursor: pointer;
+  background: #fff9c4;
+}
+.attendance-btn {
+  cursor: pointer;
+  padding: 5px 10px;
+}
