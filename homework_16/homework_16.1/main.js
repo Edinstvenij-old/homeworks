@@ -56,6 +56,8 @@ class Student {
     const total = this.attendance.filter((v) => v !== null).length;
     const attendanceRate = total ? (attended / total) * 100 : 0;
 
+    if (isNaN(attendanceRate)) attendanceRate = 0;
+
     if (avgGrade > 90 && attendanceRate > 90) return "Молодець!";
     if (avgGrade > 80 || attendanceRate > 80) return "Добре, але можна краще";
     if (avgGrade > 70 || attendanceRate > 70)
@@ -141,7 +143,9 @@ function updateRow(index) {
 }
 
 function deleteStudent(index) {
-  if (confirm(`Вы уверены, что хотите удалить ${students[index].firstName}?`)) {
+  if (
+    confirm(`Ви впевнені, що хочете видалити ${students[index].firstName}?`)
+  ) {
     students.splice(index, 1);
     saveData();
     renderTable();
@@ -161,7 +165,7 @@ function enableInlineEditing() {
         students[index].grades = gradesArray;
         updateRow(index);
       } else {
-        alert("Неверные оценки. Пожалуйста, введите числа между 0 и 100.");
+        alert("Невірні оцінки. Будь ласка, введіть числа між 0 і 100.");
         this.textContent = students[index].grades.join(", ");
       }
     });
@@ -196,7 +200,7 @@ function addStudent() {
     document.getElementById("birthYear").value = "";
     document.getElementById("grades").value = "";
   } else {
-    alert("Пожалуйста, введите правильные данные, включая оценки!");
+    alert("Будь ласка, введіть правильні дані, включаючи оцінки!");
   }
 }
 
@@ -211,10 +215,10 @@ function addGrade(index) {
       students[index].grades.push(newGrade);
       updateRow(index);
     } else {
-      alert("Нельзя добавить больше оценок, чем количество присутствующих.");
+      alert("Не можна додавати більше оцінок, ніж кількість присутніх.");
     }
   } else {
-    alert("Пожалуйста, введите оценку от 0 до 100.");
+    alert("Будь ласка, введіть оцінку від 0 до 100.");
   }
 }
 
