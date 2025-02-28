@@ -1,10 +1,16 @@
 class Student {
-  constructor(firstName, lastName, birthYear, initialGrades = []) {
+  constructor(
+    firstName,
+    lastName,
+    birthYear,
+    initialGrades = [],
+    attendance = []
+  ) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.birthYear = birthYear;
     this.grades = initialGrades;
-    this.attendance = new Array(25).fill(null);
+    this.attendance = attendance.length ? attendance : new Array(25).fill(null);
   }
 
   getAge() {
@@ -12,19 +18,28 @@ class Student {
   }
 
   getAverageGrade() {
-    return this.grades.length
-      ? (this.grades.reduce((a, b) => a + b, 0) / this.grades.length).toFixed(2)
+    const validGrades = this.grades.filter(
+      (grade) => grade !== null && grade >= 0 && grade <= 100
+    );
+    return validGrades.length
+      ? (validGrades.reduce((a, b) => a + b, 0) / validGrades.length).toFixed(2)
       : 0;
   }
 
   present() {
     let index = this.attendance.findIndex((v) => v === null);
-    if (index !== -1) this.attendance[index] = true;
+    if (index !== -1) {
+      this.attendance[index] = true;
+      saveData();
+    }
   }
 
   absent() {
     let index = this.attendance.findIndex((v) => v === null);
-    if (index !== -1) this.attendance[index] = false;
+    if (index !== -1) {
+      this.attendance[index] = false;
+      saveData();
+    }
   }
 
   getAttendanceRate() {
@@ -37,26 +52,45 @@ class Student {
 
   summary() {
     const avgGrade = parseFloat(this.getAverageGrade());
-    const attendanceRate =
-      (this.attendance.filter((v) => v === true).length /
-        this.attendance.filter((v) => v !== null).length) *
-      100;
+    const attended = this.attendance.filter((v) => v === true).length;
+    const total = this.attendance.filter((v) => v !== null).length;
+    const attendanceRate = total ? (attended / total) * 100 : 0;
 
     if (avgGrade > 90 && attendanceRate > 90) return "Молодець!";
     if (avgGrade > 80 || attendanceRate > 80) return "Добре, але можна краще";
+    if (avgGrade > 70 || attendanceRate > 70)
+      return "Непогано, але є над чим працювати";
     return "Редиска!";
   }
 }
 
 function saveData() {
-  localStorage.setItem("students", JSON.stringify(students));
+  localStorage.setItem(
+    "students",
+    JSON.stringify(
+      students.map((student) => ({
+        firstName: student.firstName,
+        lastName: student.lastName,
+        birthYear: student.birthYear,
+        grades: student.grades,
+        attendance: student.attendance,
+      }))
+    )
+  );
 }
 
 function loadData() {
   const data = localStorage.getItem("students");
   if (data) {
     students = JSON.parse(data).map(
-      (s) => new Student(s.firstName, s.lastName, s.birthYear, s.grades)
+      (s) =>
+        new Student(
+          s.firstName,
+          s.lastName,
+          s.birthYear,
+          s.grades,
+          s.attendance
+        )
     );
   }
 }
@@ -94,7 +128,6 @@ function renderTable() {
 
   tbody.appendChild(fragment);
   enableInlineEditing();
-  saveData();
 }
 
 function updateRow(index) {
@@ -108,10 +141,9 @@ function updateRow(index) {
 }
 
 function deleteStudent(index) {
-  if (
-    confirm(`Ви впевнені, що хочете видалити ${students[index].firstName}?`)
-  ) {
+  if (confirm(`Вы уверены, что хотите удалить ${students[index].firstName}?`)) {
     students.splice(index, 1);
+    saveData();
     renderTable();
   }
 }
@@ -129,8 +161,8 @@ function enableInlineEditing() {
         students[index].grades = gradesArray;
         updateRow(index);
       } else {
-        alert("Невірні оцінки.");
-        renderTable();
+        alert("Неверные оценки. Пожалуйста, введите числа между 0 и 100.");
+        this.textContent = students[index].grades.join(", ");
       }
     });
   });
@@ -151,9 +183,12 @@ function addStudent() {
     lastName &&
     !isNaN(birthYear) &&
     birthYear > 1900 &&
-    birthYear < new Date().getFullYear()
+    birthYear < new Date().getFullYear() &&
+    grades.length > 0
   ) {
-    students.push(new Student(firstName, lastName, birthYear, grades));
+    let student = new Student(firstName, lastName, birthYear, grades);
+    student.attendance = new Array(25).fill(null);
+    students.push(student);
     saveData();
     renderTable();
     document.getElementById("firstName").value = "";
@@ -161,18 +196,25 @@ function addStudent() {
     document.getElementById("birthYear").value = "";
     document.getElementById("grades").value = "";
   } else {
-    alert("Будь ласка, введіть правильні дані!");
+    alert("Пожалуйста, введите правильные данные, включая оценки!");
   }
 }
 
 function addGrade(index) {
   let newGrade = parseInt(document.getElementById(`newGrade-${index}`).value);
+  const attendanceCount = students[index].attendance.filter(
+    (v) => v === true
+  ).length;
+
   if (!isNaN(newGrade) && newGrade >= 0 && newGrade <= 100) {
-    students[index].grades.push(newGrade);
-    updateRow(index);
-    renderTable();
+    if (students[index].grades.length < attendanceCount) {
+      students[index].grades.push(newGrade);
+      updateRow(index);
+    } else {
+      alert("Нельзя добавить больше оценок, чем количество присутствующих.");
+    }
   } else {
-    alert("Будь ласка, введіть оцінку від 0 до 100.");
+    alert("Пожалуйста, введите оценку от 0 до 100.");
   }
 }
 
