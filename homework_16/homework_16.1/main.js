@@ -1,3 +1,95 @@
+// Вариант 1
+class Student {
+  constructor(name, lastname, birthYear, grades = []) {
+    this.name = name;
+    this.lastname = lastname;
+    this.birthYear = birthYear;
+    this.grades = grades;
+    this.attendance = new Array(25).fill(null);
+    this.attendanceIndex = 0;
+  }
+
+  getAge() {
+    return new Date().getFullYear() - this.birthYear;
+  }
+
+  getAverageGrade() {
+    if (this.grades.length === 0) return 0;
+    return (
+      this.grades.reduce((sum, grade) => sum + grade, 0) / this.grades.length
+    );
+  }
+
+  present() {
+    if (this.attendanceIndex < 25) {
+      this.attendance[this.attendanceIndex] = true;
+      this.attendanceIndex++;
+    } else {
+      console.log("Відвідуваність заповнена.");
+    }
+  }
+
+  absent() {
+    if (this.attendanceIndex < 25) {
+      this.attendance[this.attendanceIndex] = false;
+      this.attendanceIndex++;
+    } else {
+      console.log("Відвідуваність заповнена.");
+    }
+  }
+
+  getAttendanceRate() {
+    const attended = this.attendance.filter((value) => value === true).length;
+    const total = this.attendance.filter((value) => value !== null).length;
+    return total === 0 ? 0 : attended / total;
+  }
+
+  summary() {
+    const avgGrade = this.getAverageGrade();
+    const avgAttendance = this.getAttendanceRate();
+
+    if (avgGrade > 90 && avgAttendance > 0.9) {
+      return "Молодець!";
+    } else if (avgGrade > 80 || avgAttendance > 0.8) {
+      return "Добре, але можна краще";
+    } else {
+      return "Редиска!";
+    }
+  }
+}
+
+// Створення студентів
+const student1 = new Student("Іван", "Петров", 2000, [95, 92, 88, 100]);
+const student2 = new Student("Марія", "Іванова", 2002, [85, 80, 78, 90]);
+const student3 = new Student("Олег", "Сидоров", 2001, [70, 60, 65, 75]);
+
+// Додавання відвідуваності
+for (let i = 0; i < 24; i++) student1.present();
+for (let i = 0; i < 1; i++) student1.absent();
+
+for (let i = 0; i < 20; i++) student2.present();
+for (let i = 0; i < 5; i++) student2.absent();
+
+for (let i = 0; i < 10; i++) student3.present();
+for (let i = 0; i < 15; i++) student3.absent();
+
+console.log(
+  `${student1.name} ${
+    student1.lastname
+  }, Вік: ${student1.getAge()}, Середній бал: ${student1.getAverageGrade()}, Відвідуваність: ${student1.getAttendanceRate()}, Оцінка: ${student1.summary()}`
+);
+console.log(
+  `${student2.name} ${
+    student2.lastname
+  }, Вік: ${student2.getAge()}, Середній бал: ${student2.getAverageGrade()}, Відвідуваність: ${student2.getAttendanceRate()}, Оцінка: ${student2.summary()}`
+);
+console.log(
+  `${student3.name} ${
+    student3.lastname
+  }, Вік: ${student3.getAge()}, Середній бал: ${student3.getAverageGrade()}, Відвідуваність: ${student3.getAttendanceRate()}, Оцінка: ${student3.summary()}`
+);
+
+/* Вариант 2 
 class Student {
   constructor(
     firstName,
@@ -223,3 +315,4 @@ function addGrade(index) {
 }
 
 renderTable();
+*/
