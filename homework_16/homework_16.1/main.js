@@ -1,4 +1,3 @@
-// Вариант 1
 class Student {
   constructor(name, lastname, birthYear, grades = []) {
     this.name = name;
@@ -21,27 +20,18 @@ class Student {
   }
 
   present() {
-    if (this.attendanceIndex < 25) {
-      this.attendance[this.attendanceIndex] = true;
-      this.attendanceIndex++;
-    } else {
-      console.log("Відвідуваність заповнена.");
-    }
+    if (this.attendanceIndex < this.attendance.length)
+      this.attendance[this.attendanceIndex++] = true;
   }
 
   absent() {
-    if (this.attendanceIndex < 25) {
-      this.attendance[this.attendanceIndex] = false;
-      this.attendanceIndex++;
-    } else {
-      console.log("Відвідуваність заповнена.");
-    }
+    if (this.attendanceIndex < this.attendance.length)
+      this.attendance[this.attendanceIndex++] = false;
   }
 
   getAttendanceRate() {
     const attended = this.attendance.filter((value) => value === true).length;
-    const total = this.attendance.filter((value) => value !== null).length;
-    return total === 0 ? 0 : attended / total;
+    return this.attendanceIndex === 0 ? 0 : attended / this.attendanceIndex;
   }
 
   summary() {
@@ -58,12 +48,10 @@ class Student {
   }
 }
 
-// Створення студентів
 const student1 = new Student("Іван", "Петров", 2000, [95, 92, 88, 100]);
 const student2 = new Student("Марія", "Іванова", 2002, [85, 80, 78, 90]);
 const student3 = new Student("Олег", "Сидоров", 2001, [70, 60, 65, 75]);
 
-// Додавання відвідуваності
 for (let i = 0; i < 24; i++) student1.present();
 for (let i = 0; i < 1; i++) student1.absent();
 
@@ -89,7 +77,8 @@ console.log(
   }, Вік: ${student3.getAge()}, Середній бал: ${student3.getAverageGrade()}, Відвідуваність: ${student3.getAttendanceRate()}, Оцінка: ${student3.summary()}`
 );
 
-/* Вариант 2 
+/* Варіант 2 розширена версія
+
 class Student {
   constructor(
     firstName,
