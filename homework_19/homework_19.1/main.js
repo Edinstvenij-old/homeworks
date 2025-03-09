@@ -9,18 +9,14 @@ async function fetchForecast() {
     return;
   }
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+  try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
-        CITY
-      )}&appid=${API_KEY}&units=metric&lang=ua`,
+      `https://api.openweathermap.org/data/2.5/forecast?q=${CITY}&appid=${API_KEY}&units=metric&lang=ua`,
       { signal: controller.signal }
     );
-
-    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Помилка: ${response.status} ${response.statusText}`);
@@ -28,7 +24,7 @@ async function fetchForecast() {
 
     const data = await response.json();
 
-    if (!data.list || data.list.length === 0) {
+    if (!data.list || data.list.length === 0 || !data.city) {
       throw new Error("Немає доступних прогнозів погоди");
     }
 
@@ -53,13 +49,22 @@ async function fetchForecast() {
       💨 Вітер: ${forecast.wind.speed} м/с<br>
       🎈 Тиск: ${forecast.main.pressure} гПа<br>
       ☀️ Температура на сонці: ${forecast.main.temp_max}°C<br>
-      <button onclick="fetchForecast()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">
+      <button id="refreshForecast" style="margin-top:10px; padding:5px 10px; cursor:pointer;">
         🔄 Оновити
       </button>
     `;
+
+    setTimeout(() => {
+      const refreshButton = document.getElementById("refreshForecast");
+      if (refreshButton) {
+        refreshButton.addEventListener("click", fetchForecast);
+      }
+    }, 0);
   } catch (error) {
     console.error(error);
     forecastElement.innerHTML = `🚨 ${error.message}`;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
