@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ДЗ 23.1</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./main.js" defer></script>
+  </head>
+  <body>
+    <h1>Cтворення АПІ для TODO списку</h1>
+    <p>
+      За допомогою Node.js та Express створити API для TODO списку, яке буде
+      включати в себе:
+    </p>
+    <ul>
+      <li>Create, Read, Update, Delete - методи</li>
+      <li>Налаштування CORS</li>
+      <li>Використання mongoDB</li>
+      <li>Окрему папку з Front-end частиною, для роботи з API</li>
+    </ul>
+    <div class="tasks">
+      <h2>Список завдань</h2>
+      <ul id="taskList">
+        <li>Купити молоко <button class="delete">Видалити</button></li>
+        <li>
+          Зробити домашнє завдання <button class="delete">Видалити</button>
+        </li>
+        <li>Піти на пробіжку <button class="delete">Видалити</button></li>
+      </ul>
+      <input type="text" id="taskInput" placeholder="Нове завдання" />
+      <button id="addTask">Додати</button>
+    </div>
+  </body>
+</html>
