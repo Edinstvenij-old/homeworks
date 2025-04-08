@@ -57,6 +57,7 @@ const EmojiVoting = () => {
     const resetVotes = emojis.map((emoji) => ({ ...emoji, votes: 0 }));
     setEmojiVotes(resetVotes);
     setResultData(null);
+    localStorage.removeItem("emojiVotes");
   };
 
   return (
