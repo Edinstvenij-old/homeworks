@@ -21,11 +21,6 @@
   cursor: pointer;
   font-size: 80px;
   text-align: center;
-  transition: transform 0.2s;
-}
-
-.emoji-item:hover {
-  transform: scale(1.1);
 }
 
 .vote-count {
@@ -37,9 +32,7 @@
 .buttons {
   margin-top: 20px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
 }
 
 button {
@@ -48,6 +41,7 @@ button {
   cursor: pointer;
   border: none;
   border-radius: 5px;
+  margin: 0 10px;
 }
 
 .show-results {
@@ -58,37 +52,4 @@ button {
 .clear-results {
   background-color: #f44336;
   color: white;
-}
-
-.result {
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 30px;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.winner-text {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.winners {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.winner-emoji {
-  font-size: 100px;
-  margin: 0 10px;
-}
-
-.result-title {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #4ebc26;
 }

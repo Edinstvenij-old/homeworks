@@ -9,22 +9,18 @@ const EmojiVoting = () => {
     { symbol: "🥺", votes: 0 },
   ];
 
+  // Загрузка сохранённых голосов из localStorage или установка начальных значений
   const [emojiVotes, setEmojiVotes] = useState(() => {
     try {
       const savedVotes = localStorage.getItem("emojiVotes");
-      if (savedVotes) {
-        return JSON.parse(savedVotes);
-      } else {
-        return emojis;
-      }
+      return savedVotes ? JSON.parse(savedVotes) : emojis;
     } catch (e) {
       console.error("Ошибка при загрузке из localStorage", e);
-      return emojis;
+      return emojis; // Если данные повреждены, возвращаем начальные значения
     }
   });
 
-  const [resultData, setResultData] = useState(null);
-
+  // Синхронизация emojiVotes с localStorage при изменении
   useEffect(() => {
     try {
       localStorage.setItem("emojiVotes", JSON.stringify(emojiVotes));
@@ -33,6 +29,7 @@ const EmojiVoting = () => {
     }
   }, [emojiVotes]);
 
+  // Обработчик клика по смайлику
   const handleVote = (symbol) => {
     const updatedVotes = emojiVotes.map((emoji) =>
       emoji.symbol === symbol ? { ...emoji, votes: emoji.votes + 1 } : emoji
@@ -40,24 +37,17 @@ const EmojiVoting = () => {
     setEmojiVotes(updatedVotes);
   };
 
+  // Показать результаты
   const handleShowResults = () => {
     const maxVotes = Math.max(...emojiVotes.map((emoji) => emoji.votes));
-    if (maxVotes === 0) {
-      setResultData({ message: "Ще ніхто не голосував.", emojis: [] });
-      return;
-    }
-    const winners = emojiVotes.filter((emoji) => emoji.votes === maxVotes);
-    setResultData({
-      message: `Кількість голосів: ${maxVotes}`,
-      emojis: winners.map((e) => e.symbol),
-    });
+    const winningEmoji = emojiVotes.find((emoji) => emoji.votes === maxVotes);
+    alert(`Перемог смайл: ${winningEmoji.symbol} з ${maxVotes} голосами!`);
   };
 
+  // Очистить результаты
   const handleClearResults = () => {
     const resetVotes = emojis.map((emoji) => ({ ...emoji, votes: 0 }));
     setEmojiVotes(resetVotes);
-    setResultData(null);
-    localStorage.removeItem("emojiVotes");
   };
 
   return (
@@ -71,7 +61,7 @@ const EmojiVoting = () => {
             onClick={() => handleVote(emoji.symbol)}
           >
             <span className="emoji">{emoji.symbol}</span>
-            <div className="vote-count">голосів: {emoji.votes}</div>
+            <div className="vote-count">Голосів: {emoji.votes}</div>
           </div>
         ))}
       </div>
@@ -83,23 +73,6 @@ const EmojiVoting = () => {
           Очистити результати
         </button>
       </div>
-
-      {resultData && (
-        <div className="result">
-          <div className="result-title">Результати голосування:</div>
-          <div className="winner-text">Переможець(і):</div>
-          {resultData.emojis.length > 0 && (
-            <div className="winners">
-              {resultData.emojis.map((symbol) => (
-                <span key={symbol} className="winner-emoji">
-                  {symbol}
-                </span>
-              ))}
-            </div>
-          )}
-          <div>{resultData.message}</div>
-        </div>
-      )}
     </div>
   );
 };
