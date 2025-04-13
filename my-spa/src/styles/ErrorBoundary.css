@@ -1,0 +1,44 @@
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.error button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error pre {
+  background-color: #333;
+  color: white;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: left;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.error summary {
+  font-weight: bold;
+}
+
+@keyframes error-blink {
+  0% {
+    color: red;
+  }
+  50% {
+    color: #ff6666;
+  }
+  100% {
+    color: red;
+  }
+}
