@@ -1,28 +1,33 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import Header from "./components/Header";
-import ThemeSwitcher from "./components/ThemeSwitcher";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Contacts from "./pages/Contacts";
 import { ThemeProvider } from "./context/ThemeContext";
+
+// Ленивая загрузка страниц
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Contacts = lazy(() => import("./pages/Contacts"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <Header />
-        <ThemeSwitcher />
-        <div className="container">
-          <ErrorBoundary>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contacts" element={<Contacts />} />
-            </Routes>
-          </ErrorBoundary>
-        </div>
-      </Router>
+      <ErrorBoundary>
+        <Router>
+          <Header />
+          <div className="container">
+            <Suspense fallback={<div>Loading...</div>}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="*" element={<NotFound />} /> {/* Обработка 404 */}
+              </Routes>
+            </Suspense>
+          </div>
+        </Router>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

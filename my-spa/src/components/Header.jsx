@@ -1,24 +1,9 @@
-import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { useTheme } from "../hooks/useTheme";
+// import { FaSun, FaMoon } from "react-icons/fa"; // 2 вариант
 
 export default function Header() {
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark";
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark-mode");
-      root.classList.remove("light-mode");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.add("light-mode");
-      root.classList.remove("dark-mode");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
+  const { darkMode, toggleTheme } = useTheme();
 
   return (
     <header>
@@ -43,19 +28,15 @@ export default function Header() {
             Про мене
           </NavLink>
         </nav>
+
         <button
-          onClick={() => setDarkMode((prev) => !prev)}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "20px",
-            color: "inherit",
-          }}
+          onClick={toggleTheme}
+          className="theme-toggle"
           aria-label="Toggle theme"
           title="Toggle theme"
         >
-          {darkMode ? <FaSun /> : <FaMoon />}
+          {darkMode ? "🌙" : "☀️"}
+          {/* {darkMode ? <FaSun /> : <FaMoon />} */}
         </button>
       </div>
     </header>
