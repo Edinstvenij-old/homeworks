@@ -1,0 +1,229 @@
+/* === Глобальні стилі === */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  color: #222;
+}
+
+.dark-mode body {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* === Хедер === */
+header {
+  background-color: #222;
+  color: white;
+  padding: 15px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.dark-mode header {
+  background-color: #7e6bea;
+  color: #111;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* === Навігація === */
+nav {
+  display: flex;
+  gap: 30px;
+  font-size: 18px;
+}
+
+nav a {
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+nav a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode nav a.active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* === Іконка перемикання теми === */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(180deg);
+}
+
+/* === TODO Список === */
+.todo {
+  margin-top: 40px;
+}
+
+.todo h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.todo input {
+  padding: 10px;
+  font-size: 16px;
+  width: 70%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.todo button.add,
+.todo-item button.delete {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.todo button.add {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.todo button.add:hover {
+  background-color: #218838;
+}
+
+.todo-list {
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  background-color: #f1f1f1;
+  color: #222;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.dark-mode .todo-item {
+  background-color: #2d2d2d;
+  color: #f5f5f5;
+}
+
+.todo-item button.delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.todo-item button.delete:hover {
+  background-color: #c82333;
+}
+
+/* === Валидация полей === */
+.input-error {
+  border-color: #dc3545;
+}
+
+/* Повідомлення про помилки валідації */
+.error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* === Контент сторінок === */
+.page h1 {
+  font-size: 26px;
+  margin-bottom: 15px;
+}
+
+.page p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* === Сторінка 404 === */
+.not-found {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.not-found h1 {
+  font-size: 2.5rem;
+  color: #f44336;
+}
+
+.not-found p {
+  font-size: 1.2rem;
+  margin: 20px 0;
+}
+
+.btn-home {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #007bff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-home:hover {
+  background-color: #0056b3;
+}
+
+.loading {
+  text-align: center;
+  font-size: 20px;
+  color: #888;
+  padding: 50px;
+}
