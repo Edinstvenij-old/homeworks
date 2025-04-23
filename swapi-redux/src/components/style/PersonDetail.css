@@ -1,0 +1,64 @@
+/* src/components/PersonDetail.css */
+.person-detail-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  text-align: center;
+}
+
+.person-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+}
+
+.person-detail-container h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.person-detail-container p {
+  font-size: 1.1em;
+  margin: 8px 0;
+}
+
+.person-detail-container h3 {
+  margin-top: 20px;
+  font-size: 1.3em;
+  color: #007bff;
+}
+
+.person-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.person-detail-list li {
+  padding: 5px 0;
+  font-size: 1.05em;
+}
+
+.back-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
