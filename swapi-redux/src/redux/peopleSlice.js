@@ -1,47 +1,40 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Загружаем данные из localStorage
-const loadFromLocalStorage = () => {
-  try {
-    const data = localStorage.getItem("people");
-    return data ? JSON.parse(data) : [];
-  } catch (e) {
-    console.error("Ошибка чтения из localStorage:", e);
-    return [];
-  }
-};
-
-// Сохраняем данные в localStorage
-const saveToLocalStorage = (items) => {
-  try {
-    localStorage.setItem("people", JSON.stringify(items));
-  } catch (e) {
-    console.error("Ошибка сохранения в localStorage:", e);
-  }
-};
-
 export const fetchPeople = createAsyncThunk(
   "people/fetchPeople",
-  async (page = 1) => {
-    const response = await fetch(
-      `https://swapi.py4e.com/api/people/?page=${page}`
-    );
-    const data = await response.json();
-    return data;
+  async (page = 1, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `https://swapi.py4e.com/api/people/?page=${page}`
+      );
+      if (!response.ok) {
+        throw new Error("Не вдалося завантажити персонажів");
+      }
+      const data = await response.json();
+      return { ...data, page };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 const peopleSlice = createSlice({
   name: "people",
   initialState: {
-    items: loadFromLocalStorage(),
+    items: JSON.parse(localStorage.getItem("people")) || [],
     status: "idle",
     error: null,
+    currentPage: 0,
+    totalCount: null,
+    next: "https://swapi.py4e.com/api/people/?page=1",
   },
   reducers: {
     clearData: (state) => {
       state.items = [];
-      saveToLocalStorage([]);
+      state.currentPage = 0;
+      state.totalCount = null;
+      state.next = "https://swapi.py4e.com/api/people/?page=1";
+      localStorage.removeItem("people");
     },
   },
   extraReducers: (builder) => {
@@ -51,12 +44,18 @@ const peopleSlice = createSlice({
       })
       .addCase(fetchPeople.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload.results;
-        saveToLocalStorage(action.payload.results);
+        const { results, page, next, count } = action.payload;
+
+        state.items = page === 1 ? results : [...state.items, ...results];
+        state.currentPage = page;
+        state.totalCount = count;
+        state.next = next;
+
+        localStorage.setItem("people", JSON.stringify(state.items));
       })
       .addCase(fetchPeople.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = action.payload;
       });
   },
 });

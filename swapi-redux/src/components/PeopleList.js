@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPeople } from "../redux/peopleSlice";
 import { Link } from "react-router-dom";
@@ -6,27 +6,31 @@ import "./style/PeopleList.css";
 
 const PeopleList = () => {
   const dispatch = useDispatch();
-  const { items, status, error } = useSelector((state) => state.people);
-
-  useEffect(() => {
-    dispatch(fetchPeople());
-  }, [dispatch]);
+  const { items, status, error, currentPage, totalCount, next } = useSelector(
+    (state) => state.people
+  );
 
   const handleLoadMore = () => {
-    dispatch(fetchPeople(2));
+    dispatch(fetchPeople(currentPage + 1));
   };
 
-  if (status === "loading") {
-    return <div className="loading">Завантаження...</div>;
-  }
-
-  if (status === "failed") {
-    return <div className="error">Помилка: {error}</div>;
-  }
+  const totalPages = totalCount ? Math.ceil(totalCount / 10) : "?";
+  const isFirstLoad = items.length === 0;
 
   return (
     <div className="people-list-container">
       <h2>Список персонажів:</h2>
+
+      {status === "failed" && <div className="error">Помилка: {error}</div>}
+      {isFirstLoad && (
+        <div className="empty-message">
+          <span role="img" aria-label="robot" className="empty-icon">
+            🤖
+          </span>
+          Натисніть кнопку, щоб завантажити персонажів
+        </div>
+      )}
+
       <div className="people-list">
         {items.map((person) => (
           <div key={person.name} className="person-item">
@@ -41,13 +45,24 @@ const PeopleList = () => {
       </div>
 
       <div className="load-more-container">
-        <button
-          onClick={handleLoadMore}
-          disabled={status === "loading"}
-          className="load-more-btn"
-        >
-          Завантажити
-        </button>
+        {next && (
+          <button
+            onClick={handleLoadMore}
+            disabled={status === "loading"}
+            className="load-more-btn"
+          >
+            {status === "loading"
+              ? "Завантаження..."
+              : isFirstLoad
+              ? "Завантажити персонажів"
+              : "Завантажити ще"}
+          </button>
+        )}
+        {currentPage > 0 && (
+          <p className="page-info">
+            Сторінка: {currentPage} / {totalPages}
+          </p>
+        )}
       </div>
     </div>
   );
