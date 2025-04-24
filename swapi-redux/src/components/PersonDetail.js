@@ -3,54 +3,93 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./style/PersonDetail.css";
 
 const fetchName = async (url) => {
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.name || data.title;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Не вдалося завантажити дані");
+    const data = await res.json();
+    return data.name || data.title;
+  } catch (error) {
+    console.error("Помилка при завантаженні:", error);
+    return "Невідомо";
+  }
 };
 
 const PersonDetail = () => {
   const { personId } = useParams();
   const navigate = useNavigate();
+
   const [person, setPerson] = useState(null);
   const [homeworld, setHomeworld] = useState("");
   const [species, setSpecies] = useState([]);
   const [films, setFilms] = useState([]);
   const [starships, setStarships] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
+  // Загружаем данные о персонаже и связях
   useEffect(() => {
     const fetchDetails = async () => {
-      const res = await fetch(`https://swapi.py4e.com/api/people/${personId}/`);
-      const data = await res.json();
-      setPerson(data);
+      setLoading(true); // Начинаем загрузку
+      try {
+        const res = await fetch(
+          `https://swapi.py4e.com/api/people/${personId}/`
+        );
+        if (!res.ok) throw new Error("Персонажа не знайдено");
+        const data = await res.json();
+        setPerson(data);
 
-      if (data.homeworld) {
-        const name = await fetchName(data.homeworld);
-        setHomeworld(name);
-      }
+        // Загружаем дополнительные данные
+        const homeworldName = data.homeworld
+          ? await fetchName(data.homeworld)
+          : "Невідомо";
+        setHomeworld(homeworldName);
 
-      if (data.species.length > 0) {
-        const names = await Promise.all(data.species.map(fetchName));
-        setSpecies(names);
-      }
+        const speciesNames =
+          data.species.length > 0
+            ? await Promise.all(data.species.map(fetchName))
+            : [];
+        setSpecies(speciesNames);
 
-      if (data.films.length > 0) {
-        const names = await Promise.all(data.films.map(fetchName));
-        setFilms(names);
-      }
+        const filmsNames =
+          data.films.length > 0
+            ? await Promise.all(data.films.map(fetchName))
+            : [];
+        setFilms(filmsNames);
 
-      if (data.starships.length > 0) {
-        const names = await Promise.all(data.starships.map(fetchName));
-        setStarships(names);
+        const starshipsNames =
+          data.starships.length > 0
+            ? await Promise.all(data.starships.map(fetchName))
+            : [];
+        setStarships(starshipsNames);
+      } catch (err) {
+        console.error("Помилка:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false); // Завершаем загрузку
       }
     };
 
     fetchDetails();
   }, [personId]);
 
-  if (!person) {
+  // Если произошла ошибка, отображаем её
+  if (error) {
+    return (
+      <div className="person-detail-container">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          Назад
+        </button>
+        <p className="error-message">{error}</p>
+      </div>
+    );
+  }
+
+  // Если данные загружаются, показываем индикатор загрузки
+  if (loading) {
     return <div className="person-detail-container">Завантаження...</div>;
   }
 
+  // Если данные успешно загружены, отображаем информацию
   return (
     <div className="person-detail-container">
       <button className="back-button" onClick={() => navigate(-1)}>
@@ -60,7 +99,7 @@ const PersonDetail = () => {
       <p>Рік народження: {person.birth_year}</p>
       <p>Колір волосся: {person.hair_color}</p>
       <p>Колір шкіри: {person.skin_color}</p>
-      <p>Планета: {homeworld || "Невідомо"}</p>
+      <p>Планета: {homeworld}</p>
       <p>Раса: {species.length ? species.join(", ") : "Невідомо"}</p>
 
       <div>

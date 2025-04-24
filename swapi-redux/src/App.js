@@ -1,15 +1,11 @@
-// src/App.js
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
 import PeopleList from "./components/PeopleList";
 import PersonDetail from "./components/PersonDetail";
 import Footer from "./components/Footer";
 
 const App = () => {
-  const location = useLocation();
-
-  // Скрываем футер на всех путях, начинающихся с /person/
-  const showFooter = !location.pathname.startsWith("/person/");
+  const isDetailPage = useMatch("/person/:personId");
 
   return (
     <div className="app-container">
@@ -18,7 +14,7 @@ const App = () => {
         <Route path="/person/:personId" element={<PersonDetail />} />
       </Routes>
 
-      {showFooter && <Footer />}
+      {!isDetailPage && <Footer />}
     </div>
   );
 };
