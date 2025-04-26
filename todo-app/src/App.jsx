@@ -10,7 +10,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: FETCH_TODOS }); // Завантаження todos з API при старті
+    dispatch({ type: FETCH_TODOS });
   }, [dispatch]);
 
   return (

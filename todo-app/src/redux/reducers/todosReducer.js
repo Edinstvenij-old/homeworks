@@ -33,7 +33,7 @@ const loadFromLocalStorage = () => {
 };
 
 const initialState = {
-  items: loadFromLocalStorage(), // Загружаем todos при инициализации
+  items: loadFromLocalStorage(),
   filter: "all",
 };
 
@@ -42,40 +42,40 @@ const todosReducer = (state = initialState, action) => {
 
   switch (action.type) {
     case SET_TODOS:
-      saveToLocalStorage(action.payload); // Сохраняем новые todos
+      saveToLocalStorage(action.payload);
       return { ...state, items: action.payload };
 
     case ADD_TODO_SUCCESS:
       updatedItems = [...state.items, action.payload];
-      saveToLocalStorage(updatedItems); // Сохраняем todos с новой задачей
+      saveToLocalStorage(updatedItems);
       return { ...state, items: updatedItems };
 
     case DELETE_TODO:
       updatedItems = state.items.filter((todo) => todo.id !== action.payload);
-      saveToLocalStorage(updatedItems); // Сохраняем todos без удаленной задачи
+      saveToLocalStorage(updatedItems);
       return { ...state, items: updatedItems };
 
     case TOGGLE_TODO:
       updatedItems = state.items.map((todo) =>
         todo.id === action.payload
-          ? { ...todo, completed: !todo.completed } // Переключаем состояние только для этой задачи
+          ? { ...todo, completed: !todo.completed }
           : todo
       );
-      saveToLocalStorage(updatedItems); // Сохраняем измененные todos
+      saveToLocalStorage(updatedItems);
       return { ...state, items: updatedItems };
 
     case EDIT_TODO:
       updatedItems = state.items.map((todo) =>
         todo.id === action.payload.id
-          ? { ...todo, text: action.payload.text.trim() } // Меняем текст только для этой задачи и удаляем пробелы по краям
+          ? { ...todo, text: action.payload.text.trim() }
           : todo
       );
-      saveToLocalStorage(updatedItems); // Сохраняем измененные todos
+      saveToLocalStorage(updatedItems);
       return { ...state, items: updatedItems };
 
     case CLEAR_COMPLETED:
       updatedItems = state.items.filter((todo) => !todo.completed);
-      saveToLocalStorage(updatedItems); // Сохраняем todos без завершенных задач
+      saveToLocalStorage(updatedItems);
       return { ...state, items: updatedItems };
 
     case SET_FILTER:

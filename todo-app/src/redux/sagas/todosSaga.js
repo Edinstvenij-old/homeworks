@@ -26,7 +26,6 @@ function* fetchTodosSaga() {
     yield put(setTodos(todos));
   } catch (error) {
     console.error("Failed to fetch todos:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 
@@ -34,10 +33,9 @@ function* fetchTodosSaga() {
 function* addTodoSaga(action) {
   try {
     const newTodo = yield call(addTodoApi, action.payload);
-    yield put(addTodoSuccess(newTodo)); // Экшен для успешного добавления
+    yield put(addTodoSuccess(newTodo));
   } catch (error) {
     console.error("Failed to add todo:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 
@@ -45,12 +43,11 @@ function* deleteTodoSaga(action) {
   try {
     yield call(deleteTodoApi, action.payload);
     yield put({
-      type: DELETE_TODO, // Используем правильный тип экшена
+      type: DELETE_TODO,
       payload: action.payload,
     });
   } catch (error) {
     console.error("Failed to delete todo:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 
@@ -58,12 +55,11 @@ function* toggleTodoSaga(action) {
   try {
     yield call(toggleTodoApi, action.payload);
     yield put({
-      type: TOGGLE_TODO, // Используем правильный тип экшена
+      type: TOGGLE_TODO,
       payload: action.payload,
     });
   } catch (error) {
     console.error("Failed to toggle todo:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 
@@ -71,12 +67,11 @@ function* editTodoSaga(action) {
   try {
     yield call(editTodoApi, action.payload.id, action.payload.text);
     yield put({
-      type: EDIT_TODO, // Используем правильный тип экшена
+      type: EDIT_TODO,
       payload: action.payload,
     });
   } catch (error) {
     console.error("Failed to edit todo:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 
@@ -84,11 +79,10 @@ function* clearCompletedSaga() {
   try {
     yield call(clearCompletedApi);
     yield put({
-      type: CLEAR_COMPLETED, // Используем правильный тип экшена
+      type: CLEAR_COMPLETED,
     });
   } catch (error) {
     console.error("Failed to clear completed todos:", error);
-    // Вы можете dispatch'ить экшен для обработки ошибки, если нужно
   }
 }
 

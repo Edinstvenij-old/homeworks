@@ -8,47 +8,42 @@ const TodoList = () => {
   const todos = useSelector((state) => state.todos.items);
   const filter = useSelector((state) => state.todos.filter);
 
-  // Загружаем todos из localStorage при первом рендере компонента
   useEffect(() => {
     const saved = localStorage.getItem("todos");
     if (saved) {
       try {
         const savedTodos = JSON.parse(saved);
         if (Array.isArray(savedTodos)) {
-          dispatch(setTodos(savedTodos)); // Устанавливаем todos в Redux
+          dispatch(setTodos(savedTodos));
         }
       } catch (error) {
         console.error("Error loading todos from localStorage:", error);
       }
     } else {
-      dispatch(setTodos([])); // Если нет todos в localStorage, ставим пустой массив
+      dispatch(setTodos([]));
     }
   }, [dispatch]);
 
-  // Убедимся, что todos всегда массив
   const safeTodos = Array.isArray(todos) ? todos : [];
 
-  // Фильтрация задач в зависимости от выбранного фильтра
   const filteredTodos = safeTodos.filter((todo) => {
     switch (filter) {
       case "всі":
-        return true; // Все задачи
+        return true;
       case "активні":
-        return !todo.completed; // Только не завершенные
+        return !todo.completed;
       case "завершені":
-        return todo.completed; // Только завершенные
+        return todo.completed;
       default:
         return true;
     }
   });
 
-  // Очистка всех задач из localStorage и сброс в Redux
   const clearAllTodos = () => {
-    localStorage.removeItem("todos"); // Удаляем todos из localStorage
-    dispatch(setTodos([])); // Очищаем все todos в Redux
+    localStorage.removeItem("todos");
+    dispatch(setTodos([]));
   };
 
-  // Показуємо повідомлення, якщо todos пустий
   if (filteredTodos.length === 0) {
     return <div>No todos available</div>;
   }
