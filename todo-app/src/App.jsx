@@ -4,13 +4,13 @@ import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 import TodoFilters from "./components/TodoFilters";
 import LoadButton from "./components/LoadButton";
-import { FETCH_TODOS } from "./redux/actions/todosActions";
+import { fetchTodos } from "./redux/actions/todosActions";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: FETCH_TODOS });
+    dispatch({ type: fetchTodos });
   }, [dispatch]);
 
   return (

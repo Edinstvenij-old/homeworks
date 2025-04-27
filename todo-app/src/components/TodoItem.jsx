@@ -7,28 +7,34 @@ import {
 } from "../redux/actions/todosActions";
 
 const TodoItem = ({ todo }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(todo.text);
   const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [text, setText] = useState(todo.text || ""); // Защита если текст пустой
 
   const handleToggle = () => dispatch(toggleTodo(todo.id));
   const handleDelete = () => dispatch(deleteTodo(todo.id));
   const handleEdit = () => setIsEditing(true);
   const handleSave = () => {
-    if (text.trim()) {
-      dispatch(editTodo(todo.id, text.trim()));
+    const trimmedText = text.trim();
+    if (trimmedText) {
+      dispatch(editTodo(todo.id, trimmedText));
       setIsEditing(false);
     }
   };
 
   return (
     <li style={styles.item}>
-      <input type="checkbox" checked={todo.completed} onChange={handleToggle} />
+      <input
+        type="checkbox"
+        checked={!!todo.completed}
+        onChange={handleToggle}
+        style={styles.checkbox}
+      />
       {isEditing ? (
         <input
-          style={styles.editInput}
           value={text}
           onChange={(e) => setText(e.target.value)}
+          style={styles.editInput}
         />
       ) : (
         <span
@@ -37,21 +43,23 @@ const TodoItem = ({ todo }) => {
             textDecoration: todo.completed ? "line-through" : "none",
           }}
         >
-          {todo.text}
+          {typeof todo.text === "string" ? todo.text : "Invalid text"}
         </span>
       )}
-      {isEditing ? (
-        <button style={styles.smallButton} onClick={handleSave}>
-          Save
+      <div style={styles.buttons}>
+        {isEditing ? (
+          <button style={styles.smallButton} onClick={handleSave}>
+            Save
+          </button>
+        ) : (
+          <button style={styles.smallButton} onClick={handleEdit}>
+            Edit
+          </button>
+        )}
+        <button style={styles.smallButton} onClick={handleDelete}>
+          Delete
         </button>
-      ) : (
-        <button style={styles.smallButton} onClick={handleEdit}>
-          Edit
-        </button>
-      )}
-      <button style={styles.smallButton} onClick={handleDelete}>
-        Delete
-      </button>
+      </div>
     </li>
   );
 };
@@ -66,11 +74,19 @@ const styles = {
   text: {
     flex: "1",
     fontSize: "18px",
+    overflowWrap: "break-word",
   },
   editInput: {
     flex: "1",
     padding: "6px",
     fontSize: "16px",
+  },
+  checkbox: {
+    cursor: "pointer",
+  },
+  buttons: {
+    display: "flex",
+    gap: "4px",
   },
   smallButton: {
     padding: "4px 8px",

@@ -7,26 +7,33 @@ const TodoForm = () => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
+  const handleChange = (e) => {
+    setText(e.target.value);
+    if (error) setError(""); // Очищаємо помилку під час введення тексту
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!text.trim()) {
       setError("Please enter a task!");
       return;
     }
+
     dispatch(addTodo(text.trim()));
     setText("");
-    setError("");
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <input
-        style={styles.input}
+        type="text"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={handleChange}
         placeholder="Add a todo"
+        style={styles.input}
       />
-      <button style={styles.button} type="submit">
+      <button type="submit" style={styles.button}>
         Додати
       </button>
       {error && <div style={styles.error}>{error}</div>}
@@ -40,10 +47,28 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     gap: "8px",
+    marginBottom: "16px",
   },
-  input: { padding: "8px", fontSize: "16px", width: "250px" },
-  button: { padding: "8px 16px", fontSize: "16px", cursor: "pointer" },
-  error: { color: "red", fontSize: "14px" },
+  input: {
+    padding: "8px",
+    fontSize: "16px",
+    width: "250px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+  },
+  button: {
+    padding: "8px 16px",
+    fontSize: "16px",
+    cursor: "pointer",
+    backgroundColor: "#4caf50",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+  },
+  error: {
+    color: "red",
+    fontSize: "14px",
+  },
 };
 
 export default TodoForm;

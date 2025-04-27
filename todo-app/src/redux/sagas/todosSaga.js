@@ -1,14 +1,14 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import {
-  FETCH_TODOS,
+  fetchTodos,
+  addTodo,
+  deleteTodo,
+  toggleTodo,
+  editTodo,
+  clearCompleted,
   setTodos,
-  ADD_TODO,
   addTodoSuccess,
-  DELETE_TODO,
-  TOGGLE_TODO,
-  EDIT_TODO,
-  CLEAR_COMPLETED,
-} from "../actions/todosActions";
+} from "../actions/todosActions"; // Исправление: используем createAction, а не константы
 
 import {
   fetchTodos as fetchTodosApi,
@@ -19,7 +19,7 @@ import {
   clearCompleted as clearCompletedApi,
 } from "../../api/todosApi";
 
-// Загружаем todos только при первом рендере или при необходимости
+// --- Sagas ---
 function* fetchTodosSaga() {
   try {
     const todos = yield call(fetchTodosApi);
@@ -29,11 +29,10 @@ function* fetchTodosSaga() {
   }
 }
 
-// --- Локальные CRUD операции ---
 function* addTodoSaga(action) {
   try {
     const newTodo = yield call(addTodoApi, action.payload);
-    yield put(addTodoSuccess(newTodo));
+    yield put(addTodoSuccess(newTodo)); // Убедитесь, что newTodo содержит все данные
   } catch (error) {
     console.error("Failed to add todo:", error);
   }
@@ -41,11 +40,8 @@ function* addTodoSaga(action) {
 
 function* deleteTodoSaga(action) {
   try {
-    yield call(deleteTodoApi, action.payload);
-    yield put({
-      type: DELETE_TODO,
-      payload: action.payload,
-    });
+    yield call(deleteTodoApi, action.payload); // Предполагаем, что payload - это ID задачи
+    yield put(deleteTodo(action.payload)); // Диспетчеризуем экшен с ID
   } catch (error) {
     console.error("Failed to delete todo:", error);
   }
@@ -53,11 +49,8 @@ function* deleteTodoSaga(action) {
 
 function* toggleTodoSaga(action) {
   try {
-    yield call(toggleTodoApi, action.payload);
-    yield put({
-      type: TOGGLE_TODO,
-      payload: action.payload,
-    });
+    const updatedTodo = yield call(toggleTodoApi, action.payload); // Передаем ID задачи
+    yield put(toggleTodo(updatedTodo.id)); // Используем только ID задачи, если это ожидается
   } catch (error) {
     console.error("Failed to toggle todo:", error);
   }
@@ -65,11 +58,12 @@ function* toggleTodoSaga(action) {
 
 function* editTodoSaga(action) {
   try {
-    yield call(editTodoApi, action.payload.id, action.payload.text);
-    yield put({
-      type: EDIT_TODO,
-      payload: action.payload,
-    });
+    const updatedTodo = yield call(
+      editTodoApi,
+      action.payload.id,
+      action.payload.text
+    );
+    yield put(editTodo(updatedTodo.id, updatedTodo.text)); // Передаем обновленные данные
   } catch (error) {
     console.error("Failed to edit todo:", error);
   }
@@ -78,23 +72,23 @@ function* editTodoSaga(action) {
 function* clearCompletedSaga() {
   try {
     yield call(clearCompletedApi);
-    yield put({
-      type: CLEAR_COMPLETED,
-    });
+    yield put(clearCompleted());
   } catch (error) {
     console.error("Failed to clear completed todos:", error);
   }
 }
 
+// --- Watcher ---
 function* watchTodos() {
-  yield takeEvery(FETCH_TODOS, fetchTodosSaga);
-  yield takeEvery(ADD_TODO, addTodoSaga);
-  yield takeEvery(DELETE_TODO, deleteTodoSaga);
-  yield takeEvery(TOGGLE_TODO, toggleTodoSaga);
-  yield takeEvery(EDIT_TODO, editTodoSaga);
-  yield takeEvery(CLEAR_COMPLETED, clearCompletedSaga);
+  yield takeEvery(fetchTodos, fetchTodosSaga); // Используем экшен из createAction
+  yield takeEvery(addTodo, addTodoSaga); // Используем экшен из createAction
+  yield takeEvery(deleteTodo, deleteTodoSaga);
+  yield takeEvery(toggleTodo, toggleTodoSaga);
+  yield takeEvery(editTodo, editTodoSaga);
+  yield takeEvery(clearCompleted, clearCompletedSaga);
 }
 
+// --- Root saga ---
 export default function* rootSaga() {
   yield all([watchTodos()]);
 }

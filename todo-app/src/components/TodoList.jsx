@@ -8,25 +8,87 @@ const TodoList = () => {
   const todos = useSelector((state) => state.todos.items);
   const filter = useSelector((state) => state.todos.filter);
 
+  // Завантаження задач з localStorage при першому рендері
   useEffect(() => {
-    const saved = localStorage.getItem("todos");
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem("todos");
+      if (saved) {
         const savedTodos = JSON.parse(saved);
+
         if (Array.isArray(savedTodos)) {
-          dispatch(setTodos(savedTodos));
+          if (!hasDuplicateIds(savedTodos)) {
+            dispatch(setTodos(savedTodos));
+          } else {
+            console.warn("Дублікати ID знайдено! Очищаю задачі.");
+            dispatch(setTodos([]));
+            localStorage.removeItem("todos");
+          }
         }
-      } catch (error) {
-        console.error("Error loading todos from localStorage:", error);
+      } else {
+        dispatch(setTodos([]));
       }
-    } else {
+    } catch (error) {
+      console.error("Помилка при завантаженні задач з localStorage:", error);
       dispatch(setTodos([]));
     }
   }, [dispatch]);
 
-  const safeTodos = Array.isArray(todos) ? todos : [];
+  // Збереження задач у localStorage при їх зміні
+  useEffect(() => {
+    if (Array.isArray(todos) && todos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    } else {
+      localStorage.removeItem("todos");
+    }
+  }, [todos]);
 
-  const filteredTodos = safeTodos.filter((todo) => {
+  const filteredTodos = getFilteredTodos(todos, filter);
+
+  const clearAllTodos = () => {
+    dispatch(setTodos([]));
+    localStorage.removeItem("todos");
+  };
+
+  if (filteredTodos.length === 0) {
+    return <div>No todos available</div>;
+  }
+
+  return (
+    <div>
+      <ul>
+        {filteredTodos.map((todo) =>
+          typeof todo.text === "string" ? (
+            <TodoItem key={todo.id} todo={todo} />
+          ) : (
+            <div key={todo.id} style={{ color: "red" }}>
+              Помилка: todo.text не є рядком! {JSON.stringify(todo)}
+            </div>
+          )
+        )}
+      </ul>
+      <div style={styles.buttons}>
+        <button
+          style={styles.button}
+          onClick={() => dispatch(clearCompleted())}
+        >
+          Очистити Завершені
+        </button>
+        <button style={styles.button} onClick={clearAllTodos}>
+          Очистити ВСІ задачі
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Допоміжні функції
+const hasDuplicateIds = (todos) => {
+  const ids = todos.map((todo) => todo.id);
+  return new Set(ids).size !== ids.length;
+};
+
+const getFilteredTodos = (todos = [], filter = "всі") => {
+  return todos.filter((todo) => {
     switch (filter) {
       case "всі":
         return true;
@@ -38,29 +100,24 @@ const TodoList = () => {
         return true;
     }
   });
+};
 
-  const clearAllTodos = () => {
-    localStorage.removeItem("todos");
-    dispatch(setTodos([]));
-  };
-
-  if (filteredTodos.length === 0) {
-    return <div>No todos available</div>;
-  }
-
-  return (
-    <div>
-      <ul>
-        {filteredTodos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
-        ))}
-      </ul>
-      <button onClick={() => dispatch(clearCompleted())}>
-        Очистити Завершені
-      </button>
-      <button onClick={clearAllTodos}>Очистити ВСІ задачі</button>
-    </div>
-  );
+const styles = {
+  buttons: {
+    marginTop: "16px",
+    display: "flex",
+    gap: "8px",
+    justifyContent: "center",
+  },
+  button: {
+    padding: "8px 16px",
+    cursor: "pointer",
+    backgroundColor: "#1976d2",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "14px",
+  },
 };
 
 export default TodoList;
