@@ -54,15 +54,9 @@ const TodoList = () => {
   return (
     <div>
       <ul>
-        {filteredTodos.map((todo) =>
-          typeof todo.text === "string" ? (
-            <TodoItem key={todo.id} todo={todo} />
-          ) : (
-            <div key={todo.id} style={{ color: "red" }}>
-              Помилка: todo.text не є рядком! {JSON.stringify(todo)}
-            </div>
-          )
-        )}
+        {filteredTodos.map((todo) => (
+          <TodoItem key={todo.id} todo={todo} />
+        ))}
       </ul>
       <div style={styles.buttons}>
         <button
@@ -79,7 +73,6 @@ const TodoList = () => {
   );
 };
 
-// Допоміжні функції
 const hasDuplicateIds = (todos) => {
   const ids = todos.map((todo) => todo.id);
   return new Set(ids).size !== ids.length;

@@ -9,7 +9,6 @@ import {
   setFilter,
 } from "../actions/todosActions";
 
-// --- Сервисы LocalStorage ---
 const saveToLocalStorage = (items) => {
   try {
     if (Array.isArray(items) && items.length > 0) {

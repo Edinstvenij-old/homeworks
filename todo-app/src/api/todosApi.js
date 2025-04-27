@@ -6,6 +6,9 @@ const BASE_URL = "https://dummyjson.com/todos";
 export const fetchTodos = async () => {
   try {
     const response = await axios.get(BASE_URL);
+    if (!response.data.todos) {
+      throw new Error("No todos found");
+    }
     return response.data.todos.map((todo) => ({
       id: todo.id,
       text: todo.todo,
@@ -51,6 +54,9 @@ export const deleteTodo = async (id) => {
 export const toggleTodo = async (id) => {
   try {
     const { data } = await axios.get(`${BASE_URL}/${id}`);
+    if (!data) {
+      throw new Error("Todo not found");
+    }
     const response = await axios.put(`${BASE_URL}/${id}`, {
       completed: !data.completed,
     });
@@ -85,6 +91,9 @@ export const editTodo = async (id, text) => {
 export const clearCompleted = async () => {
   try {
     const { data } = await axios.get(BASE_URL);
+    if (!data.todos) {
+      throw new Error("No todos found");
+    }
     const completedTodos = data.todos.filter((t) => t.completed);
     for (const todo of completedTodos) {
       await axios.delete(`${BASE_URL}/${todo.id}`);

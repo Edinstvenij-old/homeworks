@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addTodoSuccess } from "../redux/actions/todosActions";
 import { v4 as uuidv4 } from "uuid";
@@ -7,6 +7,7 @@ const TodoForm = () => {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const inputRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +22,7 @@ const TodoForm = () => {
         setError("The task must be a valid string.");
         return;
       }
+
       const newTodo = {
         id: uuidv4(),
         text: text.trim(),
@@ -31,6 +33,7 @@ const TodoForm = () => {
 
       setText("");
       setError("");
+      inputRef.current.focus();
     } catch (err) {
       console.error("Error while adding todo:", err);
       setError("There was an error while adding your task. Please try again.");
@@ -40,6 +43,7 @@ const TodoForm = () => {
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <input
+        ref={inputRef} // додаємо ref для фокусу
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}

@@ -20,32 +20,18 @@ export const setTodos = createAction("SET_TODOS");
 export const fetchTodos = createAction("FETCH_TODOS");
 
 export const addTodo = createAction("ADD_TODO", (text) => {
-  console.log("Adding todo with text:", text);
-
-  if (typeof text !== "string") {
-    console.warn("Text is not a string:", text);
-    throw new Error("Text must be a string");
-  }
-
+  validateText(text);
   const id = uuidv4();
   return { payload: { id, text: text.trim(), completed: false } };
 });
 
 // Экшен для успешного добавления задачи
 export const addTodoSuccess = createAction("ADD_TODO_SUCCESS", (todo) => {
-  if (!todo || !todo.id || !todo.text) {
-    console.warn("Invalid todo data:", todo);
-    throw new Error("Invalid todo data");
-  }
   return { payload: todo };
 });
 
 // Экшен для ошибки при добавлении задачи
 export const addTodoError = createAction("ADD_TODO_ERROR", (error) => {
-  if (!error || typeof error !== "string") {
-    console.warn("Invalid error message:", error);
-    throw new Error("Error message is required");
-  }
   return { payload: error };
 });
 
@@ -57,10 +43,6 @@ export const deleteTodo = createAction("DELETE_TODO", (id) => {
 
 // Экшен для ошибки при удалении задачи
 export const deleteTodoError = createAction("DELETE_TODO_ERROR", (error) => {
-  if (!error || typeof error !== "string") {
-    console.warn("Invalid error message:", error);
-    throw new Error("Error message is required");
-  }
   return { payload: error };
 });
 
@@ -79,10 +61,6 @@ export const editTodo = createAction("EDIT_TODO", (id, text) => {
 
 // Экшен для ошибки при редактировании задачи
 export const editTodoError = createAction("EDIT_TODO_ERROR", (error) => {
-  if (!error || typeof error !== "string") {
-    console.warn("Invalid error message:", error);
-    throw new Error("Error message is required");
-  }
   return { payload: error };
 });
 

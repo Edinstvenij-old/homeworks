@@ -11,12 +11,10 @@ const rootReducer = combineReducers({
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middleware = applyMiddleware(sagaMiddleware);
-
 const enhancer =
   import.meta.env.MODE === "development"
-    ? compose(middleware, devToolsEnhancer())
-    : middleware;
+    ? compose(applyMiddleware(sagaMiddleware), devToolsEnhancer())
+    : applyMiddleware(sagaMiddleware);
 
 const store = createStore(rootReducer, enhancer);
 

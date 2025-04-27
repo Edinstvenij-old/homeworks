@@ -19,9 +19,11 @@ const TodoFilters = () => {
             ...styles.button,
             backgroundColor: currentFilter === f ? "#4caf50" : "#f0f0f0",
             color: currentFilter === f ? "#fff" : "#000",
+            boxShadow:
+              currentFilter === f ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "none",
           }}
         >
-          {f.charAt(0).toUpperCase() + f.slice(1)}{" "}
+          {f.charAt(0).toUpperCase() + f.slice(1)}
         </button>
       ))}
     </div>
@@ -41,6 +43,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "16px",
     transition: "all 0.3s ease",
+    borderRadius: "4px",
   },
 };
 

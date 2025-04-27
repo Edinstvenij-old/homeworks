@@ -44,6 +44,7 @@ const TodoItem = ({ todo }) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             style={styles.editInput}
+            autoFocus
           />
           {error && <div style={styles.error}>{error}</div>}{" "}
         </>
@@ -54,7 +55,7 @@ const TodoItem = ({ todo }) => {
             textDecoration: todo.completed ? "line-through" : "none",
           }}
         >
-          {typeof todo.text === "string" ? todo.text : "Invalid text"}
+          {todo.text}
         </span>
       )}
       <div style={styles.buttons}>

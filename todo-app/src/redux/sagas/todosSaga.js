@@ -60,7 +60,7 @@ function* deleteTodoSaga(action) {
 function* toggleTodoSaga(action) {
   try {
     const updatedTodo = yield call(toggleTodoApi, action.payload);
-    yield put(toggleTodo(updatedTodo.id));
+    yield put(toggleTodo(updatedTodo));
   } catch (error) {
     console.error("Failed to toggle todo:", error);
   }
@@ -93,7 +93,6 @@ function* clearCompletedSaga() {
   }
 }
 
-// --- Watcher ---
 function* watchTodos() {
   yield takeEvery(fetchTodos, fetchTodosSaga);
   yield takeEvery(addTodo, addTodoSaga);
@@ -103,7 +102,6 @@ function* watchTodos() {
   yield takeEvery(clearCompleted, clearCompletedSaga);
 }
 
-// --- Root saga ---
 export default function* rootSaga() {
   yield all([watchTodos()]);
 }
