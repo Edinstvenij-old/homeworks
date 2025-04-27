@@ -8,7 +8,6 @@ const TodoList = () => {
   const todos = useSelector((state) => state.todos.items);
   const filter = useSelector((state) => state.todos.filter);
 
-  // Завантаження задач з localStorage при першому рендері
   useEffect(() => {
     try {
       const saved = localStorage.getItem("todos");
@@ -33,7 +32,6 @@ const TodoList = () => {
     }
   }, [dispatch]);
 
-  // Збереження задач у localStorage при їх зміні
   useEffect(() => {
     if (Array.isArray(todos) && todos.length > 0) {
       localStorage.setItem("todos", JSON.stringify(todos));

@@ -41,19 +41,16 @@ const loadFromLocalStorage = () => {
   }
 };
 
-// --- Начальный стейт ---
 const initialState = {
   items: loadFromLocalStorage(),
   filter: "all",
 };
 
-// --- Проверка на дубли ID ---
 const checkDuplicateIds = (todos) => {
   const ids = todos.map((todo) => todo.id);
   return new Set(ids).size !== ids.length;
 };
 
-// --- Новый todosReducer ---
 const todosReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(setTodos, (state, action) => {
@@ -68,16 +65,13 @@ const todosReducer = createReducer(initialState, (builder) => {
     })
 
     .addCase(addTodoSuccess, (state, action) => {
-      // Логируем добавление задачи
       console.log("Dispatching todo:", action.payload);
 
-      // Проверяем, что задача с таким ID не существует
       if (state.items.some((todo) => todo.id === action.payload.id)) {
         console.warn(`Задача с id ${action.payload.id} уже существует!`);
         return;
       }
 
-      // Проверка на валидность текста задачи
       if (
         typeof action.payload.text !== "string" ||
         action.payload.text.trim() === ""
@@ -86,9 +80,8 @@ const todosReducer = createReducer(initialState, (builder) => {
         return;
       }
 
-      // Добавляем задачу, указываем источник
       const newTodo = { ...action.payload, source: "local" };
-      state.items.push(newTodo); // Добавляем задачу
+      state.items.push(newTodo);
       saveToLocalStorage(state.items);
     })
 
@@ -97,7 +90,6 @@ const todosReducer = createReducer(initialState, (builder) => {
       const todoToDelete = state.items.find((todo) => todo.id === todoId);
 
       if (todoToDelete?.source === "local") {
-        // Если задача локальная, удаляем из localStorage
         state.items = state.items.filter((todo) => todo.id !== todoId);
         saveToLocalStorage(state.items);
       } else {
@@ -122,13 +114,12 @@ const todosReducer = createReducer(initialState, (builder) => {
       if (todo && todo.source === "local") {
         const newText = action.payload.text.trim();
 
-        // Проверка, что текст задачи является строкой
         if (typeof newText !== "string" || newText === "") {
           console.warn(`Невалидный текст задачи: ${newText}`);
           return;
         }
 
-        todo.text = newText; // Обновляем текст задачи
+        todo.text = newText;
         saveToLocalStorage(state.items);
       } else {
         console.warn(

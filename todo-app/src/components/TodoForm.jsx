@@ -11,31 +11,26 @@ const TodoForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Проверка на пустоту и некорректный ввод
     if (!text.trim()) {
       setError("Please enter a task!");
       return;
     }
 
     try {
-      // Убедимся, что передаем строку, а не объект
       if (typeof text !== "string") {
         setError("The task must be a valid string.");
         return;
       }
-
-      // Генерируем уникальный ID для задачи
       const newTodo = {
-        id: uuidv4(), // Генерируем уникальный id
+        id: uuidv4(),
         text: text.trim(),
-        completed: false, // Задача по умолчанию не выполнена
+        completed: false,
       };
 
-      // Отправляем задачу в Redux
-      dispatch(addTodoSuccess(newTodo)); // Передаем объект с id и текстом задачи
+      dispatch(addTodoSuccess(newTodo));
 
-      setText(""); // Очистить поле ввода
-      setError(""); // Сбросить ошибку
+      setText("");
+      setError("");
     } catch (err) {
       console.error("Error while adding todo:", err);
       setError("There was an error while adding your task. Please try again.");

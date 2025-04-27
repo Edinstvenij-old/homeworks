@@ -8,8 +8,8 @@ import {
   clearCompleted,
   setTodos,
   addTodoSuccess,
-  addTodoError, // Новый экшен для обработки ошибки добавления
-  deleteTodoError, // Новый экшен для обработки ошибки удаления
+  addTodoError,
+  deleteTodoError,
 } from "../actions/todosActions";
 
 import {
@@ -28,40 +28,39 @@ function* fetchTodosSaga() {
     yield put(setTodos(todos));
   } catch (error) {
     console.error("Failed to fetch todos:", error);
-    // Можно добавить экшен для ошибок в fetch
   }
 }
 
 function* addTodoSaga(action) {
   try {
-    const newTodo = action.payload; // Получаем объект с задачей
+    const newTodo = action.payload;
     if (typeof newTodo.text !== "string") {
       throw new Error("Text in newTodo is not a string!");
     }
 
-    const response = yield call(addTodoApi, newTodo); // Отправляем объект задачи в API
+    const response = yield call(addTodoApi, newTodo);
 
-    yield put(addTodoSuccess(response)); // Если все ок, передаем результат в экшен
+    yield put(addTodoSuccess(response));
   } catch (error) {
     console.error("Failed to add todo:", error);
-    yield put(addTodoError(error.message)); // Отправляем экшен ошибки
+    yield put(addTodoError(error.message));
   }
 }
 
 function* deleteTodoSaga(action) {
   try {
-    yield call(deleteTodoApi, action.payload); // Предполагаем, что payload - это ID задачи
-    yield put(deleteTodo(action.payload)); // Диспетчеризуем экшен с ID
+    yield call(deleteTodoApi, action.payload);
+    yield put(deleteTodo(action.payload));
   } catch (error) {
     console.error("Failed to delete todo:", error);
-    yield put(deleteTodoError(error.message)); // Отправляем экшен ошибки
+    yield put(deleteTodoError(error.message));
   }
 }
 
 function* toggleTodoSaga(action) {
   try {
-    const updatedTodo = yield call(toggleTodoApi, action.payload); // Передаем ID задачи
-    yield put(toggleTodo(updatedTodo.id)); // Используем только ID задачи, если это ожидается
+    const updatedTodo = yield call(toggleTodoApi, action.payload);
+    yield put(toggleTodo(updatedTodo.id));
   } catch (error) {
     console.error("Failed to toggle todo:", error);
   }
@@ -75,12 +74,11 @@ function* editTodoSaga(action) {
       action.payload.text
     );
 
-    // Проверка на формат данных
     if (typeof updatedTodo.text !== "string") {
       throw new Error("Text in updatedTodo is not a string!");
     }
 
-    yield put(editTodo(updatedTodo.id, updatedTodo.text)); // Передаем обновленные данные
+    yield put(editTodo(updatedTodo.id, updatedTodo.text));
   } catch (error) {
     console.error("Failed to edit todo:", error);
   }

@@ -9,14 +9,14 @@ import {
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(todo.text || ""); // Защита если текст пустой
-  const [error, setError] = useState(""); // Для отображения ошибки, если текст некорректный
+  const [text, setText] = useState(todo.text || "");
+  const [error, setError] = useState("");
 
   const handleToggle = () => dispatch(toggleTodo(todo.id));
   const handleDelete = () => dispatch(deleteTodo(todo.id));
   const handleEdit = () => {
     setIsEditing(true);
-    setText(todo.text); // Сохраняем текущий текст при редактировании
+    setText(todo.text);
   };
 
   const handleSave = () => {
@@ -24,9 +24,9 @@ const TodoItem = ({ todo }) => {
     if (trimmedText) {
       dispatch(editTodo(todo.id, trimmedText));
       setIsEditing(false);
-      setError(""); // Сбросить ошибку при успешном сохранении
+      setError("");
     } else {
-      setError("Text cannot be empty!"); // Сообщение об ошибке, если текст пуст
+      setError("Text cannot be empty!");
     }
   };
 
@@ -46,7 +46,6 @@ const TodoItem = ({ todo }) => {
             style={styles.editInput}
           />
           {error && <div style={styles.error}>{error}</div>}{" "}
-          {/* Показать ошибку, если есть */}
         </>
       ) : (
         <span
