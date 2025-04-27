@@ -1,27 +1,45 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../redux/actions/todosActions";
+import { addTodoSuccess } from "../redux/actions/todosActions";
+import { v4 as uuidv4 } from "uuid";
 
 const TodoForm = () => {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setText(e.target.value);
-    if (error) setError(""); // Очищаємо помилку під час введення тексту
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Проверка на пустоту и некорректный ввод
     if (!text.trim()) {
       setError("Please enter a task!");
       return;
     }
 
-    dispatch(addTodo(text.trim()));
-    setText("");
+    try {
+      // Убедимся, что передаем строку, а не объект
+      if (typeof text !== "string") {
+        setError("The task must be a valid string.");
+        return;
+      }
+
+      // Генерируем уникальный ID для задачи
+      const newTodo = {
+        id: uuidv4(), // Генерируем уникальный id
+        text: text.trim(),
+        completed: false, // Задача по умолчанию не выполнена
+      };
+
+      // Отправляем задачу в Redux
+      dispatch(addTodoSuccess(newTodo)); // Передаем объект с id и текстом задачи
+
+      setText(""); // Очистить поле ввода
+      setError(""); // Сбросить ошибку
+    } catch (err) {
+      console.error("Error while adding todo:", err);
+      setError("There was an error while adding your task. Please try again.");
+    }
   };
 
   return (
@@ -29,7 +47,7 @@ const TodoForm = () => {
       <input
         type="text"
         value={text}
-        onChange={handleChange}
+        onChange={(e) => setText(e.target.value)}
         placeholder="Add a todo"
         style={styles.input}
       />

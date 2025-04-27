@@ -8,7 +8,9 @@ import {
   clearCompleted,
   setTodos,
   addTodoSuccess,
-} from "../actions/todosActions"; // Исправление: используем createAction, а не константы
+  addTodoError, // Новый экшен для обработки ошибки добавления
+  deleteTodoError, // Новый экшен для обработки ошибки удаления
+} from "../actions/todosActions";
 
 import {
   fetchTodos as fetchTodosApi,
@@ -26,15 +28,23 @@ function* fetchTodosSaga() {
     yield put(setTodos(todos));
   } catch (error) {
     console.error("Failed to fetch todos:", error);
+    // Можно добавить экшен для ошибок в fetch
   }
 }
 
 function* addTodoSaga(action) {
   try {
-    const newTodo = yield call(addTodoApi, action.payload);
-    yield put(addTodoSuccess(newTodo)); // Убедитесь, что newTodo содержит все данные
+    const newTodo = action.payload; // Получаем объект с задачей
+    if (typeof newTodo.text !== "string") {
+      throw new Error("Text in newTodo is not a string!");
+    }
+
+    const response = yield call(addTodoApi, newTodo); // Отправляем объект задачи в API
+
+    yield put(addTodoSuccess(response)); // Если все ок, передаем результат в экшен
   } catch (error) {
     console.error("Failed to add todo:", error);
+    yield put(addTodoError(error.message)); // Отправляем экшен ошибки
   }
 }
 
@@ -44,6 +54,7 @@ function* deleteTodoSaga(action) {
     yield put(deleteTodo(action.payload)); // Диспетчеризуем экшен с ID
   } catch (error) {
     console.error("Failed to delete todo:", error);
+    yield put(deleteTodoError(error.message)); // Отправляем экшен ошибки
   }
 }
 
@@ -63,6 +74,12 @@ function* editTodoSaga(action) {
       action.payload.id,
       action.payload.text
     );
+
+    // Проверка на формат данных
+    if (typeof updatedTodo.text !== "string") {
+      throw new Error("Text in updatedTodo is not a string!");
+    }
+
     yield put(editTodo(updatedTodo.id, updatedTodo.text)); // Передаем обновленные данные
   } catch (error) {
     console.error("Failed to edit todo:", error);
@@ -80,8 +97,8 @@ function* clearCompletedSaga() {
 
 // --- Watcher ---
 function* watchTodos() {
-  yield takeEvery(fetchTodos, fetchTodosSaga); // Используем экшен из createAction
-  yield takeEvery(addTodo, addTodoSaga); // Используем экшен из createAction
+  yield takeEvery(fetchTodos, fetchTodosSaga);
+  yield takeEvery(addTodo, addTodoSaga);
   yield takeEvery(deleteTodo, deleteTodoSaga);
   yield takeEvery(toggleTodo, toggleTodoSaga);
   yield takeEvery(editTodo, editTodoSaga);

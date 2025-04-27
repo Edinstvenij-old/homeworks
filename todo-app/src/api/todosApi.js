@@ -20,7 +20,7 @@ export const fetchTodos = async () => {
 // --- Додаємо нове todo ---
 export const addTodo = async (text) => {
   try {
-    const response = await axios.post(`${BASE_URL}/add`, {
+    const response = await axios.post(BASE_URL, {
       todo: text,
       completed: false,
       userId: 5,
@@ -73,6 +73,7 @@ export const editTodo = async (id, text) => {
     return {
       id: response.data.id,
       text: response.data.todo,
+      completed: response.data.completed,
     };
   } catch (error) {
     console.error("Failed to edit todo:", error);

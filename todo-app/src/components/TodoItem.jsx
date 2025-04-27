@@ -10,15 +10,23 @@ const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(todo.text || ""); // Защита если текст пустой
+  const [error, setError] = useState(""); // Для отображения ошибки, если текст некорректный
 
   const handleToggle = () => dispatch(toggleTodo(todo.id));
   const handleDelete = () => dispatch(deleteTodo(todo.id));
-  const handleEdit = () => setIsEditing(true);
+  const handleEdit = () => {
+    setIsEditing(true);
+    setText(todo.text); // Сохраняем текущий текст при редактировании
+  };
+
   const handleSave = () => {
     const trimmedText = text.trim();
     if (trimmedText) {
       dispatch(editTodo(todo.id, trimmedText));
       setIsEditing(false);
+      setError(""); // Сбросить ошибку при успешном сохранении
+    } else {
+      setError("Text cannot be empty!"); // Сообщение об ошибке, если текст пуст
     }
   };
 
@@ -31,11 +39,15 @@ const TodoItem = ({ todo }) => {
         style={styles.checkbox}
       />
       {isEditing ? (
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          style={styles.editInput}
-        />
+        <>
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={styles.editInput}
+          />
+          {error && <div style={styles.error}>{error}</div>}{" "}
+          {/* Показать ошибку, если есть */}
+        </>
       ) : (
         <span
           style={{
@@ -47,15 +59,12 @@ const TodoItem = ({ todo }) => {
         </span>
       )}
       <div style={styles.buttons}>
-        {isEditing ? (
-          <button style={styles.smallButton} onClick={handleSave}>
-            Save
-          </button>
-        ) : (
-          <button style={styles.smallButton} onClick={handleEdit}>
-            Edit
-          </button>
-        )}
+        <button
+          style={styles.smallButton}
+          onClick={isEditing ? handleSave : handleEdit}
+        >
+          {isEditing ? "Save" : "Edit"}
+        </button>
         <button style={styles.smallButton} onClick={handleDelete}>
           Delete
         </button>
@@ -92,6 +101,11 @@ const styles = {
     padding: "4px 8px",
     fontSize: "14px",
     cursor: "pointer",
+  },
+  error: {
+    color: "red",
+    fontSize: "12px",
+    marginTop: "4px",
   },
 };
 
