@@ -6,11 +6,16 @@ const BASE_URL = "https://dummyjson.com/todos";
 export const fetchTodos = async () => {
   try {
     const response = await axios.get(BASE_URL);
+    // Проверка на успешный ответ и данные
+    if (
+      response.status !== 200 ||
+      !response.data ||
+      !Array.isArray(response.data.todos)
+    ) {
+      throw new Error("No valid todos data found");
+    }
     // Логируем для проверки ответа
     console.log("Fetched todos:", response.data);
-    if (!response.data || !Array.isArray(response.data.todos)) {
-      throw new Error("No todos found");
-    }
     return response.data.todos.map((todo) => ({
       id: todo.id,
       text: todo.todo,
@@ -33,6 +38,9 @@ export const addTodo = async (text) => {
       completed: false,
       userId: 5, // Убедитесь, что userId действительно нужен
     });
+    if (response.status !== 200) {
+      throw new Error("Failed to add todo");
+    }
     return {
       id: response.data.id,
       text: response.data.todo,
@@ -50,7 +58,10 @@ export const addTodo = async (text) => {
 // --- Видаляємо todo по id ---
 export const deleteTodo = async (id) => {
   try {
-    await axios.delete(`${BASE_URL}/${id}`);
+    const response = await axios.delete(`${BASE_URL}/${id}`);
+    if (response.status !== 200) {
+      throw new Error("Failed to delete todo");
+    }
     return id;
   } catch (error) {
     console.error(
@@ -71,6 +82,9 @@ export const toggleTodo = async (id) => {
     const response = await axios.put(`${BASE_URL}/${id}`, {
       completed: !data.completed,
     });
+    if (response.status !== 200) {
+      throw new Error("Failed to toggle todo");
+    }
     return {
       id: response.data.id,
       completed: response.data.completed,
@@ -90,6 +104,9 @@ export const editTodo = async (id, text) => {
     const response = await axios.put(`${BASE_URL}/${id}`, {
       todo: text,
     });
+    if (response.status !== 200) {
+      throw new Error("Failed to edit todo");
+    }
     return {
       id: response.data.id,
       text: response.data.todo,

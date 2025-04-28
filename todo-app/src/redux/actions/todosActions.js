@@ -33,6 +33,8 @@ export const deleteTodoError = createAction("todos/deleteTodoError");
 export const clearCompletedSuccess = createAction(
   "todos/clearCompletedSuccess"
 );
+export const fetchTodosError = createAction("todos/fetchTodosError"); // Экшен ошибки загрузки
+export const toggleTodoError = createAction("todos/toggleTodoError"); // Добавлен экшен для ошибки переключения задачи
 
 // --- Локальные экшены ---
 export const addTodoLocal = createAction("todos/addTodoLocal", (text) => {
@@ -99,6 +101,22 @@ export const addTodoAsync = createAsyncThunk(
   }
 );
 
+// --- Переключение состояния задачи на API ---
+export const toggleTodoFromAPI = createAsyncThunk(
+  "todos/toggleTodoFromAPI",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/todos/${id}/toggle`, {
+        method: "PATCH",
+      });
+      if (!response.ok) throw new Error("Failed to toggle todo");
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message); // Возвращаем ошибку
+    }
+  }
+);
+
 // --- Удаление задачи с API ---
 export const deleteTodoFromAPI = createAsyncThunk(
   "todos/deleteTodoFromAPI",
@@ -135,3 +153,8 @@ export const editTodoOnAPI = createAsyncThunk(
     }
   }
 );
+
+// --- Экшен ошибки при редактировании ---
+export const editTodoError = createAction("todos/editTodoError", (error) => ({
+  payload: error,
+}));

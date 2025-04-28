@@ -1,24 +1,27 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import {
   fetchTodosFromAPI,
-  addTodoAsync,
-  deleteTodoFromAPI,
-  editTodoOnAPI,
   addTodoLocal,
   deleteTodoLocal,
   toggleTodoLocal,
   editTodoLocal,
   clearCompletedLocal,
+  addTodoAsync,
+  deleteTodoFromAPI,
+  editTodoOnAPI,
+  toggleTodoFromAPI,
   setTodos,
   addTodoSuccess,
   addTodoError,
   deleteTodoSuccess,
   deleteTodoError,
   toggleTodoSuccess,
+  toggleTodoError,
   editTodoSuccess,
+  editTodoError,
   clearCompletedSuccess,
-} from "../actions/todosActions";
-
+  fetchTodosError,
+} from "../actions/todosActions"; // Ensure all actions are imported correctly
 import {
   fetchTodos as fetchTodosApi,
   addTodo as addTodoApi,
@@ -47,7 +50,6 @@ const loadFromLocalStorage = () => {
 };
 
 // --- Саги ---
-
 // Загрузка задач
 function* fetchTodosSaga() {
   try {
@@ -55,6 +57,7 @@ function* fetchTodosSaga() {
     yield put(setTodos(todos));
   } catch (error) {
     console.error("Failed to fetch todos:", error);
+    yield put(fetchTodosError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -68,6 +71,7 @@ function* addTodoLocalSaga(action) {
     yield put(addTodoSuccess(newTodo));
   } catch (error) {
     console.error("Failed to add local todo:", error);
+    yield put(addTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -81,6 +85,7 @@ function* deleteTodoLocalSaga(action) {
     yield put(deleteTodoSuccess(id));
   } catch (error) {
     console.error("Failed to delete local todo:", error);
+    yield put(deleteTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -97,6 +102,17 @@ function* toggleTodoLocalSaga(action) {
     yield put(toggleTodoSuccess(toggledTodo));
   } catch (error) {
     console.error("Failed to toggle local todo:", error);
+    yield put(toggleTodoError(error.message)); // Отправляем экшен об ошибке
+  }
+}
+
+// Переключение задачи через API
+function* toggleTodoFromAPISaga(action) {
+  try {
+    const toggledTodo = yield call(toggleTodoApi, action.payload); // Используем toggleTodoApi, а не экшен
+    yield put(toggleTodoSuccess(toggledTodo));
+  } catch (error) {
+    yield put(toggleTodoError(error.message));
   }
 }
 
@@ -113,6 +129,7 @@ function* editTodoLocalSaga(action) {
     yield put(editTodoSuccess(editedTodo));
   } catch (error) {
     console.error("Failed to edit local todo:", error);
+    yield put(editTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -135,7 +152,7 @@ function* addTodoAsyncSaga(action) {
     const newTodo = yield call(addTodoApi, { text });
     yield put(addTodoSuccess(newTodo));
   } catch (error) {
-    yield put(addTodoError(error.message));
+    yield put(addTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -146,7 +163,7 @@ function* deleteTodoFromAPISaga(action) {
     yield call(deleteTodoApi, id);
     yield put(deleteTodoSuccess(id));
   } catch (error) {
-    yield put(deleteTodoError(error.message));
+    yield put(deleteTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
@@ -158,20 +175,23 @@ function* editTodoOnAPISaga(action) {
     yield put(editTodoSuccess(updatedTodo));
   } catch (error) {
     console.error("Failed to edit todo via API:", error);
+    yield put(editTodoError(error.message)); // Отправляем экшен об ошибке
   }
 }
 
 // --- Вотчеры ---
+// Прослушиваем все экшены
 function* watchTodos() {
-  yield takeEvery(fetchTodosFromAPI.type, fetchTodosSaga); // Используйте .type, если используете экшен с типами
+  yield takeEvery(fetchTodosFromAPI.type, fetchTodosSaga);
   yield takeEvery(addTodoLocal.type, addTodoLocalSaga);
   yield takeEvery(deleteTodoLocal.type, deleteTodoLocalSaga);
   yield takeEvery(toggleTodoLocal.type, toggleTodoLocalSaga);
   yield takeEvery(editTodoLocal.type, editTodoLocalSaga);
   yield takeEvery(clearCompletedLocal.type, clearCompletedLocalSaga);
-  yield takeEvery(addTodoAsync.type, addTodoAsyncSaga); // Также используйте .type для экшенов
+  yield takeEvery(addTodoAsync.type, addTodoAsyncSaga);
   yield takeEvery(deleteTodoFromAPI.type, deleteTodoFromAPISaga);
   yield takeEvery(editTodoOnAPI.type, editTodoOnAPISaga);
+  yield takeEvery(toggleTodoFromAPI.type, toggleTodoFromAPISaga);
 }
 
 // --- Корневая сага ---
