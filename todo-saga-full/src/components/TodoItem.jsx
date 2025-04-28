@@ -21,7 +21,7 @@ const TodoItem = ({ todo }) => {
 
   const handleEdit = () => {
     const newTodo = prompt("Edit todo:", todo.todo);
-    if (newTodo) {
+    if (newTodo && newTodo !== todo.todo) {
       dispatch({ type: EDIT_TODO, payload: { id: todo.id, todo: newTodo } });
     }
   };
@@ -29,7 +29,11 @@ const TodoItem = ({ todo }) => {
   return (
     <li>
       <input type="checkbox" checked={todo.completed} onChange={handleToggle} />
-      {todo.todo}
+      <span
+        style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+      >
+        {typeof todo.todo === "string" ? todo.todo : JSON.stringify(todo.todo)}
+      </span>
       <button onClick={handleEdit}>Edit</button>
       <button onClick={handleDelete}>Delete</button>
     </li>

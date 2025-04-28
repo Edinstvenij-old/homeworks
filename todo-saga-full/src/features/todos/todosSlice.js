@@ -1,53 +1,112 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CLEAR_COMPLETED } from "./todosActions";
+import {
+  getTasksFromLocalStorage,
+  addTaskToLocalStorage,
+  updateTaskInLocalStorage,
+  deleteTaskFromLocalStorage,
+} from "../../utils/localStorageUtils";
+
+// Начальное состояние
+const initialState = {
+  tasks: getTasksFromLocalStorage(),
+  loading: false,
+  error: null,
+  page: 1,
+  pageSize: 10,
+};
 
 const todosSlice = createSlice({
   name: "todos",
-  initialState: {
-    items: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
+    setTasks(state, action) {
+      state.tasks = action.payload;
+    },
+    fetchTodosStart(state) {
+      state.loading = true;
+      state.error = null;
+    },
     fetchTodosSuccess(state, action) {
       state.loading = false;
-      state.items = action.payload;
+      state.tasks = action.payload;
     },
     fetchTodosFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
     },
-    addTodoSuccess(state, action) {
-      state.items.push(action.payload);
+    addTask(state, action) {
+      const newTask = action.payload;
+      addTaskToLocalStorage(newTask);
+      state.tasks.push(newTask);
     },
-    deleteTodoSuccess(state, action) {
-      state.items = state.items.filter((todo) => todo.id !== action.payload);
+    updateTask(state, action) {
+      const updatedTask = action.payload;
+      updateTaskInLocalStorage(updatedTask);
+      const index = state.tasks.findIndex((task) => task.id === updatedTask.id);
+      if (index !== -1) {
+        state.tasks[index] = updatedTask;
+      }
     },
     toggleTodoSuccess(state, action) {
-      const todo = state.items.find((todo) => todo.id === action.payload.id);
-      if (todo) {
-        todo.completed = action.payload.completed;
+      const task = state.tasks.find((task) => task.id === action.payload.id);
+      if (task) {
+        task.completed = action.payload.completed;
       }
+    },
+    incrementPage(state) {
+      state.page += 1;
+    },
+    setPageSize(state, action) {
+      state.pageSize = action.payload;
+    },
+    deleteTask(state, action) {
+      const taskId = action.payload;
+      deleteTaskFromLocalStorage(taskId);
+      state.tasks = state.tasks.filter((task) => task.id !== taskId);
+    },
+    clearCompleted(state) {
+      state.tasks = state.tasks.filter((task) => !task.completed);
+    },
+    setError(state, action) {
+      state.error = action.payload;
+    },
+    addTodoSuccess(state, action) {
+      state.tasks.push(action.payload);
+    },
+    deleteTodoSuccess(state, action) {
+      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
     editTodoSuccess(state, action) {
-      const todo = state.items.find((todo) => todo.id === action.payload.id);
-      if (todo) {
-        todo.todo = action.payload.todo;
+      const updatedTask = action.payload;
+      const index = state.tasks.findIndex((task) => task.id === updatedTask.id);
+      if (index !== -1) {
+        state.tasks[index] = updatedTask;
       }
     },
-    [CLEAR_COMPLETED](state) {
-      state.items = state.items.filter((todo) => !todo.completed);
+    clearCompletedRequest(state) {
+      // Новый редуктор для очистки завершённых задач
+      state.tasks = state.tasks.filter((task) => !task.completed);
     },
   },
 });
 
 export const {
+  setTasks,
+  fetchTodosStart,
   fetchTodosSuccess,
   fetchTodosFailure,
   addTodoSuccess,
   deleteTodoSuccess,
   toggleTodoSuccess,
+  incrementPage,
+  setPageSize,
+  addTask,
+  updateTask,
+  deleteTask,
+  clearCompleted,
+  setError,
   editTodoSuccess,
+  clearCompletedRequest,
 } = todosSlice.actions;
 
 export default todosSlice.reducer;
