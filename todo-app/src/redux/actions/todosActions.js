@@ -1,71 +1,137 @@
-import { createAction } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
-// Универсальные функции для проверки данных
+// --- Универсальные функции для проверки данных ---
 const validateText = (text) => {
-  if (!text || typeof text !== "string" || text.trim() === "") {
+  if (!text || typeof text !== "string" || text.trim().length === 0) {
     throw new Error("Text is invalid or empty");
   }
 };
 
 const validateId = (id) => {
-  if (!id || typeof id !== "string") {
+  if (!(typeof id === "number" || typeof id === "string")) {
     throw new Error("Valid ID is required");
   }
 };
 
-// Экшены для задач
-export const loadTodos = createAction("LOAD_TODOS");
-export const setTodos = createAction("SET_TODOS");
-export const fetchTodos = createAction("FETCH_TODOS");
+// --- Стандартные экшены ---
+export const loadTodos = createAction("todos/loadTodos");
+export const setTodos = createAction("todos/setTodos");
+export const setFilter = createAction("todos/setFilter");
+export const clearCompleted = createAction("todos/clearCompleted");
+export const deleteTodo = createAction("todos/deleteTodo");
+export const toggleTodo = createAction("todos/toggleTodo");
+export const editTodo = createAction("todos/editTodo");
 
-export const addTodo = createAction("ADD_TODO", (text) => {
+// --- Статусы операций ---
+export const addTodoSuccess = createAction("todos/addTodoSuccess");
+export const editTodoSuccess = createAction("todos/editTodoSuccess");
+export const deleteTodoSuccess = createAction("todos/deleteTodoSuccess");
+export const toggleTodoSuccess = createAction("todos/toggleTodoSuccess");
+export const addTodoError = createAction("todos/addTodoError");
+export const deleteTodoError = createAction("todos/deleteTodoError");
+export const clearCompletedSuccess = createAction(
+  "todos/clearCompletedSuccess"
+);
+
+// --- Локальные экшены ---
+export const addTodoLocal = createAction("todos/addTodoLocal", (text) => {
   validateText(text);
-  const id = uuidv4();
-  return { payload: { id, text: text.trim(), completed: false } };
+  return {
+    payload: {
+      id: uuidv4(), // Генерация уникального ID для локальной задачи
+      text: text.trim(),
+      completed: false,
+      source: "local", // Источник задачи: "local"
+    },
+  };
 });
 
-// Экшен для успешного добавления задачи
-export const addTodoSuccess = createAction("ADD_TODO_SUCCESS", (todo) => {
-  return { payload: todo };
-});
-
-// Экшен для ошибки при добавлении задачи
-export const addTodoError = createAction("ADD_TODO_ERROR", (error) => {
-  return { payload: error };
-});
-
-// Экшен для удаления задачи
-export const deleteTodo = createAction("DELETE_TODO", (id) => {
+export const deleteTodoLocal = createAction("todos/deleteTodoLocal", (id) => {
   validateId(id);
   return { payload: id };
 });
 
-// Экшен для ошибки при удалении задачи
-export const deleteTodoError = createAction("DELETE_TODO_ERROR", (error) => {
-  return { payload: error };
-});
-
-// Экшен для переключения статуса задачи
-export const toggleTodo = createAction("TOGGLE_TODO", (id) => {
+export const toggleTodoLocal = createAction("todos/toggleTodoLocal", (id) => {
   validateId(id);
   return { payload: id };
 });
 
-// Экшен для редактирования задачи
-export const editTodo = createAction("EDIT_TODO", (id, text) => {
+export const editTodoLocal = createAction("todos/editTodoLocal", (id, text) => {
   validateId(id);
   validateText(text);
   return { payload: { id, text: text.trim() } };
 });
 
-// Экшен для ошибки при редактировании задачи
-export const editTodoError = createAction("EDIT_TODO_ERROR", (error) => {
-  return { payload: error };
-});
+export const clearCompletedLocal = createAction("todos/clearCompletedLocal");
 
-// Экшен для очистки завершённых задач
-export const clearCompleted = createAction("CLEAR_COMPLETED");
+// --- Асинхронные экшены (thunks) ---
+// --- Получение задач с API ---
+export const fetchTodosFromAPI = createAsyncThunk(
+  "todos/fetchTodosFromAPI",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch("/api/todos");
+      if (!response.ok) throw new Error("Failed to fetch todos");
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(error.message); // Возвращаем сообщение об ошибке
+    }
+  }
+);
 
-// Экшен для изменения фильтра задач
-export const setFilter = createAction("SET_FILTER");
+// --- Добавление задачи на API ---
+export const addTodoAsync = createAsyncThunk(
+  "todos/addTodoAsync",
+  async (text, { rejectWithValue }) => {
+    try {
+      validateText(text);
+      const response = await fetch("/api/todos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.trim() }),
+      });
+      if (!response.ok) throw new Error("Failed to add todo");
+      return await response.json(); // Возвращаем данные с добавленной задачей
+    } catch (error) {
+      return rejectWithValue(error.message); // Обработка ошибки
+    }
+  }
+);
+
+// --- Удаление задачи с API ---
+export const deleteTodoFromAPI = createAsyncThunk(
+  "todos/deleteTodoFromAPI",
+  async (id, { rejectWithValue }) => {
+    try {
+      validateId(id);
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete todo");
+      return id; // Возвращаем ID удаленной задачи
+    } catch (error) {
+      return rejectWithValue(error.message); // Обработка ошибки
+    }
+  }
+);
+
+// --- Редактирование задачи на API ---
+export const editTodoOnAPI = createAsyncThunk(
+  "todos/editTodoOnAPI",
+  async ({ id, text }, { rejectWithValue }) => {
+    try {
+      validateId(id);
+      validateText(text);
+      const response = await fetch(`/api/todos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.trim() }),
+      });
+      if (!response.ok) throw new Error("Failed to update todo");
+      return await response.json(); // Возвращаем обновленные данные задачи
+    } catch (error) {
+      return rejectWithValue(error.message); // Обработка ошибки
+    }
+  }
+);

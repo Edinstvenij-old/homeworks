@@ -1,51 +1,91 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { clearCompleted, setTodos } from "../redux/actions/todosActions";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearCompleted,
+  setTodos,
+  fetchTodosFromAPI,
+} from "../redux/actions/todosActions";
+import { getFilteredTodos } from "../redux/selectors/selectors";
 import TodoItem from "./TodoItem";
 
 const TodoList = () => {
   const dispatch = useDispatch();
-  const todos = useSelector((state) => state.todos.items);
-  const filter = useSelector((state) => state.todos.filter);
+
+  // Защищаем доступ к state.todos
+  const todos = useSelector((state) => {
+    const todosState = state.todos || {}; // Если state.todos не существует, создаём пустой объект
+    return [
+      ...(todosState.local || []), // Если local не существует, создаём пустой массив
+      ...(todosState.server || []), // Если server не существует, создаём пустой массив
+    ];
+  });
+
+  const filter = useSelector((state) => state.todos?.filter || "all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("todos");
-      if (saved) {
-        const savedTodos = JSON.parse(saved);
+    const loadTodos = async () => {
+      try {
+        setError(""); // Сброс ошибок перед загрузкой данных
+        setLoading(true);
 
-        if (Array.isArray(savedTodos)) {
-          if (!hasDuplicateIds(savedTodos)) {
-            dispatch(setTodos(savedTodos));
-          } else {
-            console.warn("Дублікати ID знайдено! Очищаю задачі.");
-            dispatch(setTodos([]));
+        // Загружаем локальные задачи
+        let localTodos = [];
+        const saved = localStorage.getItem("todos");
+
+        if (saved) {
+          try {
+            const savedTodos = JSON.parse(saved);
+            if (Array.isArray(savedTodos)) {
+              localTodos = savedTodos.filter((todo) => todo.source === "local");
+            } else {
+              console.warn("Invalid data in localStorage, clearing tasks.");
+              localStorage.removeItem("todos");
+            }
+          } catch (err) {
+            console.error("Error parsing localStorage data:", err);
             localStorage.removeItem("todos");
           }
         }
-      } else {
-        dispatch(setTodos([]));
+
+        // Загружаем серверные задачи
+        await dispatch(fetchTodosFromAPI());
+
+        // Добавляем локальные задачи в стейт, если они есть
+        if (localTodos.length > 0) {
+          dispatch(setTodos(localTodos));
+        }
+      } catch (err) {
+        console.error("Error loading todos:", err);
+        setError("Error loading tasks. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Помилка при завантаженні задач з localStorage:", error);
-      dispatch(setTodos([]));
-    }
+    };
+
+    loadTodos();
   }, [dispatch]);
 
+  // Обновляем localStorage только для локальных задач
   useEffect(() => {
-    if (Array.isArray(todos) && todos.length > 0) {
-      localStorage.setItem("todos", JSON.stringify(todos));
+    const localTodos = todos.filter((todo) => todo.source === "local");
+    if (localTodos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(localTodos));
     } else {
       localStorage.removeItem("todos");
     }
   }, [todos]);
 
-  const filteredTodos = getFilteredTodos(todos, filter);
+  if (loading) {
+    return <div>Loading tasks...</div>;
+  }
 
-  const clearAllTodos = () => {
-    dispatch(setTodos([]));
-    localStorage.removeItem("todos");
-  };
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  const filteredTodos = getFilteredTodos(todos, filter);
 
   if (filteredTodos.length === 0) {
     return <div>No todos available</div>;
@@ -65,32 +105,18 @@ const TodoList = () => {
         >
           Очистити Завершені
         </button>
-        <button style={styles.button} onClick={clearAllTodos}>
+        <button
+          style={styles.button}
+          onClick={() => {
+            dispatch(setTodos([])); // Очищаем все задачи в Redux
+            localStorage.removeItem("todos"); // Удаляем все задачи из localStorage
+          }}
+        >
           Очистити ВСІ задачі
         </button>
       </div>
     </div>
   );
-};
-
-const hasDuplicateIds = (todos) => {
-  const ids = todos.map((todo) => todo.id);
-  return new Set(ids).size !== ids.length;
-};
-
-const getFilteredTodos = (todos = [], filter = "всі") => {
-  return todos.filter((todo) => {
-    switch (filter) {
-      case "всі":
-        return true;
-      case "активні":
-        return !todo.completed;
-      case "завершені":
-        return todo.completed;
-      default:
-        return true;
-    }
-  });
 };
 
 const styles = {

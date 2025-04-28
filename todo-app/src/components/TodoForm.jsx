@@ -1,13 +1,13 @@
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { addTodoSuccess } from "../redux/actions/todosActions";
 import { v4 as uuidv4 } from "uuid";
+import { addLocalTodo } from "../redux/services/localStorageService"; // Используем сервис для работы с localStorage
 
 const TodoForm = () => {
   const [text, setText] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
   const inputRef = useRef();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,36 +17,39 @@ const TodoForm = () => {
       return;
     }
 
+    const newTodo = {
+      id: uuidv4(),
+      text: text.trim(),
+      completed: false,
+      source: "local",
+    };
+
     try {
-      if (typeof text !== "string") {
-        setError("The task must be a valid string.");
-        return;
-      }
-
-      const newTodo = {
-        id: uuidv4(),
-        text: text.trim(),
-        completed: false,
-      };
-
-      dispatch(addTodoSuccess(newTodo));
-
-      setText("");
-      setError("");
-      inputRef.current.focus();
+      // Диспатчим только локальное добавление в Redux store и localStorage
+      dispatch(addLocalTodo(newTodo)); // Обновляем Redux состояние
     } catch (err) {
-      console.error("Error while adding todo:", err);
-      setError("There was an error while adding your task. Please try again.");
+      console.error("Failed to add todo to Redux or localStorage:", err);
+      setError("Failed to add todo.");
     }
+
+    // Очищаем форму
+    setText("");
+    setError("");
+    inputRef.current.focus();
+  };
+
+  const handleChange = (e) => {
+    setText(e.target.value);
+    setError("");
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
       <input
-        ref={inputRef} // додаємо ref для фокусу
+        ref={inputRef}
         type="text"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={handleChange}
         placeholder="Add a todo"
         style={styles.input}
       />

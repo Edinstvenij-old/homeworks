@@ -6,7 +6,9 @@ const BASE_URL = "https://dummyjson.com/todos";
 export const fetchTodos = async () => {
   try {
     const response = await axios.get(BASE_URL);
-    if (!response.data.todos) {
+    // Логируем для проверки ответа
+    console.log("Fetched todos:", response.data);
+    if (!response.data || !Array.isArray(response.data.todos)) {
       throw new Error("No todos found");
     }
     return response.data.todos.map((todo) => ({
@@ -15,8 +17,11 @@ export const fetchTodos = async () => {
       completed: todo.completed,
     }));
   } catch (error) {
-    console.error("Failed to fetch todos:", error);
-    throw error;
+    console.error(
+      "Failed to fetch todos:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };
 
@@ -26,7 +31,7 @@ export const addTodo = async (text) => {
     const response = await axios.post(BASE_URL, {
       todo: text,
       completed: false,
-      userId: 5,
+      userId: 5, // Убедитесь, что userId действительно нужен
     });
     return {
       id: response.data.id,
@@ -34,8 +39,11 @@ export const addTodo = async (text) => {
       completed: response.data.completed,
     };
   } catch (error) {
-    console.error("Failed to add todo:", error);
-    throw error;
+    console.error(
+      "Failed to add todo:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };
 
@@ -45,8 +53,11 @@ export const deleteTodo = async (id) => {
     await axios.delete(`${BASE_URL}/${id}`);
     return id;
   } catch (error) {
-    console.error("Failed to delete todo:", error);
-    throw error;
+    console.error(
+      "Failed to delete todo:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };
 
@@ -54,7 +65,7 @@ export const deleteTodo = async (id) => {
 export const toggleTodo = async (id) => {
   try {
     const { data } = await axios.get(`${BASE_URL}/${id}`);
-    if (!data) {
+    if (!data || !data.id) {
       throw new Error("Todo not found");
     }
     const response = await axios.put(`${BASE_URL}/${id}`, {
@@ -65,8 +76,11 @@ export const toggleTodo = async (id) => {
       completed: response.data.completed,
     };
   } catch (error) {
-    console.error("Failed to toggle todo:", error);
-    throw error;
+    console.error(
+      "Failed to toggle todo:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };
 
@@ -82,8 +96,11 @@ export const editTodo = async (id, text) => {
       completed: response.data.completed,
     };
   } catch (error) {
-    console.error("Failed to edit todo:", error);
-    throw error;
+    console.error(
+      "Failed to edit todo:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };
 
@@ -91,15 +108,19 @@ export const editTodo = async (id, text) => {
 export const clearCompleted = async () => {
   try {
     const { data } = await axios.get(BASE_URL);
-    if (!data.todos) {
+    if (!data || !Array.isArray(data.todos)) {
       throw new Error("No todos found");
     }
     const completedTodos = data.todos.filter((t) => t.completed);
-    for (const todo of completedTodos) {
-      await axios.delete(`${BASE_URL}/${todo.id}`);
-    }
+    const deletePromises = completedTodos.map((todo) =>
+      axios.delete(`${BASE_URL}/${todo.id}`)
+    );
+    await Promise.all(deletePromises);
   } catch (error) {
-    console.error("Failed to clear completed todos:", error);
-    throw error;
+    console.error(
+      "Failed to clear completed todos:",
+      error.response?.data || error.message || error
+    );
+    throw error.response?.data || error.message || "Unknown error";
   }
 };

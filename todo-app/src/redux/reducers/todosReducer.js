@@ -1,137 +1,125 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
   setTodos,
-  addTodoSuccess,
   deleteTodo,
   toggleTodo,
   editTodo,
   clearCompleted,
   setFilter,
+  fetchTodosFromAPI,
+  deleteTodoFromAPI,
+  editTodoOnAPI,
+  addTodoAsync,
 } from "../actions/todosActions";
-
-const saveToLocalStorage = (items) => {
-  try {
-    if (Array.isArray(items) && items.length > 0) {
-      localStorage.setItem("todos", JSON.stringify(items));
-    } else {
-      localStorage.removeItem("todos");
-    }
-  } catch (error) {
-    console.error("Failed to save todos to localStorage:", error);
-  }
-};
-
-const loadFromLocalStorage = () => {
-  try {
-    const todos = localStorage.getItem("todos");
-    if (todos) {
-      const parsedTodos = JSON.parse(todos);
-      if (Array.isArray(parsedTodos)) {
-        return parsedTodos;
-      } else {
-        console.warn("Loaded data is not an array. Returning empty list.");
-        return [];
-      }
-    }
-    return [];
-  } catch (error) {
-    console.error("Failed to load todos from localStorage:", error);
-    return [];
-  }
-};
+import {
+  deleteLocalTodo,
+  toggleLocalTodo,
+  editLocalTodo,
+  clearCompletedLocalTodos,
+} from "../services/localStorageService";
 
 const initialState = {
-  items: loadFromLocalStorage(),
-  filter: "all",
+  local: [], // Локальные задачи
+  server: [], // Задачи с сервера
+  filter: "all", // Фильтр для задач
+  loading: false, // Состояние загрузки
+  error: null, // Ошибка
 };
 
-const checkDuplicateIds = (todos) => {
-  const ids = todos.map((todo) => todo.id);
-  return new Set(ids).size !== ids.length;
-};
+// Находит задачу по ID в массиве
+const findTodoById = (todos, id) => todos.find((todo) => todo.id === id);
 
 const todosReducer = createReducer(initialState, (builder) => {
   builder
+    // Устанавливаем задачи с сервера
     .addCase(setTodos, (state, action) => {
-      if (checkDuplicateIds(action.payload)) {
-        console.warn(
-          "Найдены дублирующиеся ID задач! Данные не будут сохранены."
-        );
-        return;
-      }
-      state.items = action.payload;
-      saveToLocalStorage(state.items);
+      if (!action?.payload) return;
+      state.server = action.payload;
     })
 
-    .addCase(addTodoSuccess, (state, action) => {
-      console.log("Dispatching todo:", action.payload);
-
-      if (state.items.some((todo) => todo.id === action.payload.id)) {
-        console.warn(`Задача с id ${action.payload.id} уже существует!`);
-        return;
-      }
-
-      if (
-        typeof action.payload.text !== "string" ||
-        action.payload.text.trim() === ""
-      ) {
-        console.warn(`Невалидный текст задачи: ${action.payload.text}`);
-        return;
-      }
-
-      const newTodo = { ...action.payload, source: "local" };
-      state.items.push(newTodo);
-      saveToLocalStorage(state.items);
+    // Загрузка задач с сервера
+    .addCase(fetchTodosFromAPI.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchTodosFromAPI.fulfilled, (state, action) => {
+      if (!action?.payload) return;
+      state.server = action.payload;
+      state.loading = false;
+    })
+    .addCase(fetchTodosFromAPI.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     })
 
+    // Добавление новой задачи
+    .addCase(addTodoAsync.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(addTodoAsync.fulfilled, (state, action) => {
+      const newTodo = action.payload;
+      state.server.push(newTodo); // Добавляем задачу на сервер
+      state.local.push(newTodo); // Добавляем задачу в localStorage
+      state.loading = false;
+    })
+    .addCase(addTodoAsync.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+
+    // Удаление задачи с сервера
+    .addCase(deleteTodoFromAPI.fulfilled, (state, action) => {
+      state.server = state.server.filter((todo) => todo.id !== action.payload);
+    })
+
+    // Редактирование задачи на сервере
+    .addCase(editTodoOnAPI.fulfilled, (state, action) => {
+      const idx = state.server.findIndex(
+        (todo) => todo.id === action.payload.id
+      );
+      if (idx !== -1) {
+        state.server[idx] = {
+          ...state.server[idx],
+          ...action.payload,
+        };
+      }
+    })
+
+    // Локальные действия
     .addCase(deleteTodo, (state, action) => {
-      const todoId = action.payload;
-      const todoToDelete = state.items.find((todo) => todo.id === todoId);
-
-      if (todoToDelete?.source === "local") {
-        state.items = state.items.filter((todo) => todo.id !== todoId);
-        saveToLocalStorage(state.items);
-      } else {
-        console.warn("Задача с этим id не является локальной.");
-      }
+      // Удаляем локальную задачу
+      state.local = state.local.filter((todo) => todo.id !== action.payload);
+      // Обновляем localStorage
+      deleteLocalTodo(action.payload);
     })
 
     .addCase(toggleTodo, (state, action) => {
-      const todo = state.items.find((t) => t.id === action.payload);
-      if (todo && todo.source === "local") {
+      const todo = findTodoById(state.local, action.payload);
+      if (todo) {
         todo.completed = !todo.completed;
-        saveToLocalStorage(state.items);
-      } else {
-        console.warn(
-          `Задача с id ${action.payload} не найдена для переключения статуса или она не является локальной.`
-        );
+        // Обновляем localStorage
+        toggleLocalTodo(action.payload);
       }
     })
 
     .addCase(editTodo, (state, action) => {
-      const todo = state.items.find((t) => t.id === action.payload.id);
-      if (todo && todo.source === "local") {
-        const newText = action.payload.text.trim();
-
-        if (typeof newText !== "string" || newText === "") {
-          console.warn(`Невалидный текст задачи: ${newText}`);
-          return;
-        }
-
-        todo.text = newText;
-        saveToLocalStorage(state.items);
-      } else {
-        console.warn(
-          `Задача с id ${action.payload.id} не найдена для редактирования или она не является локальной.`
-        );
+      const todo = findTodoById(state.local, action.payload.id);
+      if (todo) {
+        todo.text = action.payload.text.trim();
+        // Обновляем localStorage
+        editLocalTodo(action.payload.id, action.payload.text.trim());
       }
     })
 
     .addCase(clearCompleted, (state) => {
-      state.items = state.items.filter((todo) => !todo.completed);
-      saveToLocalStorage(state.items);
+      // Убираем завершенные задачи из локального хранилища
+      const activeTodos = state.local.filter((todo) => !todo.completed);
+      state.local = activeTodos;
+      clearCompletedLocalTodos();
     })
 
+    // Устанавливаем фильтр
     .addCase(setFilter, (state, action) => {
       state.filter = action.payload;
     });

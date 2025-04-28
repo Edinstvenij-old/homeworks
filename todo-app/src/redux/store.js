@@ -1,22 +1,18 @@
-import { createStore, applyMiddleware, combineReducers, compose } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import { devToolsEnhancer } from "@redux-devtools/extension";
-
-import todosReducer from "./reducers/todosReducer";
+import rootReducer from "./reducers/todosReducer";
 import rootSaga from "./sagas/todosSaga";
-
-const rootReducer = combineReducers({
-  todos: todosReducer,
-});
 
 const sagaMiddleware = createSagaMiddleware();
 
-const enhancer =
-  import.meta.env.MODE === "development"
-    ? compose(applyMiddleware(sagaMiddleware), devToolsEnhancer())
-    : applyMiddleware(sagaMiddleware);
-
-const store = createStore(rootReducer, enhancer);
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: true, // Включаем использование redux-thunk
+    }).concat(sagaMiddleware), // Добавляем redux-saga
+  devTools: import.meta.env.MODE !== "production",
+});
 
 sagaMiddleware.run(rootSaga);
 

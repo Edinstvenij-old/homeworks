@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import {
-  deleteTodo,
+  deleteTodoFromAPI,
   toggleTodo,
-  editTodo,
+  editTodoOnAPI,
 } from "../redux/actions/todosActions";
 
 const TodoItem = ({ todo }) => {
@@ -11,23 +11,65 @@ const TodoItem = ({ todo }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(todo.text || "");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleToggle = () => dispatch(toggleTodo(todo.id));
-  const handleDelete = () => dispatch(deleteTodo(todo.id));
+  const handleToggle = () => {
+    dispatch(toggleTodo(todo.id)); // Локальное изменение статуса задачи
+  };
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      if (todo.source === "local") {
+        // Удаляем локальные задачи
+        dispatch(deleteTodoFromAPI(todo.id));
+      } else {
+        // Для API задач можно вызвать другое действие
+        console.warn("Cannot delete API tasks directly.");
+        // Если нужно, можно реализовать удаление API задач, например через API запрос
+      }
+    } catch (error) {
+      setError("Failed to delete task.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleEdit = () => {
     setIsEditing(true);
     setText(todo.text);
+    setError(""); // Очищаем ошибки при начале редактирования
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmedText = text.trim();
     if (trimmedText) {
-      dispatch(editTodo(todo.id, trimmedText));
-      setIsEditing(false);
-      setError("");
+      try {
+        setLoading(true);
+        if (todo.source === "local") {
+          // Редактируем только локальные задачи
+          await dispatch(editTodoOnAPI({ id: todo.id, text: trimmedText }));
+          setIsEditing(false);
+          setError(""); // Очищаем ошибки после успешного сохранения
+        } else {
+          // Редактирование задач из API, если требуется
+          console.warn("Cannot edit API tasks directly.");
+          // Можно добавить логику для редактирования API задач
+        }
+      } catch (err) {
+        setError("Failed to save task.");
+      } finally {
+        setLoading(false);
+      }
     } else {
-      setError("Text cannot be empty!");
+      setError("Text cannot be empty!"); // Ошибка, если текст пустой
     }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false); // Отмена редактирования
+    setText(todo.text); // Возвращаем старый текст
+    setError(""); // Очищаем ошибки
   };
 
   return (
@@ -46,7 +88,7 @@ const TodoItem = ({ todo }) => {
             style={styles.editInput}
             autoFocus
           />
-          {error && <div style={styles.error}>{error}</div>}{" "}
+          {error && <div style={styles.error}>{error}</div>}
         </>
       ) : (
         <span
@@ -59,15 +101,37 @@ const TodoItem = ({ todo }) => {
         </span>
       )}
       <div style={styles.buttons}>
-        <button
-          style={styles.smallButton}
-          onClick={isEditing ? handleSave : handleEdit}
-        >
-          {isEditing ? "Save" : "Edit"}
-        </button>
-        <button style={styles.smallButton} onClick={handleDelete}>
-          Delete
-        </button>
+        {isEditing ? (
+          <>
+            <button
+              style={styles.smallButton}
+              onClick={handleSave}
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
+            </button>
+            <button style={styles.smallButton} onClick={handleCancel}>
+              Cancel
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              style={styles.smallButton}
+              onClick={handleEdit}
+              disabled={loading}
+            >
+              {loading ? "Editing..." : "Edit"}
+            </button>
+            <button
+              style={styles.smallButton}
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              {loading ? "Deleting..." : "Delete"}
+            </button>
+          </>
+        )}
       </div>
     </li>
   );

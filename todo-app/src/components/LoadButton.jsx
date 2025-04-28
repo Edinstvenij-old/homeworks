@@ -1,12 +1,12 @@
 import { useDispatch } from "react-redux";
-
-const FETCH_TODOS = "FETCH_TODOS";
+import { fetchTodosFromAPI } from "../redux/actions/todosActions"; // Предполагается, что fetchTodosFromAPI уже определён
 
 const LoadButton = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch({ type: FETCH_TODOS });
+    // Запускаем асинхронный экшен для загрузки задач из API
+    dispatch(fetchTodosFromAPI());
   };
 
   return (
