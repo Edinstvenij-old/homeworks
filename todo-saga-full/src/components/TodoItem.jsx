@@ -1,15 +1,17 @@
 import { useDispatch } from "react-redux";
-import axios from "axios"; // Убедитесь, что axios импортирован
+import axios from "axios";
 import {
   DELETE_TODO,
   TOGGLE_TODO,
   EDIT_TODO,
+  EDIT_TODO_FAILURE,
+  EDIT_TODO_SUCCESS, // Новый экшен для успешного редактирования
 } from "../features/todos/todosActions";
 
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
 
-  console.log("TodoItem props:", todo); // Добавляем лог для дебага
+  console.log("TodoItem props:", todo);
 
   const handleToggle = () => {
     dispatch({
@@ -24,28 +26,51 @@ const TodoItem = ({ todo }) => {
 
   const handleEdit = () => {
     const newTodo = prompt("Изменить задачу:", todo.title);
-    if (newTodo && newTodo.trim() && newTodo !== todo.title) {
-      const payload = { id: todo.id, title: newTodo.trim() };
-      console.log("Отправка данных на сервер:", payload);
+
+    if (newTodo && newTodo.trim() !== "" && newTodo !== todo.title) {
+      const updatedTodo = { id: todo.id, title: newTodo.trim() };
+
+      // Локальное обновление состояния в Redux для мгновенного обновления UI
+      dispatch({
+        type: EDIT_TODO,
+        payload: updatedTodo,
+      });
+
+      console.log("Отправка данных на сервер:", updatedTodo);
 
       // Отправка данных на сервер
       axios
-        .put(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, payload)
+        .put(
+          `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+          updatedTodo
+        )
         .then((response) => {
-          if (response && response.data) {
-            // Ответ от сервера содержит обновленные данные
+          if (response.status === 200 && response.data) {
             console.log("Задача обновлена:", response.data);
-
-            // Обновление состояния в Redux
+            // Успешно обновлена на сервере
             dispatch({
-              type: EDIT_TODO,
-              payload: { id: todo.id, title: response.data.title }, // Используем данные из ответа сервера
+              type: EDIT_TODO_SUCCESS,
+              payload: response.data, // Обновление задачи с сервером
+            });
+          } else {
+            console.error("Ошибка на сервере:", response);
+            // Обработка ошибки сервера
+            dispatch({
+              type: EDIT_TODO_FAILURE,
+              payload: { id: todo.id, error: "Ошибка на сервере" },
             });
           }
         })
         .catch((error) => {
           console.error("Ошибка при обновлении задачи:", error);
+          // Обработаем ошибку при запросе
+          dispatch({
+            type: EDIT_TODO_FAILURE,
+            payload: { id: todo.id, error: error.message },
+          });
         });
+    } else {
+      console.log("Редактирование отменено или не изменилось");
     }
   };
 
@@ -65,7 +90,7 @@ const TodoItem = ({ todo }) => {
             color: todo.completed ? "#999" : "#333",
           }}
         >
-          {todo.title || "Без названия"} {/* Проверка, что title передается */}
+          {todo.title || "Без названия"}
         </span>
       </div>
       <div style={styles.buttons}>

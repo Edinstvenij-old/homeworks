@@ -5,7 +5,7 @@ import {
   deleteTodo,
   toggleTodo,
   editTodo,
-} from "../../api/todoApi"; // Объединяем импорты
+} from "../../api/todoApi";
 import {
   FETCH_TODOS,
   ADD_TODO,
@@ -24,7 +24,6 @@ import {
   deleteTodoSuccess,
   toggleTodoSuccess,
   editTodoSuccess,
-  //incrementPage,
   setTasks,
 } from "./todosSlice";
 import {
@@ -39,12 +38,10 @@ import {
 function* fetchTodosWorker(action) {
   try {
     const { page = 1, pageSize = 10 } = action.payload || {};
-
     const response = yield call(getTodos, page, pageSize);
-
     console.log("Ответ от API:", response);
 
-    const tasks = response; // response — это сразу массив задач
+    const tasks = response;
 
     if (Array.isArray(tasks)) {
       yield put(setTasks(tasks));
@@ -57,6 +54,7 @@ function* fetchTodosWorker(action) {
   }
 }
 
+// Worker для добавления задачи
 function* addTodoWorker(action) {
   try {
     const todo = action.payload;
@@ -89,6 +87,7 @@ function* deleteTodoWorker(action) {
   }
 }
 
+// Worker для переключения состояния задачи
 function* toggleTodoWorker(action) {
   try {
     const { id, completed } = action.payload;
@@ -106,15 +105,22 @@ function* toggleTodoWorker(action) {
   }
 }
 
+// Worker для редактирования задачи
 function* editTodoWorker(action) {
   try {
-    const { id, todo } = action.payload;
-    const updatedTask = yield call(editTodo, id, todo);
+    const updatedTodo = action.payload;
+    if (!updatedTodo || !updatedTodo.id || !updatedTodo.title) {
+      throw new Error("Необходимые данные для редактирования отсутствуют");
+    }
 
-    if (!updatedTask) throw new Error("Ошибка при редактировании задачи");
+    // Использование API для редактирования задачи
+    const response = yield call(editTodo, updatedTodo); // Используем функцию из api/todoApi
 
-    yield call(updateTaskInLocalStorage, updatedTask);
-    yield put(editTodoSuccess(updatedTask));
+    if (response && response.id) {
+      yield put(editTodoSuccess(response)); // Используем экшен для успешного обновления
+    } else {
+      throw new Error("Ошибка при обновлении задачи");
+    }
   } catch (error) {
     console.error("Ошибка при редактировании задачи:", error);
     yield put(
