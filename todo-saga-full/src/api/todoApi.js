@@ -8,19 +8,28 @@ export const getTodos = (page, pageSize) => {
 };
 
 // Добавление новой задачи
-export const addTodo = (todo) =>
-  axios.post(API_URL, {
-    todo,
-    completed: false,
-    userId: 1,
-  });
+export const addTodo = async (todoData) => {
+  try {
+    const response = await axios.post(API_URL, todoData, {
+      headers: { "Content-Type": "application/json" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при добавлении задачи:", error);
+    throw error;
+  }
+};
 
 // Удаление задачи по ID
-export const deleteTodo = (id) => axios.delete(`${API_URL}/${id}`);
+export const deleteTodo = (id) => {
+  return axios.delete(`${API_URL}/${id}`);
+};
 
 // Переключение состояния задачи (завершена/не завершена)
-export const toggleTodo = (id, completed) =>
-  axios.put(`${API_URL}/${id}`, { completed });
+export const toggleTodo = (id, completed) => {
+  return axios.put(`${API_URL}/${id}`, { completed });
+};
 
 // Редактирование задачи
-export const editTodo = (id, todo) => axios.put(`${API_URL}/${id}`, { todo });
+export const editTodo = (id, updatedFields) =>
+  axios.put(`https://dummyjson.com/todos/${id}`, updatedFields);

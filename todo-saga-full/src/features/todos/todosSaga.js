@@ -27,23 +27,27 @@ import {
   clearTasksFromLocalStorage,
 } from "../../utils/localStorageUtils";
 
-// Получение задач с учетом пагинации
 function* fetchTodosWorker() {
   const { page, pageSize } = yield select((state) => state.todos);
 
   try {
-    const { data } = yield call(api.getTodos, page, pageSize); // Пагинация с сервером
-    if (data && Array.isArray(data.todos)) {
-      yield put(fetchTodosSuccess(data.todos)); // Обновляем задачи в стейте
+    const response = yield call(api.getTodos, page, pageSize);
+    console.log("Ответ от сервера:", response);
+    console.log("response.data:", response.data);
 
-      // Обновляем страницу после загрузки
+    const tasks = response.data.todos; // <-- ВОТ ТУТ правильный доступ
+
+    if (Array.isArray(tasks)) {
+      yield put(fetchTodosSuccess(tasks));
       yield put(incrementPage());
     } else {
-      throw new Error("Некорректные данные от сервера");
+      throw new Error("Некорректные данные: ожидался массив задач");
     }
   } catch (error) {
-    yield put(fetchTodosFailure(error.message));
     console.error("Ошибка при получении задач с сервера:", error);
+    yield put(
+      fetchTodosFailure(error.message || "Ошибка при получении задач с сервера")
+    );
   }
 }
 
@@ -58,6 +62,9 @@ function* addTodoWorker(action) {
     }
   } catch (error) {
     console.error("Ошибка при добавлении задачи:", error);
+    yield put(
+      fetchTodosFailure(error.message || "Ошибка при добавлении задачи")
+    );
   }
 }
 
@@ -71,6 +78,7 @@ function* deleteTodoWorker(action) {
     yield put(deleteTodoSuccess(taskId));
   } catch (error) {
     console.error("Ошибка при удалении задачи:", error);
+    yield put(fetchTodosFailure(error.message || "Ошибка при удалении задачи"));
   }
 }
 
@@ -89,24 +97,28 @@ function* toggleTodoWorker(action) {
     }
   } catch (error) {
     console.error("Ошибка при переключении состояния задачи:", error);
+    yield put(
+      fetchTodosFailure(
+        error.message || "Ошибка при переключении состояния задачи"
+      )
+    );
   }
 }
 
-// Редактирование задачи
 function* editTodoWorker(action) {
   try {
-    const { data } = yield call(
-      api.editTodo,
-      action.payload.id,
-      action.payload.todo
-    );
+    const { id, todo } = action.payload;
+    const payload = { todo }; // Заворачиваем в объект
+
+    const { data } = yield call(api.editTodo, id, payload);
+
     if (data) {
-      // Обновляем задачу как на сервере, так и в локальном хранилище
       updateTaskInLocalStorage(data);
       yield put(editTodoSuccess(data));
     }
   } catch (error) {
     console.error("Ошибка при редактировании задачи:", error);
+    yield put(fetchTodosFailure(error.message));
   }
 }
 
@@ -127,6 +139,9 @@ function* clearCompletedWorker() {
     }
   } catch (error) {
     console.error("Ошибка при очистке завершённых задач:", error);
+    yield put(
+      fetchTodosFailure(error.message || "Ошибка при очистке завершённых задач")
+    );
   }
 }
 
@@ -136,9 +151,16 @@ function* syncWithLocalStorageWorker() {
     const tasks = yield call(getTasksFromLocalStorage); // Получаем задачи из локального хранилища
     if (Array.isArray(tasks)) {
       yield put(fetchTodosSuccess(tasks)); // Диспатчим задачи в стейт
+    } else {
+      throw new Error("Ошибка при получении задач из локального хранилища");
     }
   } catch (error) {
     console.error("Ошибка при синхронизации с локальным хранилищем:", error);
+    yield put(
+      fetchTodosFailure(
+        error.message || "Ошибка при синхронизации с локальным хранилищем"
+      )
+    );
   }
 }
 
@@ -149,6 +171,11 @@ function* clearLocalStorageWorker() {
     yield put(fetchTodosSuccess([])); // Обновляем стейт после очистки
   } catch (error) {
     console.error("Ошибка при очистке локального хранилища:", error);
+    yield put(
+      fetchTodosFailure(
+        error.message || "Ошибка при очистке локального хранилища"
+      )
+    );
   }
 }
 
