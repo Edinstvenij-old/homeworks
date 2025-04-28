@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { takeEvery, call, put, select } from "redux-saga/effects";
 import * as api from "../../api/todoApi";
 import {
   FETCH_TODOS,
@@ -6,6 +6,7 @@ import {
   DELETE_TODO,
   TOGGLE_TODO,
   EDIT_TODO,
+  CLEAR_COMPLETED_REQUEST,
 } from "./todosActions";
 import {
   fetchTodosSuccess,
@@ -56,6 +57,20 @@ function* toggleTodoWorker(action) {
   }
 }
 
+function* clearCompletedWorker() {
+  try {
+    const todos = yield select((state) => state.todos.items);
+    const completedTodos = todos.filter((todo) => todo.completed);
+
+    for (const todo of completedTodos) {
+      yield call(api.deleteTodo, todo.id);
+      yield put(deleteTodoSuccess(todo.id));
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function* editTodoWorker(action) {
   try {
     const { data } = yield call(
@@ -75,4 +90,5 @@ export function* todosSaga() {
   yield takeEvery(DELETE_TODO, deleteTodoWorker);
   yield takeEvery(TOGGLE_TODO, toggleTodoWorker);
   yield takeEvery(EDIT_TODO, editTodoWorker);
+  yield takeEvery(CLEAR_COMPLETED_REQUEST, clearCompletedWorker);
 }

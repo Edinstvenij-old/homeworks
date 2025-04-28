@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TodoItem from "./TodoItem";
-import { FETCH_TODOS, CLEAR_COMPLETED } from "../features/todos/todosActions";
+import {
+  FETCH_TODOS,
+  CLEAR_COMPLETED,
+  CLEAR_COMPLETED_REQUEST,
+} from "../features/todos/todosActions";
 
 const TodoList = () => {
   const dispatch = useDispatch();
@@ -21,7 +25,7 @@ const TodoList = () => {
           <TodoItem key={todo.id} todo={todo} />
         ))}
       </ul>
-      <button onClick={() => dispatch({ type: CLEAR_COMPLETED })}>
+      <button onClick={() => dispatch({ type: CLEAR_COMPLETED_REQUEST })}>
         Clear Completed
       </button>
     </div>

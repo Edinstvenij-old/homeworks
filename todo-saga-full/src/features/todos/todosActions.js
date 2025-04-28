@@ -5,3 +5,4 @@ export const DELETE_TODO = "todos/deleteTodo";
 export const TOGGLE_TODO = "todos/toggleTodo";
 export const EDIT_TODO = "todos/editTodo";
 export const CLEAR_COMPLETED = "todos/clearCompleted";
+export const CLEAR_COMPLETED_REQUEST = "todos/clearCompletedRequest";
