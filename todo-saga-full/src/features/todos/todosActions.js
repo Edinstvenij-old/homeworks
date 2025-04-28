@@ -15,6 +15,15 @@ export const CLEAR_LOCAL_STORAGE = "todos/clearLocalStorage";
 export const clearCompletedRequest = () => ({
   type: CLEAR_COMPLETED_REQUEST,
 });
+export const setError = (error) => ({
+  type: "SET_ERROR",
+  payload: error,
+});
+// Экшен для установки задач
+export const setTodos = (todos) => ({
+  type: "SET_TODOS",
+  payload: todos,
+});
 // Экшен для получения задач с сервера
 export const fetchTodosFromApi = () => {
   return async (dispatch) => {

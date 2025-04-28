@@ -1,35 +1,36 @@
 import axios from "axios";
 
-const API_URL = "https://dummyjson.com/todos";
+// Используем правильный базовый URL для API
+const API_URL = "https://jsonplaceholder.typicode.com/todos";
 
-// Получение задач с пагинацией
-export const getTodos = (page, pageSize) => {
-  return axios.get(`${API_URL}?_page=${page}&_limit=${pageSize}`);
+// Добавить задачу
+export const addTodo = async (todo) => {
+  const response = await axios.post(API_URL, todo); // Используем полный URL
+  return response.data;
 };
 
-// Добавление новой задачи
-export const addTodo = async (todoData) => {
-  try {
-    const response = await axios.post(API_URL, todoData, {
-      headers: { "Content-Type": "application/json" },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Ошибка при добавлении задачи:", error);
-    throw error;
-  }
+// Удалить задачу
+export const deleteTodo = async (id) => {
+  const response = await axios.delete(`${API_URL}/${id}`); // Используем полный URL
+  return response.data;
 };
 
-// Удаление задачи по ID
-export const deleteTodo = (id) => {
-  return axios.delete(`${API_URL}/${id}`);
+// Переключить статус задачи
+export const toggleTodo = async (id, completed) => {
+  const response = await axios.patch(`${API_URL}/${id}`, { completed }); // Используем полный URL
+  return response.data;
 };
 
-// Переключение состояния задачи (завершена/не завершена)
-export const toggleTodo = (id, completed) => {
-  return axios.put(`${API_URL}/${id}`, { completed });
+// Редактировать задачу
+export const editTodo = async (id, todo) => {
+  const response = await axios.put(`${API_URL}/${id}`, todo); // Используем полный URL
+  return response.data;
 };
 
-// Редактирование задачи
-export const editTodo = (id, updatedFields) =>
-  axios.put(`https://dummyjson.com/todos/${id}`, updatedFields);
+// Получить все задачи с пагинацией
+export const getTodos = async (page = 1, pageSize = 10) => {
+  const response = await axios.get(
+    `${API_URL}?_page=${page}&_limit=${pageSize}`
+  ); // Используем правильную пагинацию
+  return response.data;
+};

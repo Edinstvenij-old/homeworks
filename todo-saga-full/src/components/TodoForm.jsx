@@ -2,39 +2,63 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { ADD_TODO } from "../features/todos/todosActions";
 
-// Генерация уникального ID для каждой задачи (можно использовать библиотеку, например, uuid)
-const generateId = () => Math.random().toString(36).substr(2, 9);
-
 const TodoForm = () => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (text.trim() !== "") {
-      const newTask = {
-        id: generateId(), // Генерация уникального ID
-        todo: text.trim(),
-        completed: false,
-      };
 
-      // Отправляем действие для добавления задачи
-      dispatch({ type: ADD_TODO, payload: newTask });
+    const trimmedText = text.trim();
+    if (!trimmedText) return;
 
-      setText(""); // Очищаем поле ввода после отправки
-    }
+    const newTask = {
+      todo: trimmedText,
+      completed: false,
+    };
+
+    dispatch({ type: ADD_TODO, payload: newTask });
+    setText("");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={styles.form}>
       <input
+        type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Add todo..."
+        placeholder="Добавить задачу..."
+        style={styles.input}
       />
-      <button type="submit">Add</button>
+      <button type="submit" disabled={!text.trim()} style={styles.button}>
+        Добавить
+      </button>
     </form>
   );
+};
+
+// Простенькие inline-стили для наглядности
+const styles = {
+  form: {
+    display: "flex",
+    gap: "8px",
+    marginBottom: "16px",
+  },
+  input: {
+    flex: 1,
+    padding: "8px",
+    fontSize: "16px",
+  },
+  button: {
+    padding: "8px 16px",
+    fontSize: "16px",
+    cursor: "pointer",
+    backgroundColor: "#4CAF50",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    opacity: 1,
+  },
 };
 
 export default TodoForm;

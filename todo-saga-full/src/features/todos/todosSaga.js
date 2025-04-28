@@ -1,5 +1,11 @@
 import { takeEvery, call, put, select } from "redux-saga/effects";
-import * as api from "../../api/todoApi";
+import {
+  getTodos,
+  addTodo,
+  deleteTodo,
+  toggleTodo,
+  editTodo,
+} from "../../api/todoApi"; // Объединяем импорты
 import {
   FETCH_TODOS,
   ADD_TODO,
@@ -9,6 +15,7 @@ import {
   CLEAR_COMPLETED_REQUEST,
   SYNC_WITH_LOCAL_STORAGE,
   CLEAR_LOCAL_STORAGE,
+  setError,
 } from "./todosActions";
 import {
   fetchTodosSuccess,
@@ -17,7 +24,8 @@ import {
   deleteTodoSuccess,
   toggleTodoSuccess,
   editTodoSuccess,
-  incrementPage,
+  //incrementPage,
+  setTasks,
 } from "./todosSlice";
 import {
   addTaskToLocalStorage,
@@ -27,39 +35,37 @@ import {
   clearTasksFromLocalStorage,
 } from "../../utils/localStorageUtils";
 
-function* fetchTodosWorker() {
-  const { page, pageSize } = yield select((state) => state.todos);
-
+// Worker для загрузки задач с сервера
+function* fetchTodosWorker(action) {
   try {
-    const response = yield call(api.getTodos, page, pageSize);
-    console.log("Ответ от сервера:", response);
-    console.log("response.data:", response.data);
+    const { page = 1, pageSize = 10 } = action.payload || {};
 
-    const tasks = response.data.todos; // <-- ВОТ ТУТ правильный доступ
+    const response = yield call(getTodos, page, pageSize);
+
+    console.log("Ответ от API:", response);
+
+    const tasks = response; // response — это сразу массив задач
 
     if (Array.isArray(tasks)) {
-      yield put(fetchTodosSuccess(tasks));
-      yield put(incrementPage());
+      yield put(setTasks(tasks));
     } else {
       throw new Error("Некорректные данные: ожидался массив задач");
     }
   } catch (error) {
-    console.error("Ошибка при получении задач с сервера:", error);
-    yield put(
-      fetchTodosFailure(error.message || "Ошибка при получении задач с сервера")
-    );
+    console.error("Ошибка при получении задач:", error);
+    yield put(setError(error.message));
   }
 }
 
-// Добавление задачи
 function* addTodoWorker(action) {
   try {
-    const { data } = yield call(api.addTodo, action.payload);
-    if (data) {
-      // Добавляем задачу на сервере и сохраняем локально
-      addTaskToLocalStorage(data);
-      yield put(addTodoSuccess(data));
-    }
+    const todo = action.payload;
+    const createdTask = yield call(addTodo, todo);
+
+    if (!createdTask) throw new Error("Ошибка при добавлении задачи на сервер");
+
+    yield call(addTaskToLocalStorage, createdTask);
+    yield put(addTodoSuccess(createdTask));
   } catch (error) {
     console.error("Ошибка при добавлении задачи:", error);
     yield put(
@@ -68,13 +74,14 @@ function* addTodoWorker(action) {
   }
 }
 
-// Удаление задачи
+// Worker для удаления задачи
 function* deleteTodoWorker(action) {
   try {
     const taskId = action.payload;
-    yield call(api.deleteTodo, taskId);
-    // Удаляем задачу с сервера и из локального хранилища
-    deleteTaskFromLocalStorage(taskId);
+
+    yield call(deleteTodo, taskId);
+    yield call(deleteTaskFromLocalStorage, taskId);
+
     yield put(deleteTodoSuccess(taskId));
   } catch (error) {
     console.error("Ошибка при удалении задачи:", error);
@@ -82,25 +89,19 @@ function* deleteTodoWorker(action) {
   }
 }
 
-// Переключение состояния задачи (например, завершена/не завершена)
 function* toggleTodoWorker(action) {
   try {
-    const { data } = yield call(
-      api.toggleTodo,
-      action.payload.id,
-      action.payload.completed
-    );
-    if (data) {
-      // Обновляем задачу как на сервере, так и в локальном хранилище
-      updateTaskInLocalStorage(data);
-      yield put(toggleTodoSuccess(data));
-    }
+    const { id, completed } = action.payload;
+    const updatedTask = yield call(toggleTodo, id, completed);
+
+    if (!updatedTask) throw new Error("Ошибка при переключении статуса задачи");
+
+    yield call(updateTaskInLocalStorage, updatedTask);
+    yield put(toggleTodoSuccess(updatedTask));
   } catch (error) {
     console.error("Ошибка при переключении состояния задачи:", error);
     yield put(
-      fetchTodosFailure(
-        error.message || "Ошибка при переключении состояния задачи"
-      )
+      fetchTodosFailure(error.message || "Ошибка при переключении задачи")
     );
   }
 }
@@ -108,67 +109,63 @@ function* toggleTodoWorker(action) {
 function* editTodoWorker(action) {
   try {
     const { id, todo } = action.payload;
-    const payload = { todo }; // Заворачиваем в объект
+    const updatedTask = yield call(editTodo, id, todo);
 
-    const { data } = yield call(api.editTodo, id, payload);
+    if (!updatedTask) throw new Error("Ошибка при редактировании задачи");
 
-    if (data) {
-      updateTaskInLocalStorage(data);
-      yield put(editTodoSuccess(data));
-    }
+    yield call(updateTaskInLocalStorage, updatedTask);
+    yield put(editTodoSuccess(updatedTask));
   } catch (error) {
     console.error("Ошибка при редактировании задачи:", error);
-    yield put(fetchTodosFailure(error.message));
+    yield put(
+      fetchTodosFailure(error.message || "Ошибка при редактировании задачи")
+    );
   }
 }
 
-// Очистка завершённых задач (удаляем их с сервера и из локального хранилища)
+// Worker для очистки завершённых задач
 function* clearCompletedWorker() {
   try {
-    const todos = yield select((state) => state.todos.tasks); // Получаем задачи из стейта
-    if (!todos || !Array.isArray(todos)) {
-      throw new Error("Таски не найдены или не правильного формата");
+    const todos = yield select((state) => state.todos.tasks);
+
+    if (!Array.isArray(todos)) {
+      throw new Error("Неверный формат задач");
     }
 
-    const completedTodos = todos.filter((todo) => todo.completed); // Фильтруем завершенные задачи
+    const completedTodos = todos.filter((todo) => todo.completed);
 
     for (const todo of completedTodos) {
-      yield call(api.deleteTodo, todo.id); // Удаляем задачу с сервера
-      deleteTaskFromLocalStorage(todo.id); // Удаляем задачу из локального хранилища
-      yield put(deleteTodoSuccess(todo.id)); // Успешное удаление задачи из стейта
+      yield call(deleteTodo, todo.id);
+      yield call(deleteTaskFromLocalStorage, todo.id);
+      yield put(deleteTodoSuccess(todo.id));
     }
   } catch (error) {
     console.error("Ошибка при очистке завершённых задач:", error);
-    yield put(
-      fetchTodosFailure(error.message || "Ошибка при очистке завершённых задач")
-    );
+    yield put(fetchTodosFailure(error.message || "Ошибка при очистке задач"));
   }
 }
 
-// Синхронизация с локальным хранилищем
+// Worker для синхронизации с локальным хранилищем
 function* syncWithLocalStorageWorker() {
   try {
-    const tasks = yield call(getTasksFromLocalStorage); // Получаем задачи из локального хранилища
-    if (Array.isArray(tasks)) {
-      yield put(fetchTodosSuccess(tasks)); // Диспатчим задачи в стейт
-    } else {
-      throw new Error("Ошибка при получении задач из локального хранилища");
+    const tasks = yield call(getTasksFromLocalStorage);
+
+    if (!Array.isArray(tasks)) {
+      throw new Error("Ошибка получения данных из локального хранилища");
     }
+
+    yield put(fetchTodosSuccess(tasks));
   } catch (error) {
     console.error("Ошибка при синхронизации с локальным хранилищем:", error);
-    yield put(
-      fetchTodosFailure(
-        error.message || "Ошибка при синхронизации с локальным хранилищем"
-      )
-    );
+    yield put(fetchTodosFailure(error.message || "Ошибка при синхронизации"));
   }
 }
 
-// Очистка локального хранилища
+// Worker для очистки локального хранилища
 function* clearLocalStorageWorker() {
   try {
-    yield call(clearTasksFromLocalStorage); // Очищаем локальное хранилище
-    yield put(fetchTodosSuccess([])); // Обновляем стейт после очистки
+    yield call(clearTasksFromLocalStorage);
+    yield put(fetchTodosSuccess([]));
   } catch (error) {
     console.error("Ошибка при очистке локального хранилища:", error);
     yield put(
@@ -179,7 +176,7 @@ function* clearLocalStorageWorker() {
   }
 }
 
-// Основная функция для запуска всех саг
+// Основная сага
 export function* todosSaga() {
   yield takeEvery(FETCH_TODOS, fetchTodosWorker);
   yield takeEvery(ADD_TODO, addTodoWorker);
