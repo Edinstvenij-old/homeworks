@@ -1,193 +1,167 @@
-import { takeEvery, call, put, select } from "redux-saga/effects";
-import {
-  getTodos,
-  addTodo,
-  deleteTodo,
-  toggleTodo,
-  editTodo,
-} from "../../api/todoApi";
+import { takeEvery, put, call, select, all } from "redux-saga/effects";
+import axios from "axios";
 import {
   FETCH_TODOS,
+  FETCH_TODOS_SUCCESS,
+  FETCH_TODOS_FAILURE,
   ADD_TODO,
+  ADD_TODO_SUCCESS,
+  ADD_TODO_FAILURE,
   DELETE_TODO,
-  TOGGLE_TODO,
+  DELETE_TODO_SUCCESS,
+  DELETE_TODO_FAILURE,
   EDIT_TODO,
-  CLEAR_COMPLETED_REQUEST,
-  SYNC_WITH_LOCAL_STORAGE,
-  CLEAR_LOCAL_STORAGE,
-  setError,
+  EDIT_TODO_SUCCESS,
+  EDIT_TODO_FAILURE,
+  TOGGLE_TODO,
+  TOGGLE_TODO_SUCCESS,
+  TOGGLE_TODO_FAILURE,
+  CLEAR_COMPLETED,
+  CLEAR_COMPLETED_SUCCESS,
+  CLEAR_COMPLETED_FAILURE,
 } from "./todosActions";
-import {
-  fetchTodosSuccess,
-  fetchTodosFailure,
-  addTodoSuccess,
-  deleteTodoSuccess,
-  toggleTodoSuccess,
-  editTodoSuccess,
-  editTodoFailure, // 🔥 добавили
-  setTasks,
-} from "./todosSlice";
-import {
-  addTaskToLocalStorage,
-  updateTaskInLocalStorage,
-  deleteTaskFromLocalStorage,
-  getTasksFromLocalStorage,
-  clearTasksFromLocalStorage,
-} from "../../utils/localStorageUtils";
 
-// Worker для загрузки задач
-function* fetchTodosWorker(action) {
+let nextLocalId = 101;
+
+const getLocalId = () => {
+  if (nextLocalId > 200) nextLocalId = 101;
+  return nextLocalId++;
+};
+
+// Функция загрузки задач
+function* fetchTodosWorker() {
   try {
-    const { page = 1, pageSize = 10 } = action.payload || {};
-    const response = yield call(getTodos, page, pageSize);
-    console.log("Ответ от API:", response);
-
-    const tasks = response;
-
-    if (Array.isArray(tasks)) {
-      yield put(setTasks(tasks));
-    } else {
-      throw new Error("Некорректные данные: ожидался массив задач");
-    }
+    const response = yield call(
+      axios.get,
+      "https://jsonplaceholder.typicode.com/todos?_limit=10"
+    );
+    yield put({ type: FETCH_TODOS_SUCCESS, payload: response.data });
   } catch (error) {
-    console.error("Ошибка при получении задач:", error);
-    yield put(setError(error.message));
+    yield put({
+      type: FETCH_TODOS_FAILURE,
+      payload: { error: error.message, source: "fetchTodosWorker" },
+    });
   }
 }
 
-// Worker для добавления задачи
+// Добавление задачи (локально)
 function* addTodoWorker(action) {
   try {
-    const todo = action.payload;
-    const createdTask = yield call(addTodo, todo);
-
-    if (!createdTask) throw new Error("Ошибка при добавлении задачи на сервер");
-
-    yield call(addTaskToLocalStorage, createdTask);
-    yield put(addTodoSuccess(createdTask));
+    const newTodo = { ...action.payload, id: getLocalId() };
+    yield put({ type: ADD_TODO_SUCCESS, payload: newTodo });
   } catch (error) {
-    console.error("Ошибка при добавлении задачи:", error);
-    yield put(
-      fetchTodosFailure(error.message || "Ошибка при добавлении задачи")
-    );
+    yield put({
+      type: ADD_TODO_FAILURE,
+      payload: { error: error.message, source: "addTodoWorker" },
+    });
   }
 }
 
-// Worker для удаления задачи
+// Удаление задачи
 function* deleteTodoWorker(action) {
   try {
-    const taskId = action.payload;
-
-    yield call(deleteTodo, taskId);
-    yield call(deleteTaskFromLocalStorage, taskId);
-
-    yield put(deleteTodoSuccess(taskId));
+    yield call(
+      axios.delete,
+      `https://jsonplaceholder.typicode.com/todos/${action.payload}`
+    );
+    yield put({ type: DELETE_TODO_SUCCESS, payload: action.payload });
   } catch (error) {
-    console.error("Ошибка при удалении задачи:", error);
-    yield put(fetchTodosFailure(error.message || "Ошибка при удалении задачи"));
+    yield put({
+      type: DELETE_TODO_FAILURE,
+      payload: { error: error.message, source: "deleteTodoWorker" },
+    });
   }
 }
 
-// Worker для переключения состояния задачи
+// Редактирование задачи
+function* editTodoWorker(action) {
+  try {
+    const { id, title } = action.payload;
+
+    if (!title || title.trim() === "") {
+      throw new Error("Заголовок задачи не может быть пустым");
+    }
+
+    const response = yield call(
+      axios.put,
+      `https://jsonplaceholder.typicode.com/todos/${id}`,
+      { title }
+    );
+
+    if (response.status === 200) {
+      yield put({ type: EDIT_TODO_SUCCESS, payload: response.data });
+    } else {
+      yield put({
+        type: EDIT_TODO_FAILURE,
+        payload: { id, error: "Ошибка на сервере", source: "editTodoWorker" },
+      });
+    }
+  } catch (error) {
+    yield put({
+      type: EDIT_TODO_FAILURE,
+      payload: {
+        id: action.payload.id,
+        error: error.message || "Неизвестная ошибка",
+        source: "editTodoWorker",
+      },
+    });
+  }
+}
+
+// Переключение выполнено/не выполнено
 function* toggleTodoWorker(action) {
   try {
     const { id, completed } = action.payload;
-    const updatedTask = yield call(toggleTodo, id, completed);
-
-    if (!updatedTask) throw new Error("Ошибка при переключении статуса задачи");
-
-    yield call(updateTaskInLocalStorage, updatedTask);
-    yield put(toggleTodoSuccess(updatedTask));
-  } catch (error) {
-    console.error("Ошибка при переключении состояния задачи:", error);
-    yield put(
-      fetchTodosFailure(error.message || "Ошибка при переключении задачи")
+    const response = yield call(
+      axios.patch,
+      `https://jsonplaceholder.typicode.com/todos/${id}`,
+      { completed }
     );
+    yield put({ type: TOGGLE_TODO_SUCCESS, payload: response.data });
+  } catch (error) {
+    yield put({
+      type: TOGGLE_TODO_FAILURE,
+      payload: { error: error.message, source: "toggleTodoWorker" },
+    });
   }
 }
 
-// 🔥 Правильный editTodoWorker
-function* editTodoWorker(action) {
-  try {
-    const updatedTodo = action.payload;
-    if (!updatedTodo || !updatedTodo.id || !updatedTodo.title) {
-      throw new Error("Необходимые данные для редактирования отсутствуют");
-    }
-
-    const response = yield call(editTodo, updatedTodo.id, updatedTodo);
-
-    if (response && response.id) {
-      yield put(editTodoSuccess(response));
-    } else {
-      throw new Error("Ошибка при обновлении задачи");
-    }
-  } catch (error) {
-    console.error("Ошибка при редактировании задачи:", error);
-    yield put(
-      editTodoFailure(error.message || "Ошибка при редактировании задачи")
-    );
-  }
-}
-
-// Остальные воркеры без изменений
+// Очистка всех завершённых задач (локально и на сервере)
 function* clearCompletedWorker() {
   try {
-    const todos = yield select((state) => state.todos.tasks);
+    const completedTasks = yield select((state) =>
+      state.todos.tasks.filter((task) => task.completed)
+    );
 
-    if (!Array.isArray(todos)) {
-      throw new Error("Неверный формат задач");
-    }
+    const serverCompletedTasks = completedTasks.filter(
+      (task) => task.id <= 200
+    );
 
-    const completedTodos = todos.filter((todo) => todo.completed);
-
-    for (const todo of completedTodos) {
-      yield call(deleteTodo, todo.id);
-      yield call(deleteTaskFromLocalStorage, todo.id);
-      yield put(deleteTodoSuccess(todo.id));
-    }
-  } catch (error) {
-    console.error("Ошибка при очистке завершённых задач:", error);
-    yield put(fetchTodosFailure(error.message || "Ошибка при очистке задач"));
-  }
-}
-
-function* syncWithLocalStorageWorker() {
-  try {
-    const tasks = yield call(getTasksFromLocalStorage);
-
-    if (!Array.isArray(tasks)) {
-      throw new Error("Ошибка получения данных из локального хранилища");
-    }
-
-    yield put(fetchTodosSuccess(tasks));
-  } catch (error) {
-    console.error("Ошибка при синхронизации с локальным хранилищем:", error);
-    yield put(fetchTodosFailure(error.message || "Ошибка при синхронизации"));
-  }
-}
-
-function* clearLocalStorageWorker() {
-  try {
-    yield call(clearTasksFromLocalStorage);
-    yield put(fetchTodosSuccess([]));
-  } catch (error) {
-    console.error("Ошибка при очистке локального хранилища:", error);
-    yield put(
-      fetchTodosFailure(
-        error.message || "Ошибка при очистке локального хранилища"
+    yield all(
+      serverCompletedTasks.map((task) =>
+        call(
+          axios.delete,
+          `https://jsonplaceholder.typicode.com/todos/${task.id}`
+        )
       )
     );
+
+    yield put({ type: CLEAR_COMPLETED_SUCCESS });
+  } catch (error) {
+    yield put({
+      type: CLEAR_COMPLETED_FAILURE,
+      payload: { error: error.message, source: "clearCompletedWorker" },
+    });
   }
 }
 
-// Основная сага
-export function* todosSaga() {
+function* todosSaga() {
   yield takeEvery(FETCH_TODOS, fetchTodosWorker);
   yield takeEvery(ADD_TODO, addTodoWorker);
   yield takeEvery(DELETE_TODO, deleteTodoWorker);
-  yield takeEvery(TOGGLE_TODO, toggleTodoWorker);
   yield takeEvery(EDIT_TODO, editTodoWorker);
-  yield takeEvery(CLEAR_COMPLETED_REQUEST, clearCompletedWorker);
-  yield takeEvery(SYNC_WITH_LOCAL_STORAGE, syncWithLocalStorageWorker);
-  yield takeEvery(CLEAR_LOCAL_STORAGE, clearLocalStorageWorker);
+  yield takeEvery(TOGGLE_TODO, toggleTodoWorker);
+  yield takeEvery(CLEAR_COMPLETED, clearCompletedWorker);
 }
+
+export default todosSaga;

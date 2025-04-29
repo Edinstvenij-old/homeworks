@@ -11,25 +11,18 @@ class ErrorBoundary extends Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Обновляем state, чтобы при следующем рендере показать fallback UI
     return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Логируем ошибку, можно интегрировать с системой мониторинга
     console.error("Error caught by ErrorBoundary: ", error);
     console.error("Error details: ", errorInfo);
 
-    // Сохраняем информацию об ошибке в состоянии
     this.setState({ error, errorInfo });
-
-    // Можно отправить данные в систему мониторинга
-    // logErrorToMyService(error, errorInfo); // пример
   }
 
   render() {
     if (this.state.hasError) {
-      // Сообщение о произошедшей ошибке, можно улучшить UI
       return (
         <div>
           <h1>Something went wrong.</h1>
@@ -43,7 +36,6 @@ class ErrorBoundary extends Component {
       );
     }
 
-    // Возвращаем дочерние компоненты, если ошибки нет
     return this.props.children;
   }
 }

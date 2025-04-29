@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { ADD_TODO } from "../features/todos/todosActions";
 
+let nextId = 101;
+
 const TodoForm = () => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
@@ -12,8 +14,13 @@ const TodoForm = () => {
     const trimmedText = text.trim();
     if (!trimmedText) return;
 
+    if (nextId > 200) {
+      nextId = 1;
+    }
+
     const newTask = {
-      todo: trimmedText,
+      id: nextId++,
+      title: trimmedText,
       completed: false,
     };
 
@@ -30,14 +37,21 @@ const TodoForm = () => {
         placeholder="Добавить задачу..."
         style={styles.input}
       />
-      <button type="submit" disabled={!text.trim()} style={styles.button}>
+      <button
+        type="submit"
+        disabled={!text.trim()}
+        style={{
+          ...styles.button,
+          opacity: text.trim() ? 1 : 0.6,
+          cursor: text.trim() ? "pointer" : "not-allowed",
+        }}
+      >
         Добавить
       </button>
     </form>
   );
 };
 
-// Простенькие inline-стили для наглядности
 const styles = {
   form: {
     display: "flex",
@@ -48,16 +62,17 @@ const styles = {
     flex: 1,
     padding: "8px",
     fontSize: "16px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
   },
   button: {
     padding: "8px 16px",
     fontSize: "16px",
-    cursor: "pointer",
     backgroundColor: "#4CAF50",
     color: "#fff",
     border: "none",
     borderRadius: "4px",
-    opacity: 1,
+    transition: "opacity 0.2s ease",
   },
 };
 

@@ -10,16 +10,14 @@ const TodoList = () => {
   const dispatch = useDispatch();
   const { tasks, loading, error, hasMore } = useSelector(
     (state) => state.todos
-  ); // предполагается, что hasMore хранит информацию о том, есть ли ещё задачи для загрузки
+  );
 
-  // Загружаем задачи при монтировании компонента
   useEffect(() => {
     dispatch({ type: FETCH_TODOS });
   }, [dispatch]);
 
   const handleLoadTodos = () => {
     if (!loading && hasMore) {
-      // Не загружаем, если данные загружаются или нет доступных задач
       dispatch({ type: FETCH_TODOS });
     }
   };
@@ -28,9 +26,17 @@ const TodoList = () => {
     dispatch(clearCompletedRequest());
   };
 
-  if (loading) return <p style={styles.message}>Загрузка...</p>;
-  if (error)
-    return <p style={{ ...styles.message, color: "red" }}>Ошибка: {error}</p>;
+  if (loading && (!tasks || tasks.length === 0)) {
+    return <p style={styles.message}>Загрузка...</p>;
+  }
+
+  if (error) {
+    return (
+      <p style={{ ...styles.message, color: "red" }}>
+        Ошибка: {error?.message || "Неизвестная ошибка"}
+      </p>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -40,7 +46,7 @@ const TodoList = () => {
           style={styles.button}
           disabled={loading || !hasMore}
         >
-          Загрузить ещё
+          {loading ? "Загрузка..." : "Загрузить ещё"}
         </button>
         <button
           onClick={handleClearCompleted}
@@ -86,9 +92,6 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     transition: "background-color 0.3s ease",
-  },
-  buttonHover: {
-    backgroundColor: "#45a049",
   },
   list: {
     listStyle: "none",

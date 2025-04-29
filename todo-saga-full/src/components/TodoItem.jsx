@@ -1,75 +1,99 @@
 import { useDispatch } from "react-redux";
-import axios from "axios";
+import { useState } from "react";
 import {
   DELETE_TODO,
   TOGGLE_TODO,
   EDIT_TODO,
-  EDIT_TODO_FAILURE,
-  EDIT_TODO_SUCCESS, // Новый экшен для успешного редактирования
 } from "../features/todos/todosActions";
 
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(todo.title || "");
 
-  console.log("TodoItem props:", todo);
+  const isLocalTask = typeof todo.id !== "number" || todo.id > 200;
 
-  const handleToggle = () => {
-    dispatch({
-      type: TOGGLE_TODO,
-      payload: { id: todo.id, completed: !todo.completed },
-    });
+  const handleToggle = async () => {
+    const updatedTask = {
+      ...todo,
+      completed: !todo.completed,
+    };
+
+    if (isLocalTask) {
+      dispatch({ type: TOGGLE_TODO, payload: updatedTask });
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTask),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Ошибка при обновлении задачи: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      dispatch({ type: TOGGLE_TODO, payload: data });
+    } catch (error) {
+      console.error("Ошибка при обновлении задачи:", error);
+    }
+  };
+
+  const handleEdit = async () => {
+    if (newTitle.trim() === "") return;
+
+    const updatedTask = {
+      ...todo,
+      title: newTitle.trim(),
+    };
+
+    if (isLocalTask) {
+      dispatch({ type: EDIT_TODO, payload: updatedTask });
+      setIsEditing(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedTask),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Ошибка при редактировании задачи: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      dispatch({ type: EDIT_TODO, payload: data });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Ошибка при редактировании задачи:", error);
+    }
   };
 
   const handleDelete = () => {
     dispatch({ type: DELETE_TODO, payload: todo.id });
   };
 
-  const handleEdit = () => {
-    const newTodo = prompt("Изменить задачу:", todo.title);
-
-    if (newTodo && newTodo.trim() !== "" && newTodo !== todo.title) {
-      const updatedTodo = { id: todo.id, title: newTodo.trim() };
-      dispatch({
-        type: EDIT_TODO,
-        payload: updatedTodo,
-      });
-
-      console.log("Отправка данных на сервер:", updatedTodo);
-
-      // Отправка данных на сервер
-      axios
-        .put(
-          `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
-          updatedTodo
-        )
-        .then((response) => {
-          if (response.status === 200 && response.data) {
-            console.log("Задача обновлена:", response.data);
-            // Успешно обновлена на сервере
-            dispatch({
-              type: EDIT_TODO_SUCCESS,
-              payload: response.data, // Обновление задачи с сервером
-            });
-          } else {
-            console.error("Ошибка на сервере:", response);
-            // Обработка ошибки сервера
-            dispatch({
-              type: EDIT_TODO_FAILURE,
-              payload: { id: todo.id, error: "Ошибка на сервере" },
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Ошибка при обновлении задачи:", error);
-          // Обработаем ошибку при запросе
-          dispatch({
-            type: EDIT_TODO_FAILURE,
-            payload: { id: todo.id, error: error.message },
-          });
-        });
-    } else {
-      console.log("Редактирование отменено или не изменилось");
-    }
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setNewTitle(todo.title);
   };
 
   return (
@@ -81,29 +105,62 @@ const TodoItem = ({ todo }) => {
           onChange={handleToggle}
           style={styles.checkbox}
         />
-        <span
-          style={{
-            ...styles.text,
-            textDecoration: todo.completed ? "line-through" : "none",
-            color: todo.completed ? "#999" : "#333",
-          }}
-        >
-          {todo.title || "Без названия"}
-        </span>
+        {!isEditing ? (
+          <span
+            style={{
+              ...styles.text,
+              textDecoration: todo.completed ? "line-through" : "none",
+              color: todo.completed ? "#999" : "#333",
+            }}
+          >
+            {todo.title || "Без названия"}
+          </span>
+        ) : (
+          <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            style={styles.input}
+            autoFocus
+          />
+        )}
       </div>
       <div style={styles.buttons}>
-        <button
-          onClick={handleEdit}
-          style={{ ...styles.button, backgroundColor: "#2196f3" }}
-        >
-          Edit
-        </button>
-        <button
-          onClick={handleDelete}
-          style={{ ...styles.button, backgroundColor: "#f44336" }}
-        >
-          Delete
-        </button>
+        {isEditing ? (
+          <>
+            <button
+              onClick={handleEdit}
+              style={{ ...styles.button, backgroundColor: "#4CAF50" }}
+            >
+              Сохранить
+            </button>
+            <button
+              onClick={handleCancelEdit}
+              style={{
+                ...styles.button,
+                backgroundColor: "#d3d3d3",
+                color: "#000",
+              }}
+            >
+              Отмена
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => setIsEditing(true)}
+              style={{ ...styles.button, backgroundColor: "#2196f3" }}
+            >
+              Редактировать
+            </button>
+            <button
+              onClick={handleDelete}
+              style={{ ...styles.button, backgroundColor: "#f44336" }}
+            >
+              Удалить
+            </button>
+          </>
+        )}
       </div>
     </li>
   );
@@ -123,9 +180,10 @@ const styles = {
   left: {
     display: "flex",
     alignItems: "center",
+    flex: 1,
+    gap: "10px",
   },
   checkbox: {
-    marginRight: "10px",
     width: "18px",
     height: "18px",
   },
@@ -133,9 +191,17 @@ const styles = {
     fontSize: "16px",
     wordBreak: "break-word",
   },
+  input: {
+    fontSize: "16px",
+    padding: "5px",
+    borderRadius: "4px",
+    border: "1px solid #ccc",
+    flex: 1,
+  },
   buttons: {
     display: "flex",
     gap: "8px",
+    marginLeft: "10px",
   },
   button: {
     padding: "6px 12px",

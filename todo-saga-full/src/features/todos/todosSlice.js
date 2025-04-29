@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  addTaskToLocalStorage,
-  updateTaskInLocalStorage,
-  deleteTaskFromLocalStorage,
-} from "../../utils/localStorageUtils";
 
-// Начальное состояние
 const initialState = {
   tasks: [],
   loading: false,
@@ -35,21 +29,34 @@ const todosSlice = createSlice({
     },
     addTask(state, action) {
       const newTask = action.payload;
-      addTaskToLocalStorage(newTask);
+      const storedTasks = getStoredTasks();
+      storedTasks.push(newTask);
+      saveTasksToLocalStorage(storedTasks);
       state.tasks.push(newTask);
     },
     updateTask(state, action) {
       const updatedTask = action.payload;
-      updateTaskInLocalStorage(updatedTask);
       const index = state.tasks.findIndex((task) => task.id === updatedTask.id);
       if (index !== -1) {
         state.tasks[index] = updatedTask;
+        const storedTasks = getStoredTasks();
+        const updatedStoredTasks = storedTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        );
+        saveTasksToLocalStorage(updatedStoredTasks);
       }
     },
     toggleTodoSuccess(state, action) {
       const task = state.tasks.find((task) => task.id === action.payload.id);
       if (task) {
         task.completed = action.payload.completed;
+        const storedTasks = getStoredTasks();
+        const updatedStoredTasks = storedTasks.map((t) =>
+          t.id === task.id
+            ? { ...task, completed: action.payload.completed }
+            : t
+        );
+        saveTasksToLocalStorage(updatedStoredTasks);
       }
     },
     incrementPage(state) {
@@ -60,11 +67,18 @@ const todosSlice = createSlice({
     },
     deleteTask(state, action) {
       const taskId = action.payload;
-      deleteTaskFromLocalStorage(taskId);
       state.tasks = state.tasks.filter((task) => task.id !== taskId);
+      const storedTasks = getStoredTasks();
+      const updatedStoredTasks = storedTasks.filter(
+        (task) => task.id !== taskId
+      );
+      saveTasksToLocalStorage(updatedStoredTasks);
     },
     clearCompleted(state) {
       state.tasks = state.tasks.filter((task) => !task.completed);
+      const storedTasks = getStoredTasks();
+      const updatedStoredTasks = storedTasks.filter((task) => !task.completed);
+      saveTasksToLocalStorage(updatedStoredTasks);
     },
     setError(state, action) {
       state.error = action.payload;
@@ -83,7 +97,6 @@ const todosSlice = createSlice({
       }
     },
     editTodoFailure(state, action) {
-      // 🔥 добавили обработку ошибки редактирования
       state.error = action.payload || "Ошибка при редактировании задачи";
     },
     clearCompletedRequest(state) {
@@ -91,6 +104,10 @@ const todosSlice = createSlice({
     },
   },
 });
+
+const getStoredTasks = () => JSON.parse(localStorage.getItem("tasks")) || [];
+const saveTasksToLocalStorage = (tasks) =>
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 
 export const {
   setTasks,
@@ -108,7 +125,7 @@ export const {
   clearCompleted,
   setError,
   editTodoSuccess,
-  editTodoFailure, // 🔥 обязательно экспортировать
+  editTodoFailure,
   clearCompletedRequest,
 } = todosSlice.actions;
 
