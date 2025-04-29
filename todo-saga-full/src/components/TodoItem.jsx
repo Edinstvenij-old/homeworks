@@ -29,8 +29,6 @@ const TodoItem = ({ todo }) => {
 
     if (newTodo && newTodo.trim() !== "" && newTodo !== todo.title) {
       const updatedTodo = { id: todo.id, title: newTodo.trim() };
-
-      // Локальное обновление состояния в Redux для мгновенного обновления UI
       dispatch({
         type: EDIT_TODO,
         payload: updatedTodo,

@@ -65,7 +65,7 @@ const TodoList = () => {
 
 const styles = {
   container: {
-    maxWidth: "600px",
+    maxWidth: "1000px",
     margin: "0 auto",
     padding: "20px",
     backgroundColor: "#f9f9f9",

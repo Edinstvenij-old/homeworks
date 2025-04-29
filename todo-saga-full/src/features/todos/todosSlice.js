@@ -82,8 +82,11 @@ const todosSlice = createSlice({
         state.tasks[index] = updatedTask;
       }
     },
+    editTodoFailure(state, action) {
+      // 🔥 добавили обработку ошибки редактирования
+      state.error = action.payload || "Ошибка при редактировании задачи";
+    },
     clearCompletedRequest(state) {
-      // Новый редуктор для очистки завершённых задач
       state.tasks = state.tasks.filter((task) => !task.completed);
     },
   },
@@ -105,6 +108,7 @@ export const {
   clearCompleted,
   setError,
   editTodoSuccess,
+  editTodoFailure, // 🔥 обязательно экспортировать
   clearCompletedRequest,
 } = todosSlice.actions;
 

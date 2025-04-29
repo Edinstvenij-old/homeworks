@@ -1,36 +1,40 @@
 import axios from "axios";
 
-// Используем правильный базовый URL для API
+// Базовый URL для API
 const API_URL = "https://jsonplaceholder.typicode.com/todos";
 
 // Добавить задачу
 export const addTodo = async (todo) => {
-  const response = await axios.post(API_URL, todo); // Используем полный URL
+  const response = await axios.post(API_URL, todo);
   return response.data;
 };
 
-// Удалить задачу
+// Удалить задачу по ID
 export const deleteTodo = async (id) => {
-  const response = await axios.delete(`${API_URL}/${id}`); // Используем полный URL
+  if (!id) throw new Error("ID задачи обязателен для удаления");
+  const response = await axios.delete(`${API_URL}/${id}`);
   return response.data;
 };
 
-// Переключить статус задачи
+// Переключить статус задачи (completed: true/false)
 export const toggleTodo = async (id, completed) => {
-  const response = await axios.patch(`${API_URL}/${id}`, { completed }); // Используем полный URL
+  if (!id) throw new Error("ID задачи обязателен для изменения статуса");
+  const response = await axios.patch(`${API_URL}/${id}`, { completed });
   return response.data;
 };
 
-// Редактировать задачу
+// Редактировать задачу полностью
 export const editTodo = async (id, todo) => {
-  const response = await axios.put(`${API_URL}/${id}`, todo); // Используем полный URL
+  if (!id || !todo)
+    throw new Error("ID и объект задачи обязательны для редактирования");
+  const response = await axios.put(`${API_URL}/${id}`, todo);
   return response.data;
 };
 
-// Получить все задачи с пагинацией
+// Получить список задач с пагинацией
 export const getTodos = async (page = 1, pageSize = 10) => {
   const response = await axios.get(
     `${API_URL}?_page=${page}&_limit=${pageSize}`
-  ); // Используем правильную пагинацию
+  );
   return response.data;
 };

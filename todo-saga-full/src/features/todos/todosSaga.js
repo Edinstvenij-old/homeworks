@@ -24,6 +24,7 @@ import {
   deleteTodoSuccess,
   toggleTodoSuccess,
   editTodoSuccess,
+  editTodoFailure, // 🔥 добавили
   setTasks,
 } from "./todosSlice";
 import {
@@ -34,7 +35,7 @@ import {
   clearTasksFromLocalStorage,
 } from "../../utils/localStorageUtils";
 
-// Worker для загрузки задач с сервера
+// Worker для загрузки задач
 function* fetchTodosWorker(action) {
   try {
     const { page = 1, pageSize = 10 } = action.payload || {};
@@ -105,7 +106,7 @@ function* toggleTodoWorker(action) {
   }
 }
 
-// Worker для редактирования задачи
+// 🔥 Правильный editTodoWorker
 function* editTodoWorker(action) {
   try {
     const updatedTodo = action.payload;
@@ -113,23 +114,22 @@ function* editTodoWorker(action) {
       throw new Error("Необходимые данные для редактирования отсутствуют");
     }
 
-    // Использование API для редактирования задачи
-    const response = yield call(editTodo, updatedTodo); // Используем функцию из api/todoApi
+    const response = yield call(editTodo, updatedTodo.id, updatedTodo);
 
     if (response && response.id) {
-      yield put(editTodoSuccess(response)); // Используем экшен для успешного обновления
+      yield put(editTodoSuccess(response));
     } else {
       throw new Error("Ошибка при обновлении задачи");
     }
   } catch (error) {
     console.error("Ошибка при редактировании задачи:", error);
     yield put(
-      fetchTodosFailure(error.message || "Ошибка при редактировании задачи")
+      editTodoFailure(error.message || "Ошибка при редактировании задачи")
     );
   }
 }
 
-// Worker для очистки завершённых задач
+// Остальные воркеры без изменений
 function* clearCompletedWorker() {
   try {
     const todos = yield select((state) => state.todos.tasks);
@@ -151,7 +151,6 @@ function* clearCompletedWorker() {
   }
 }
 
-// Worker для синхронизации с локальным хранилищем
 function* syncWithLocalStorageWorker() {
   try {
     const tasks = yield call(getTasksFromLocalStorage);
@@ -167,7 +166,6 @@ function* syncWithLocalStorageWorker() {
   }
 }
 
-// Worker для очистки локального хранилища
 function* clearLocalStorageWorker() {
   try {
     yield call(clearTasksFromLocalStorage);
