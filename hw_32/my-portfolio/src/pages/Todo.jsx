@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Container,
   Paper,
@@ -7,72 +7,35 @@ import {
   TextField,
   Button,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { format } from "date-fns";
-import { v4 as uuidv4 } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addTodo,
+  deleteTodo,
+  toggleDone,
+  startEdit,
+  saveEdit,
+  setEditText,
+} from "../store/features/todos/todosSlice";
 import TodoList from "../components/TodoList";
 import TodoCalendar from "../components/TodoCalendar";
 
 const formatDate = (date) => (date ? format(date, "yyyy-MM-dd") : null);
 
 const Todo = () => {
-  const [todos, setTodos] = useState([]);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.items);
+  const editId = useSelector((state) => state.todos.editId);
+  const editText = useSelector((state) => state.todos.editText);
+
   const [text, setText] = useState("");
-  const [editId, setEditId] = useState(null);
-  const [editText, setEditText] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-  const saveTodos = (updated) => {
-    setTodos(updated);
-    localStorage.setItem("todos", JSON.stringify(updated));
-  };
-
-  useEffect(() => {
-    const stored = localStorage.getItem("todos");
-    if (stored) {
-      setTodos(JSON.parse(stored));
-    }
-  }, []);
-
-  const addTodo = () => {
-    if (text.trim()) {
-      const newTodo = {
-        id: uuidv4(),
-        text: text.trim(),
-        done: false,
-        date: formatDate(selectedDate),
-      };
-      saveTodos([...todos, newTodo]);
-      setText("");
-    }
-  };
-
-  const deleteTodo = (id) => {
-    saveTodos(todos.filter((todo) => todo.id !== id));
-  };
-
-  const toggleDone = (id) => {
-    saveTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, done: !todo.done } : todo
-      )
-    );
-  };
-
-  const startEdit = (id, text) => {
-    setEditId(id);
-    setEditText(text);
-  };
-
-  const saveEdit = (id) => {
-    saveTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, text: editText } : todo))
-    );
-    setEditId(null);
-    setEditText("");
-  };
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Для Snackbar
 
   const selectedFormatted = formatDate(selectedDate);
   const filteredTodos = todos.filter((todo) => todo.date === selectedFormatted);
@@ -81,6 +44,19 @@ const Todo = () => {
     acc[todo.date] = (acc[todo.date] || 0) + 1;
     return acc;
   }, {});
+
+  const handleAdd = () => {
+    if (text.trim()) {
+      dispatch(addTodo({ text: text.trim(), date: formatDate(selectedDate) }));
+      setText("");
+    } else {
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -119,7 +95,7 @@ const Todo = () => {
             fullWidth
             size="small"
           />
-          <Button onClick={addTodo} variant="contained">
+          <Button onClick={handleAdd} variant="contained">
             Добавить
           </Button>
         </Box>
@@ -128,15 +104,29 @@ const Todo = () => {
 
         <TodoList
           todos={filteredTodos}
-          toggleDone={toggleDone}
-          deleteTodo={deleteTodo}
+          toggleDone={(id) => dispatch(toggleDone(id))}
+          deleteTodo={(id) => dispatch(deleteTodo(id))}
           editId={editId}
           editText={editText}
-          setEditText={setEditText}
-          startEdit={startEdit}
-          saveEdit={saveEdit}
+          setEditText={(text) => dispatch(setEditText(text))}
+          startEdit={(id, text) => dispatch(startEdit({ id, text }))}
+          saveEdit={(id) => dispatch(saveEdit(id))}
         />
       </Paper>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Пожалуйста, введите задачу!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

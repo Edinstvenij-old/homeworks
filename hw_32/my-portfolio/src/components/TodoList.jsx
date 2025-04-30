@@ -34,6 +34,7 @@ const TodoList = ({
         }}
       >
         <Checkbox checked={todo.done} onChange={() => toggleDone(todo.id)} />
+
         {editId === todo.id ? (
           <TextField
             value={editText}
@@ -51,6 +52,7 @@ const TodoList = ({
             {todo.text}
           </Typography>
         )}
+
         {editId === todo.id ? (
           <IconButton onClick={() => saveEdit(todo.id)} color="primary">
             <SaveIcon />
@@ -63,6 +65,7 @@ const TodoList = ({
             <EditIcon />
           </IconButton>
         )}
+
         <IconButton onClick={() => deleteTodo(todo.id)} color="error">
           <DeleteIcon />
         </IconButton>

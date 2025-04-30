@@ -100,10 +100,10 @@ const Header = () => {
                   to="/"
                   style={({ isActive }) => ({
                     textDecoration: "none",
-                    color: isActive ? "#64b5f6" : "#fff", // Светлый синий для активной ссылки
+                    color: isActive ? "#64b5f6" : "#fff",
                     backgroundColor: isActive
                       ? "rgba(100, 181, 246, 0.1)"
-                      : "transparent", // Светлый фон для активной ссылки
+                      : "transparent",
                     padding: "8px 16px",
                     borderRadius: "4px",
                     transition: "all 0.3s ease",
@@ -160,11 +160,11 @@ const Header = () => {
                 padding: "10px 20px",
                 borderRadius: "4px",
                 "&.active": {
-                  color: "#64b5f6", // Светлый синий для активной ссылки
-                  backgroundColor: "rgba(100, 181, 246, 0.1)", // Светлый фон для активной ссылки
+                  color: "#64b5f6",
+                  backgroundColor: "rgba(100, 181, 246, 0.1)",
                 },
                 "&:hover": {
-                  backgroundColor: "rgba(100, 181, 246, 0.2)", // Легкий синий эффект при наведении
+                  backgroundColor: "rgba(100, 181, 246, 0.2)",
                 },
                 transition: "all 0.3s ease",
               }}

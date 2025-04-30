@@ -1,13 +1,16 @@
 import { Routes, Route } from "react-router-dom";
+import { Box, GlobalStyles } from "@mui/material";
+import { Provider } from "react-redux";
+import store from "./store/store";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Todo from "./pages/Todo";
 import Swapi from "./pages/Swapi";
-import { Box, GlobalStyles } from "@mui/material";
 
 const App = () => (
-  <>
+  <Provider store={store}>
     <GlobalStyles
       styles={{
         body: {
@@ -28,7 +31,6 @@ const App = () => (
         },
       }}
     />
-
     <Box
       id="app-background"
       sx={{
@@ -47,7 +49,7 @@ const App = () => (
       </Box>
       <Footer />
     </Box>
-  </>
+  </Provider>
 );
 
 export default App;
