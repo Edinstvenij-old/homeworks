@@ -11,7 +11,7 @@ import {
   Slide,
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
 const ElevationScroll = ({ children }) => {
@@ -65,7 +65,7 @@ const Header = () => {
               sx={{ width: 40, height: 40, mr: 2 }}
             />
             <Typography variant="h6" sx={{ color: "white" }}>
-              Мой Портфолио
+              Portfolio
             </Typography>
           </Box>
 
@@ -96,25 +96,55 @@ const Header = () => {
               onClose={handleMenuClose}
             >
               <MenuItem onClick={handleMenuClose}>
-                <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+                <NavLink
+                  to="/"
+                  style={({ isActive }) => ({
+                    textDecoration: "none",
+                    color: isActive ? "#64b5f6" : "#fff", // Светлый синий для активной ссылки
+                    backgroundColor: isActive
+                      ? "rgba(100, 181, 246, 0.1)"
+                      : "transparent", // Светлый фон для активной ссылки
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                  })}
+                >
                   Главная
-                </Link>
+                </NavLink>
               </MenuItem>
               <MenuItem onClick={handleMenuClose}>
-                <Link
+                <NavLink
                   to="/todo"
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={({ isActive }) => ({
+                    textDecoration: "none",
+                    color: isActive ? "#64b5f6" : "#fff",
+                    backgroundColor: isActive
+                      ? "rgba(100, 181, 246, 0.1)"
+                      : "transparent",
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                  })}
                 >
                   TODO
-                </Link>
+                </NavLink>
               </MenuItem>
               <MenuItem onClick={handleMenuClose}>
-                <Link
+                <NavLink
                   to="/swapi"
-                  style={{ textDecoration: "none", color: "black" }}
+                  style={({ isActive }) => ({
+                    textDecoration: "none",
+                    color: isActive ? "#64b5f6" : "#fff",
+                    backgroundColor: isActive
+                      ? "rgba(100, 181, 246, 0.1)"
+                      : "transparent",
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    transition: "all 0.3s ease",
+                  })}
                 >
                   SWAPI
-                </Link>
+                </NavLink>
               </MenuItem>
             </Menu>
           </Box>
@@ -122,25 +152,64 @@ const Header = () => {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <Button
               color="inherit"
-              component={Link}
+              component={NavLink}
               to="/"
-              sx={{ color: "white" }}
+              sx={{
+                color: "white",
+                textDecoration: "none",
+                padding: "10px 20px",
+                borderRadius: "4px",
+                "&.active": {
+                  color: "#64b5f6", // Светлый синий для активной ссылки
+                  backgroundColor: "rgba(100, 181, 246, 0.1)", // Светлый фон для активной ссылки
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(100, 181, 246, 0.2)", // Легкий синий эффект при наведении
+                },
+                transition: "all 0.3s ease",
+              }}
             >
               Главная
             </Button>
             <Button
               color="inherit"
-              component={Link}
+              component={NavLink}
               to="/todo"
-              sx={{ color: "white" }}
+              sx={{
+                color: "white",
+                textDecoration: "none",
+                padding: "10px 20px",
+                borderRadius: "4px",
+                "&.active": {
+                  color: "#64b5f6",
+                  backgroundColor: "rgba(100, 181, 246, 0.1)",
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(100, 181, 246, 0.2)",
+                },
+                transition: "all 0.3s ease",
+              }}
             >
               TODO
             </Button>
             <Button
               color="inherit"
-              component={Link}
+              component={NavLink}
               to="/swapi"
-              sx={{ color: "white" }}
+              sx={{
+                color: "white",
+                textDecoration: "none",
+                padding: "10px 20px",
+                borderRadius: "4px",
+                "&.active": {
+                  color: "#64b5f6",
+                  backgroundColor: "rgba(100, 181, 246, 0.1)",
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(100, 181, 246, 0.2)",
+                },
+                transition: "all 0.3s ease",
+              }}
             >
               SWAPI
             </Button>

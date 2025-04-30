@@ -10,17 +10,26 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import CodeIcon from "@mui/icons-material/Code";
 import BuildIcon from "@mui/icons-material/Build";
 import StarIcon from "@mui/icons-material/Star";
+import SportsEsportsIcon from "@mui/icons-material/SportsEsports"; // Используем подходящую иконку для React
+import CssIcon from "@mui/icons-material/Style";
+import JavaScriptIcon from "@mui/icons-material/CodeRounded";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import resumeData from "../data/resumeData";
 
 const getIcon = (skill) => {
   if (skill.toLowerCase().includes("react"))
-    return <CodeIcon color="primary" />;
+    return <SportsEsportsIcon color="primary" sx={{ fontSize: 40 }} />;
   if (skill.toLowerCase().includes("redux"))
-    return <BuildIcon color="secondary" />;
-  return <StarIcon color="action" />;
+    return <BuildIcon color="secondary" sx={{ fontSize: 40 }} />;
+  if (skill.toLowerCase().includes("javascript"))
+    return <JavaScriptIcon color="warning" sx={{ fontSize: 40 }} />;
+  if (skill.toLowerCase().includes("css"))
+    return <CssIcon color="info" sx={{ fontSize: 40 }} />;
+  if (skill.toLowerCase().includes("github"))
+    return <GitHubIcon color="action" sx={{ fontSize: 40 }} />;
+  return <StarIcon color="action" sx={{ fontSize: 40 }} />;
 };
 
 const Home = () => (
@@ -57,7 +66,7 @@ const Home = () => (
       </Typography>
 
       <Typography variant="h5" gutterBottom>
-        Нав Skills:
+        Skills:
       </Typography>
       <List>
         {resumeData.skills.map((skill, idx) => (
