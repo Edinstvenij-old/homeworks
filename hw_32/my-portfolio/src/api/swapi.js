@@ -5,7 +5,12 @@ export const getPeople = async (url = "https://swapi.py4e.com/api/people/") => {
     const response = await axios.get(url);
     return { results: response.data.results, next: response.data.next };
   } catch (error) {
-    console.error("Ошибка при загрузке данных:", error);
-    throw error;
+    console.error(
+      "Ошибка при загрузке данных:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      "Не удалось загрузить данные, пожалуйста, попробуйте позже."
+    );
   }
 };

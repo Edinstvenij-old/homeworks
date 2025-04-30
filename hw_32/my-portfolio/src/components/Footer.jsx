@@ -7,8 +7,8 @@ const Footer = () => (
   <Box
     component="footer"
     sx={{
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
-      backdropFilter: "blur(6px)",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backdropFilter: "blur(3px)",
       py: 3,
       mt: "auto",
     }}
@@ -23,6 +23,7 @@ const Footer = () => (
           href="mailto:your.email@example.com"
           color="primary"
           aria-label="Email"
+          sx={{ "&:hover": { color: "blue" } }}
         >
           <EmailIcon />
         </IconButton>
@@ -33,6 +34,7 @@ const Footer = () => (
           rel="noopener noreferrer"
           color="inherit"
           aria-label="GitHub"
+          sx={{ "&:hover": { color: "#333" } }}
         >
           <GitHubIcon />
         </IconButton>
@@ -43,6 +45,7 @@ const Footer = () => (
           rel="noopener noreferrer"
           color="primary"
           aria-label="LinkedIn"
+          sx={{ "&:hover": { color: "#0077b5" } }}
         >
           <LinkedInIcon />
         </IconButton>

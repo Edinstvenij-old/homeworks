@@ -25,7 +25,7 @@ import {
 import TodoList from "../components/TodoList";
 import TodoCalendar from "../components/TodoCalendar";
 
-const formatDate = (date) => (date ? format(date, "yyyy-MM-dd") : null);
+const formatDate = (date) => (date ? format(date, "yyyy-MM-dd") : "");
 
 const Todo = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const Todo = () => {
 
   const [text, setText] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Для Snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const selectedFormatted = formatDate(selectedDate);
   const filteredTodos = todos.filter((todo) => todo.date === selectedFormatted);
@@ -47,16 +47,14 @@ const Todo = () => {
 
   const handleAdd = () => {
     if (text.trim()) {
-      dispatch(addTodo({ text: text.trim(), date: formatDate(selectedDate) }));
+      dispatch(addTodo({ text: text.trim(), date: selectedFormatted }));
       setText("");
     } else {
       setOpenSnackbar(true);
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
+  const handleCloseSnackbar = () => setOpenSnackbar(false);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -94,6 +92,7 @@ const Todo = () => {
             label="Новая задача"
             fullWidth
             size="small"
+            aria-label="Новое задание"
           />
           <Button onClick={handleAdd} variant="contained">
             Добавить
@@ -109,7 +108,7 @@ const Todo = () => {
           editId={editId}
           editText={editText}
           setEditText={(text) => dispatch(setEditText(text))}
-          startEdit={(id, text) => dispatch(startEdit({ id, text }))}
+          startEdit={(idObj) => dispatch(startEdit(idObj))}
           saveEdit={(id) => dispatch(saveEdit(id))}
         />
       </Paper>
@@ -118,6 +117,7 @@ const Todo = () => {
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseSnackbar}

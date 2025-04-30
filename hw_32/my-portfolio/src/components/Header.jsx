@@ -46,6 +46,15 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const navLinkStyle = ({ isActive }) => ({
+    textDecoration: "none",
+    color: isActive ? "#64b5f6" : "#fff",
+    backgroundColor: isActive ? "rgba(100, 181, 246, 0.1)" : "transparent",
+    padding: "8px 16px",
+    borderRadius: "4px",
+    transition: "all 0.3s ease",
+  });
+
   return (
     <ElevationScroll>
       <AppBar
@@ -96,53 +105,17 @@ const Header = () => {
               onClose={handleMenuClose}
             >
               <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/"
-                  style={({ isActive }) => ({
-                    textDecoration: "none",
-                    color: isActive ? "#64b5f6" : "#fff",
-                    backgroundColor: isActive
-                      ? "rgba(100, 181, 246, 0.1)"
-                      : "transparent",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    transition: "all 0.3s ease",
-                  })}
-                >
+                <NavLink to="/" style={navLinkStyle}>
                   Главная
                 </NavLink>
               </MenuItem>
               <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/todo"
-                  style={({ isActive }) => ({
-                    textDecoration: "none",
-                    color: isActive ? "#64b5f6" : "#fff",
-                    backgroundColor: isActive
-                      ? "rgba(100, 181, 246, 0.1)"
-                      : "transparent",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    transition: "all 0.3s ease",
-                  })}
-                >
+                <NavLink to="/todo" style={navLinkStyle}>
                   TODO
                 </NavLink>
               </MenuItem>
               <MenuItem onClick={handleMenuClose}>
-                <NavLink
-                  to="/swapi"
-                  style={({ isActive }) => ({
-                    textDecoration: "none",
-                    color: isActive ? "#64b5f6" : "#fff",
-                    backgroundColor: isActive
-                      ? "rgba(100, 181, 246, 0.1)"
-                      : "transparent",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    transition: "all 0.3s ease",
-                  })}
-                >
+                <NavLink to="/swapi" style={navLinkStyle}>
                   SWAPI
                 </NavLink>
               </MenuItem>

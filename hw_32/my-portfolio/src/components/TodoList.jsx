@@ -31,7 +31,7 @@ const TodoList = ({
 
   const handleKeyPress = (e, id) => {
     if (e.key === "Enter") {
-      saveEdit({ id });
+      saveEdit(id);
     }
   };
 
@@ -74,15 +74,12 @@ const TodoList = ({
           )}
 
           {editId === todo.id ? (
-            <IconButton
-              onClick={() => saveEdit({ id: todo.id })}
-              color="primary"
-            >
+            <IconButton onClick={() => saveEdit(todo.id)} color="primary">
               <SaveIcon />
             </IconButton>
           ) : (
             <IconButton
-              onClick={() => startEdit(todo.id, todo.text)}
+              onClick={() => startEdit({ id: todo.id, text: todo.text })}
               color="info"
             >
               <EditIcon />

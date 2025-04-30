@@ -42,7 +42,7 @@ const todosSlice = createSlice({
       state.editText = action.payload.text;
     },
     saveEdit: (state, action) => {
-      const todo = state.items.find((todo) => todo.id === action.payload.id);
+      const todo = state.items.find((todo) => todo.id === action.payload);
       if (todo) {
         todo.text = state.editText;
         localStorage.setItem("todos", JSON.stringify(state.items));

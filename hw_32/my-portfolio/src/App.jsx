@@ -1,16 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import { Box, GlobalStyles } from "@mui/material";
-import { Provider } from "react-redux";
-import store from "./store/store";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Todo from "./pages/Todo";
 import Swapi from "./pages/Swapi";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App = () => (
-  <Provider store={store}>
+  <>
     <GlobalStyles
       styles={{
         body: {
@@ -41,15 +40,17 @@ const App = () => (
     >
       <Header />
       <Box sx={{ flex: 1 }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/todo" element={<Todo />} />
-          <Route path="/swapi" element={<Swapi />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/todo" element={<Todo />} />
+            <Route path="/swapi" element={<Swapi />} />
+          </Routes>
+        </ErrorBoundary>
       </Box>
       <Footer />
     </Box>
-  </Provider>
+  </>
 );
 
 export default App;

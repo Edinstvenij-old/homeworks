@@ -30,7 +30,7 @@ const Home = () => (
       <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
         <Avatar
           alt={resumeData?.name || "Фото"}
-          src={resumeData?.photo}
+          src={resumeData?.photo || "/default-avatar.jpg"}
           sx={{ width: 100, height: 100, mr: 3 }}
         />
         <Box>
@@ -48,7 +48,7 @@ const Home = () => (
         {resumeData?.summary || "Описание отсутствует."}
       </Typography>
 
-      {resumeData?.skills?.length > 0 && (
+      {resumeData?.skills?.length > 0 ? (
         <>
           <Typography variant="h5" gutterBottom>
             Skills:
@@ -56,7 +56,7 @@ const Home = () => (
           <List>
             {resumeData.skills.map((skill, idx) => (
               <ListItem
-                key={idx}
+                key={skill + idx}
                 sx={{ bgcolor: "#f9f9f9", mb: 1, borderRadius: 1 }}
               >
                 <ListItemIcon>{getIcon(skill)}</ListItemIcon>
@@ -65,6 +65,10 @@ const Home = () => (
             ))}
           </List>
         </>
+      ) : (
+        <Typography variant="body2" color="textSecondary">
+          Нет навыков, чтобы отобразить.
+        </Typography>
       )}
     </Paper>
   </Container>
