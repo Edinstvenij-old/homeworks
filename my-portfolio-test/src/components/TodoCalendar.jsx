@@ -22,6 +22,7 @@ function ServerDay({ day, outsideCurrentMonth, todosByDate, ...other }) {
             {...other}
             outsideCurrentMonth={outsideCurrentMonth}
             day={day}
+            data-testid={`calendar-day-${formatted}`}
           />
         </Badge>
       </Box>
