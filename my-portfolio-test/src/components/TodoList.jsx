@@ -113,6 +113,8 @@ const TodoList = ({
               <Typography
                 sx={{
                   textDecoration: todo.done ? "line-through" : "none",
+                  textDecorationColor: todo.done ? "red" : "none",
+                  textDecorationThickness: todo.done ? "3px" : "initial",
                   flexGrow: 1,
                   mr: 1,
                 }}

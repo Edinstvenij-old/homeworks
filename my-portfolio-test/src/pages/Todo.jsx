@@ -65,6 +65,11 @@ const Todo = () => {
     audio.play();
   };
 
+  const playStrikeSound = () => {
+    const audio = new Audio("/sounds/strike.mp3");
+    audio.play();
+  };
+
   const handleAdd = () => {
     const trimmed = text.trim();
     if (trimmed) {
@@ -97,6 +102,11 @@ const Todo = () => {
     if (e.key === "Enter") {
       handleAdd();
     }
+  };
+
+  const handleToggleDone = (id) => {
+    dispatch(toggleDone(id));
+    playStrikeSound();
   };
 
   useEffect(() => {
@@ -185,7 +195,7 @@ const Todo = () => {
 
         <TodoList
           todos={filteredTodos}
-          toggleDone={(id) => dispatch(toggleDone(id))}
+          toggleDone={handleToggleDone}
           deleteTodo={(id) => {
             dispatch(deleteTodo(id));
             playBroomSound();
