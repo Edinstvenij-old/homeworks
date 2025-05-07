@@ -16,7 +16,7 @@ const HotelCard = ({ hotel }) => {
       <CardMedia
         component="img"
         height="200"
-        image={hotel?.image || "/image/default-image.jpg"} // ✅ safe access
+        image={hotel?.image || "/image/default-image.jpg"}
         alt={hotel?.name || "Hotel image"}
         sx={{ objectFit: "cover" }}
       />
@@ -48,7 +48,7 @@ const HotelCard = ({ hotel }) => {
           sx={{ mt: 2 }}
           onClick={() => navigate(`/hotel/${hotel?.id}`)}
         >
-          View Details
+          Посмотреть подробности
         </Button>
       </CardContent>
     </Card>

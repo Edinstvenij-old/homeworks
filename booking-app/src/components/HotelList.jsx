@@ -3,23 +3,28 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchHotels } from "../store/features/hotels/hotelsSlice";
 import HotelCard from "./HotelCard";
 import { Typography, Grid, Box, CircularProgress, Alert } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
-const HotelList = ({ selectedCity }) => {
+const HotelList = ({ selectedCity: propCity }) => {
   const dispatch = useDispatch();
   const { data: hotels, loading, error } = useSelector((state) => state.hotels);
+  const location = useLocation();
+
+  // Получаем город: сначала из пропсов, если нет — из location.state
+  const selectedCity = propCity || location.state?.destination || null;
 
   useEffect(() => {
     if (selectedCity) {
       dispatch(fetchHotels({ city: selectedCity }));
     } else {
-      dispatch(fetchHotels()); // fallback — загрузить все, если нет фильтра
+      dispatch(fetchHotels()); // fallback — загрузить все
     }
   }, [dispatch, selectedCity]);
 
   return (
     <Box mt={4}>
       <Typography variant="h5" gutterBottom>
-        Hotels in {selectedCity || "all locations"}
+        Отели в {selectedCity || "all locations"}
       </Typography>
 
       {loading && (
@@ -36,7 +41,7 @@ const HotelList = ({ selectedCity }) => {
 
       {!loading && !error && hotels.length === 0 && (
         <Typography>
-          No hotels found in {selectedCity || "this area"}.
+          Отели не найдены в {selectedCity || "this area"}.
         </Typography>
       )}
 

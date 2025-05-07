@@ -10,15 +10,15 @@ const bookingSlice = createSlice({
   reducers: {
     sendBookingRequest: (state) => {
       state.loading = true;
-      state.error = null;
+      state.error = null; // При отправке запроса, сбрасываем ошибки
     },
     setBookingData: (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      state.data = action.payload; // Сохраняем данные бронирования
     },
     setError: (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.error = action.payload; // Сохраняем ошибку
     },
   },
 });

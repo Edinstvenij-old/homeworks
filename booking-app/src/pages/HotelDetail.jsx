@@ -7,6 +7,7 @@ import {
   Typography,
   Box,
   Rating,
+  CircularProgress,
 } from "@mui/material";
 
 export default function HotelDetail() {
@@ -15,13 +16,27 @@ export default function HotelDetail() {
     state.hotels.data.find((h) => String(h.id) === hotelId)
   );
 
+  // Если данных о отеле нет
   if (!hotel) {
     return (
-      <Typography variant="h6" sx={{ mt: 4, textAlign: "center" }}>
-        Hotel not found.
-      </Typography>
+      <Box sx={{ mt: 4, textAlign: "center" }}>
+        <CircularProgress />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Отель не найден.
+        </Typography>
+      </Box>
     );
   }
+
+  const {
+    name,
+    image,
+    address,
+    city,
+    hotel_rating,
+    price_per_night,
+    description,
+  } = hotel;
 
   return (
     <Card
@@ -36,37 +51,33 @@ export default function HotelDetail() {
       <CardMedia
         component="img"
         height="300"
-        image={hotel.image || "/image/default-image.jpg"}
-        alt={hotel.name || "Hotel"}
+        image={image || "/image/default-image.jpg"}
+        alt={name || "Hotel"}
         sx={{ objectFit: "cover" }}
       />
 
       <CardContent>
         <Typography variant="h5" gutterBottom>
-          {hotel.name}
+          {name || "Unnamed Hotel"}
         </Typography>
 
         <Typography variant="body1" gutterBottom>
-          Address: {hotel.address || "N/A"}, {hotel.city || "N/A"}
+          Address: {address || "N/A"}, {city || "N/A"}
         </Typography>
 
         <Box mt={1} display="flex" alignItems="center">
           <Typography variant="body2" mr={1}>
             Rating:
           </Typography>
-          <Rating
-            value={Number(hotel.hotel_rating) || 0}
-            precision={0.5}
-            readOnly
-          />
+          <Rating value={Number(hotel_rating) || 0} precision={0.5} readOnly />
         </Box>
 
         <Typography variant="h6" mt={2}>
-          Price: ${hotel.price_per_night || "N/A"} / night
+          Price: ${price_per_night || "N/A"} / night
         </Typography>
 
         <Typography variant="body2" color="text.secondary" mt={2}>
-          Description: {hotel.description || "No description available."}
+          Description: {description || "No description available."}
         </Typography>
       </CardContent>
     </Card>

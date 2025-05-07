@@ -9,38 +9,34 @@ import {
   Container,
   Grid,
 } from "@mui/material";
-import { fetchHotels } from "../store/features/hotels/hotelsSlice"; // Используй правильное действие
+import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
 import HotelCard from "../components/HotelCard";
+import { selectMemoizedHotels } from "../store/selectors";
 
 export default function Hotels() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const selectedCity = location.state?.destination || "";
+
   const {
     data: hotels = [],
     loading,
     error,
-  } = useSelector(
-    (state) => state.hotels || {} // Защищаем от undefined
-  );
-
-  const city = location.state?.destination || "";
+  } = useSelector(selectMemoizedHotels);
 
   useEffect(() => {
-    dispatch(fetchHotels()); // Диспатчим правильное действие
-  }, [dispatch]);
-
-  const visibleHotels =
-    city && typeof city === "string"
-      ? hotels.filter(
-          (hotel) =>
-            hotel.city?.toLowerCase().trim() === city.toLowerCase().trim()
-        )
-      : hotels;
+    // если есть выбранный город — фильтруем по нему
+    if (selectedCity) {
+      dispatch(fetchHotelsRequest({ city: selectedCity }));
+    } else {
+      dispatch(fetchHotelsRequest());
+    }
+  }, [dispatch, selectedCity]);
 
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Hotels {city ? `in ${city}` : "List"}
+        Hotels {selectedCity ? `in ${selectedCity}` : "List"}
       </Typography>
 
       {loading && (
@@ -55,15 +51,17 @@ export default function Hotels() {
         </Alert>
       )}
 
-      {!loading && !error && visibleHotels.length === 0 && (
+      {!loading && !error && hotels.length === 0 && (
         <Typography variant="body1" sx={{ mt: 2 }}>
-          {city ? `No hotels found in ${city}.` : "No hotels available."}
+          {selectedCity
+            ? `Отели не найдены в ${selectedCity}.`
+            : "Нет доступных отелей."}
         </Typography>
       )}
 
-      {!loading && !error && visibleHotels.length > 0 && (
+      {!loading && !error && hotels.length > 0 && (
         <Grid container spacing={3} mt={2}>
-          {visibleHotels.map((hotel) => (
+          {hotels.map((hotel) => (
             <Grid item xs={12} sm={6} md={4} key={hotel.id}>
               <HotelCard hotel={hotel} />
             </Grid>

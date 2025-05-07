@@ -8,7 +8,8 @@ const hotelsSlice = createSlice({
     error: null,
   },
   reducers: {
-    fetchHotels: (state) => {
+    fetchHotelsRequest: (state) => {
+      // изменил название
       state.loading = true;
       state.error = null;
     },
@@ -23,7 +24,7 @@ const hotelsSlice = createSlice({
   },
 });
 
-export const { fetchHotels, fetchHotelsSuccess, fetchHotelsFailure } =
+export const { fetchHotelsRequest, fetchHotelsSuccess, fetchHotelsFailure } =
   hotelsSlice.actions;
 
 export default hotelsSlice.reducer;
