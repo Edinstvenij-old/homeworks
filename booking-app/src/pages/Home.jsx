@@ -20,6 +20,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Загрузка списка городов
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -43,11 +44,13 @@ export default function Home() {
     fetchData();
   }, []);
 
+  // Обработчик отправки формы
   const onSubmit = useCallback(
     async (values) => {
       const result = await dispatch(sendBooking(values));
 
       if (sendBooking.fulfilled.match(result)) {
+        // Переход на страницу отелей с передачей города через state
         navigate("/hotels", { state: { destination: values.destination } });
       } else {
         alert(result.payload || "Booking error");

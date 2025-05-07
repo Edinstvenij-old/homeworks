@@ -7,12 +7,19 @@ export const fetchHotels = createAsyncThunk(
   async (city = "", { rejectWithValue }) => {
     try {
       const query = city ? `?city=${encodeURIComponent(city)}` : "";
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/hotels${query}`
-      );
+      const url = `${import.meta.env.VITE_API_URL}/hotels${query}`;
+      console.log("Fetching data from: ", url); // Логируем URL запроса
+      const response = await axios.get(url);
+      console.log("Fetched data:", response.data); // Логируем ответ от API
+      if (!Array.isArray(response.data)) {
+        throw new Error("API response is not an array");
+      }
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || "Ошибка загрузки отелей");
+      console.error("Error fetching hotels:", error); // Логируем ошибку
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Ошибка загрузки отелей"
+      );
     }
   }
 );
@@ -35,15 +42,11 @@ const hotelsSlice = createSlice({
       })
       .addCase(fetchHotels.fulfilled, (state, action) => {
         state.loading = false;
-
-        // ✅ Обновляем только при изменении ссылочно
-        if (state.data !== action.payload) {
-          state.data = action.payload;
-        }
+        state.data = action.payload || [];
       })
       .addCase(fetchHotels.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Неизвестная ошибка";
       });
   },
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { fetchHotels } from "../store/features/hotels/hotelsSlice";
@@ -13,21 +13,24 @@ import {
 const HotelList = ({ selectedCity: propCity }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  // Если город передан как пропс, используем его. Иначе, ищем в location.
   const selectedCity = propCity || location.state?.destination || null;
 
-  const selectHotelsByCityRef = useRef(makeSelectHotelsByCity());
+  // Используем селектор для получения отелей, если город выбран
   const hotels = useSelector((state) =>
-    selectHotelsByCityRef.current(state, selectedCity)
+    makeSelectHotelsByCity()(state, selectedCity)
   );
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
 
+  // Запрос отелей при изменении selectedCity
   useEffect(() => {
     if (selectedCity) {
       console.log("Fetching hotels for city:", selectedCity);
-      dispatch(fetchHotels({ city: selectedCity }));
+      dispatch(fetchHotels(selectedCity)); // Передаем строку города, а не объект
     } else {
-      dispatch(fetchHotels());
+      dispatch(fetchHotels()); // Загружаем все отели, если город не выбран
     }
   }, [dispatch, selectedCity]);
 
@@ -49,7 +52,7 @@ const HotelList = ({ selectedCity: propCity }) => {
         </Alert>
       )}
 
-      {!loading && !error && hotels.length === 0 && (
+      {!loading && !error && hotels?.length === 0 && (
         <Typography>
           Отели не найдены{" "}
           {selectedCity ? `в ${selectedCity}` : "в этой области"}.
@@ -57,7 +60,7 @@ const HotelList = ({ selectedCity: propCity }) => {
       )}
 
       <Grid container spacing={3} mt={2}>
-        {hotels.map((hotel) => (
+        {hotels?.map((hotel) => (
           <Grid item key={hotel.id} xs={12} sm={6} md={4}>
             <HotelCard hotel={hotel} />
           </Grid>

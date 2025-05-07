@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
@@ -12,7 +12,7 @@ import {
 import { fetchHotels } from "../store/features/hotels/hotelsSlice";
 import HotelCard from "../components/HotelCard";
 import {
-  makeSelectHotelsByCity,
+  selectHotelsData,
   selectLoading,
   selectError,
 } from "../store/selectors/hotelsSelectors";
@@ -20,17 +20,21 @@ import {
 export default function Hotels() {
   const dispatch = useDispatch();
   const location = useLocation();
-
   const selectedCity = location.state?.destination || "";
 
-  // Сохраняем один экземпляр селектора
-  const selectHotelsByCityRef = useRef(makeSelectHotelsByCity());
-  const hotels = useSelector((state) =>
-    selectHotelsByCityRef.current(state, selectedCity)
-  );
-
+  const hotelsData = useSelector(selectHotelsData);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
+
+  // Оптимизация фильтрации отелей
+  const hotels = useMemo(() => {
+    console.log("Filtering hotels by city:", selectedCity);
+    if (!selectedCity) return hotelsData; // Если город не выбран, показываем все отели
+    return hotelsData.filter(
+      (hotel) =>
+        hotel.city?.toLowerCase().trim() === selectedCity.toLowerCase().trim()
+    );
+  }, [hotelsData, selectedCity]);
 
   useEffect(() => {
     dispatch(fetchHotels(selectedCity || undefined));
