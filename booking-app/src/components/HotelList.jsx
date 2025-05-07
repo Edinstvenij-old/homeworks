@@ -1,30 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { fetchHotels } from "../store/features/hotels/hotelsSlice";
 import HotelCard from "./HotelCard";
 import { Typography, Grid, Box, CircularProgress, Alert } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import {
+  makeSelectHotelsByCity,
+  selectLoading,
+  selectError,
+} from "../store/selectors/hotelsSelectors";
 
 const HotelList = ({ selectedCity: propCity }) => {
   const dispatch = useDispatch();
-  const { data: hotels, loading, error } = useSelector((state) => state.hotels);
   const location = useLocation();
-
-  // Получаем город: сначала из пропсов, если нет — из location.state
   const selectedCity = propCity || location.state?.destination || null;
+
+  // 🧠 Создаём уникальный экземпляр селектора на каждый рендер
+  const selectHotelsByCity = useMemo(makeSelectHotelsByCity, []);
+  const hotels = useSelector((state) =>
+    selectHotelsByCity(state, selectedCity)
+  );
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
     if (selectedCity) {
+      console.log("Fetching hotels for city:", selectedCity);
       dispatch(fetchHotels({ city: selectedCity }));
     } else {
-      dispatch(fetchHotels()); // fallback — загрузить все
+      dispatch(fetchHotels());
     }
   }, [dispatch, selectedCity]);
 
   return (
     <Box mt={4}>
       <Typography variant="h5" gutterBottom>
-        Отели в {selectedCity || "all locations"}
+        Отели в {selectedCity || "всех направлениях"}
       </Typography>
 
       {loading && (
@@ -41,7 +52,8 @@ const HotelList = ({ selectedCity: propCity }) => {
 
       {!loading && !error && hotels.length === 0 && (
         <Typography>
-          Отели не найдены в {selectedCity || "this area"}.
+          Отели не найдены{" "}
+          {selectedCity ? `в ${selectedCity}` : "в этой области"}.
         </Typography>
       )}
 

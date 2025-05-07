@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
@@ -9,29 +9,40 @@ import {
   Container,
   Grid,
 } from "@mui/material";
-import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
+import { fetchHotels } from "../store/features/hotels/hotelsSlice";
 import HotelCard from "../components/HotelCard";
-import { selectMemoizedHotels } from "../store/selectors";
+import {
+  makeSelectHotelsByCity,
+  selectLoading,
+  selectError,
+} from "../store/selectors/hotelsSelectors";
 
 export default function Hotels() {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  // Получаем город из location.state или оставляем пустую строку
   const selectedCity = location.state?.destination || "";
 
-  const {
-    data: hotels = [],
-    loading,
-    error,
-  } = useSelector(selectMemoizedHotels);
+  // Мемоизированный селектор на основе makeSelectHotelsByCity
+  const selectHotelsByCity = useMemo(makeSelectHotelsByCity, []);
+  const hotels = useSelector((state) =>
+    selectHotelsByCity(state, selectedCity)
+  );
+
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
   useEffect(() => {
-    // если есть выбранный город — фильтруем по нему
     if (selectedCity) {
-      dispatch(fetchHotelsRequest({ city: selectedCity }));
-    } else {
-      dispatch(fetchHotelsRequest());
+      console.log("Fetching hotels for city:", selectedCity);
+      dispatch(fetchHotels(selectedCity));
     }
   }, [dispatch, selectedCity]);
+
+  useEffect(() => {
+    console.log("Received hotels data:", hotels);
+  }, [hotels]);
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -54,8 +65,8 @@ export default function Hotels() {
       {!loading && !error && hotels.length === 0 && (
         <Typography variant="body1" sx={{ mt: 2 }}>
           {selectedCity
-            ? `Отели не найдены в ${selectedCity}.`
-            : "Нет доступных отелей."}
+            ? `No hotels found in ${selectedCity}.`
+            : "No available hotels."}
         </Typography>
       )}
 

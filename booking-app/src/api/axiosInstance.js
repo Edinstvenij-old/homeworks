@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
@@ -8,14 +7,15 @@ const API = axios.create({
   },
 });
 
+// Интерсептор только логирует ошибку (без toast!)
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error.response?.status;
+    const status = error?.response?.status;
     const message =
-      error.response?.data?.message || error.message || "Unknown error";
-    toast.error(`Error ${status || ""}: ${message}`);
-    return Promise.reject(error);
+      error?.response?.data?.message || error?.message || "Unknown error";
+    console.error(`API Error ${status ? `(${status})` : ""}: ${message}`);
+    return Promise.reject(error); // Пробрасываем дальше
   }
 );
 

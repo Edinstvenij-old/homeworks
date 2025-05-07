@@ -1,8 +1,8 @@
 import { Form, Field } from "react-final-form";
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { sendBookingRequest } from "../store/features/booking/bookingSlice";
-import { fetchDestinations } from "../api/destinationApi";
+import { sendBooking } from "../store/features/booking/bookingSlice";
+import { fetchDestinations } from "../api/api";
 import {
   Button,
   MenuItem,
@@ -24,7 +24,6 @@ export default function Home() {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const response = await fetchDestinations();
         if (Array.isArray(response)) {
@@ -45,9 +44,14 @@ export default function Home() {
   }, []);
 
   const onSubmit = useCallback(
-    (values) => {
-      dispatch(sendBookingRequest(values));
-      navigate("/hotels", { state: { destination: values.destination } });
+    async (values) => {
+      const result = await dispatch(sendBooking(values));
+
+      if (sendBooking.fulfilled.match(result)) {
+        navigate("/hotels", { state: { destination: values.destination } });
+      } else {
+        alert(result.payload || "Booking error");
+      }
     },
     [dispatch, navigate]
   );
@@ -62,35 +66,31 @@ export default function Home() {
               name="destination"
               validate={(v) => (v ? undefined : "Required")}
             >
-              {({ input, meta }) => {
-                return (
-                  <>
-                    <TextField
-                      select
-                      label="Выберите город"
-                      {...input}
-                      error={meta.touched && Boolean(meta.error)}
-                      helperText={meta.touched && meta.error}
-                      fullWidth
-                      disabled={loading || destinations.length === 0}
-                    >
-                      {loading ? (
-                        <MenuItem disabled>
-                          <CircularProgress size={24} />
-                        </MenuItem>
-                      ) : error ? (
-                        <MenuItem disabled>{error}</MenuItem>
-                      ) : (
-                        destinations.map((opt) => (
-                          <MenuItem key={opt.id} value={opt.label}>
-                            {opt.label}
-                          </MenuItem>
-                        ))
-                      )}
-                    </TextField>
-                  </>
-                );
-              }}
+              {({ input, meta }) => (
+                <TextField
+                  select
+                  label="Выберите город"
+                  {...input}
+                  error={meta.touched && Boolean(meta.error)}
+                  helperText={meta.touched && meta.error}
+                  fullWidth
+                  disabled={loading || destinations.length === 0}
+                >
+                  {loading ? (
+                    <MenuItem disabled>
+                      <CircularProgress size={24} />
+                    </MenuItem>
+                  ) : error ? (
+                    <MenuItem disabled>{error}</MenuItem>
+                  ) : (
+                    destinations.map((opt) => (
+                      <MenuItem key={opt.id} value={opt.label}>
+                        {opt.label}
+                      </MenuItem>
+                    ))
+                  )}
+                </TextField>
+              )}
             </Field>
 
             {error && (

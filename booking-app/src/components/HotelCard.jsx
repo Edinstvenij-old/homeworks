@@ -20,33 +20,27 @@ const HotelCard = ({ hotel }) => {
         alt={hotel?.name || "Hotel image"}
         sx={{ objectFit: "cover" }}
       />
-
       <CardContent>
         <Typography variant="h6" gutterBottom>
-          {hotel?.name || "No name available"}
+          {hotel?.name}
         </Typography>
-
         <Typography color="textSecondary" variant="body2" paragraph>
-          {hotel?.address || "No address available"}
+          {hotel?.address}
         </Typography>
-
         <Typography color="textSecondary" variant="body2">
-          {hotel?.city || "No city specified"}
+          {hotel?.city}
         </Typography>
-
         <Typography variant="body2" color="textSecondary" mt={1}>
-          Rating: {hotel?.hotel_rating || "N/A"}
+          Rating: {hotel?.hotel_rating}
         </Typography>
-
         <Typography variant="body2" color="textSecondary" mt={1}>
           Phone: {hotel?.phone_number || "N/A"}
         </Typography>
-
         <Button
           variant="contained"
           size="small"
           sx={{ mt: 2 }}
-          onClick={() => navigate(`/hotel/${hotel?.id}`)}
+          onClick={() => navigate(`/hotels/${hotel?.id}`)}
         >
           Посмотреть подробности
         </Button>
