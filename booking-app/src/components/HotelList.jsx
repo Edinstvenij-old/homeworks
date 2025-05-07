@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { fetchHotels } from "../store/features/hotels/hotelsSlice";
@@ -15,10 +15,9 @@ const HotelList = ({ selectedCity: propCity }) => {
   const location = useLocation();
   const selectedCity = propCity || location.state?.destination || null;
 
-  // 🧠 Создаём уникальный экземпляр селектора на каждый рендер
-  const selectHotelsByCity = useMemo(makeSelectHotelsByCity, []);
+  const selectHotelsByCityRef = useRef(makeSelectHotelsByCity());
   const hotels = useSelector((state) =>
-    selectHotelsByCity(state, selectedCity)
+    selectHotelsByCityRef.current(state, selectedCity)
   );
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);

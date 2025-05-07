@@ -7,7 +7,7 @@ const API = axios.create({
   },
 });
 
-// Интерсептор только логирует ошибку (без toast!)
+// Логируем ошибку в консоль, но не перехватываем окончательно
 API.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -15,7 +15,7 @@ API.interceptors.response.use(
     const message =
       error?.response?.data?.message || error?.message || "Unknown error";
     console.error(`API Error ${status ? `(${status})` : ""}: ${message}`);
-    return Promise.reject(error); // Пробрасываем дальше
+    return Promise.reject(error);
   }
 );
 

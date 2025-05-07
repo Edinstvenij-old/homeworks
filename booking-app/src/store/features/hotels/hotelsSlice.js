@@ -35,8 +35,9 @@ const hotelsSlice = createSlice({
       })
       .addCase(fetchHotels.fulfilled, (state, action) => {
         state.loading = false;
-        // Сохраняем данные только если они изменились
-        if (JSON.stringify(state.data) !== JSON.stringify(action.payload)) {
+
+        // ✅ Обновляем только при изменении ссылочно
+        if (state.data !== action.payload) {
           state.data = action.payload;
         }
       })
