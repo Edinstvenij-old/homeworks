@@ -5,7 +5,6 @@ import {
   MenuItem,
   TextField,
   Typography,
-  Container,
   Paper,
   Box,
   CircularProgress,
@@ -26,32 +25,30 @@ export default function Main() {
 
   const onSubmit = (data) => {
     if (!data.destination) return;
-
-    // Переход с передачей destinationId через URL параметры
     navigate(`/hotels?destinationId=${data.destination}`);
   };
 
   if (loading) {
     return (
-      <Container maxWidth="sm" sx={{ mt: 6 }}>
-        <CircularProgress sx={{ display: "block", mx: "auto" }} />
-      </Container>
+      <Box py={6} display="flex" justifyContent="center">
+        <CircularProgress />
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container maxWidth="sm" sx={{ mt: 6 }}>
+      <Box py={6}>
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 6 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+    <Box component="section" py={6} display="flex" justifyContent="center">
+      <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 500 }}>
         <Typography variant="h4" gutterBottom align="center">
           Book a Hotel
         </Typography>
@@ -91,6 +88,6 @@ export default function Main() {
           </Button>
         </Box>
       </Paper>
-    </Container>
+    </Box>
   );
 }

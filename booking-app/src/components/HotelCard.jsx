@@ -1,42 +1,62 @@
 import {
   Card,
   CardContent,
+  CardMedia,
   Typography,
-  CardActionArea,
+  CardActions,
+  Button,
   Box,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function HotelCard({ hotel }) {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate(`/hotels/${hotel.id}`);
-  };
+  const defaultImage = "..//../public/image/default-image.jpg";
 
   return (
-    <Card
-      elevation={4}
-      sx={{ height: "100%", display: "flex", flexDirection: "column" }}
-    >
-      <CardActionArea onClick={handleClick} sx={{ flexGrow: 1 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom noWrap>
-            {hotel.name || "Unnamed Hotel"}
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Card
+        sx={{
+          width: 320,
+          height: 420,
+          display: "flex",
+          flexDirection: "column",
+          borderRadius: 3,
+          boxShadow: 6,
+          backgroundColor: "#1e1e1e",
+          color: "#fff",
+        }}
+      >
+        <CardMedia
+          component="img"
+          height="180"
+          image={hotel.image || defaultImage}
+          alt={hotel.name}
+          sx={{ objectFit: "cover" }}
+        />
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Typography gutterBottom variant="h6" component="div" color="white">
+            {hotel.name}
           </Typography>
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {hotel.address || "No address available"}
+          <Typography variant="body2" color="gray">
+            {hotel.description || "No description available."}
           </Typography>
-          <Box sx={{ mt: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              Rating: {hotel.hotel_rating ?? "N/A"}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Phone: {hotel.phone_number ?? "N/A"}
-            </Typography>
-          </Box>
         </CardContent>
-      </CardActionArea>
-    </Card>
+        <CardActions>
+          <Button
+            size="small"
+            component={Link}
+            to={`/hotels/${hotel.id}`}
+            variant="outlined"
+            sx={{
+              borderColor: "#fff",
+              color: "#fff",
+              "&:hover": { borderColor: "#ccc" },
+            }}
+          >
+            View Details
+          </Button>
+        </CardActions>
+      </Card>
+    </Box>
   );
 }

@@ -1,12 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import {
-  Grid,
-  Container,
-  Typography,
-  CircularProgress,
-  Box,
-} from "@mui/material";
+import { Grid, Typography, CircularProgress, Box } from "@mui/material";
 import HotelCard from "../components/HotelCard";
 import { fetchHotelsRequest } from "../features/hotels/hotelsSlice";
 import { useLocation } from "react-router-dom";
@@ -21,35 +15,32 @@ export default function Hotels() {
     const destinationId = searchParams.get("destinationId");
 
     if (destinationId) {
-      dispatch(fetchHotelsRequest(destinationId)); // Загружаем отели по ID
+      dispatch(fetchHotelsRequest(destinationId));
     } else {
-      dispatch(fetchHotelsRequest()); // Загружаем все отели
+      dispatch(fetchHotelsRequest());
     }
   }, [dispatch, location.search]);
 
   if (loading) {
     return (
-      <Container
-        maxWidth="lg"
-        sx={{ mt: 4, display: "flex", justifyContent: "center" }}
-      >
+      <Box py={6} display="flex" justifyContent="center">
         <CircularProgress />
-      </Container>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Box py={6}>
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
+    <Box component="section" py={6}>
       <Typography variant="h4" gutterBottom>
         Available Hotels
       </Typography>
@@ -63,12 +54,12 @@ export default function Hotels() {
           ))}
         </Grid>
       ) : (
-        <Box sx={{ mt: 4 }}>
+        <Box mt={4}>
           <Typography variant="h6" color="text.secondary" align="center">
             No hotels available at the moment.
           </Typography>
         </Box>
       )}
-    </Container>
+    </Box>
   );
 }
