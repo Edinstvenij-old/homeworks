@@ -1,5 +1,4 @@
-// components/Layout.jsx
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import Header from "./Header";
 import Footer from "./Footer";
 
@@ -9,23 +8,29 @@ const Layout = ({ children }) => {
       display="flex"
       flexDirection="column"
       minHeight="100vh"
+      width="100%"
       bgcolor="background.default"
     >
-      <Header />
+      <Box component="header" width="100%" sx={{ flexShrink: 0 }}>
+        <Header />
+      </Box>
+
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 4,
           display: "flex",
           flexDirection: "column",
+          width: "100%",
+          margin: "0 auto",
         }}
       >
-        <Container maxWidth="lg" sx={{ flexGrow: 1 }}>
-          {children}
-        </Container>
+        {children}
       </Box>
-      <Footer />
+
+      <Box component="footer" width="100%" sx={{ flexShrink: 0 }}>
+        <Footer />
+      </Box>
     </Box>
   );
 };

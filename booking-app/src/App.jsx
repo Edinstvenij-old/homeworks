@@ -4,27 +4,45 @@ import About from "./pages/About";
 import Hotels from "./pages/Hotels";
 import HotelDetails from "./pages/HotelDetails";
 import NotFound from "./pages/NotFound";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { Box, Container } from "@mui/material";
+import Layout from "./components/Layout"; // Импортируем Layout
 
 function App() {
   return (
-    <Box display="flex" flexDirection="column" minHeight="100vh">
-      <Header />
-      <Box component="main" flexGrow={1}>
-        <Container maxWidth="lg">
-          <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/hotels" element={<Hotels />} />
-            <Route path="/hotels/:id" element={<HotelDetails />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Container>
-      </Box>
-      <Footer />
-    </Box>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Layout>
+            <Main />
+          </Layout>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <Layout>
+            <About />
+          </Layout>
+        }
+      />
+      <Route
+        path="/hotels"
+        element={
+          <Layout>
+            <Hotels />
+          </Layout>
+        }
+      />
+      <Route
+        path="/hotels/:id"
+        element={
+          <Layout>
+            <HotelDetails />
+          </Layout>
+        }
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

@@ -29,6 +29,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  height: 100vh; /* Обеспечиваем, чтобы тело страницы занимало весь экран */
+  width: 100vw; /* Страница растягивается по ширине */
+  overflow: hidden; /* Чтобы убрать ненужные полосы прокрутки */
 }
 
 h1 {
@@ -46,6 +51,7 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: #fff;
 }
 button:hover {
   border-color: #646cff;
@@ -65,10 +71,23 @@ body,
   font-family: "Roboto", sans-serif;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #242424;
+    --text-color: rgba(255, 255, 255, 0.87);
+  }
+  a:hover {
+    color: #535bf2;
+  }
+  button {
+    background-color: #333;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background-color: #ffffff;
+    --text-color: #213547;
   }
   a:hover {
     color: #747bff;

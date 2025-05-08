@@ -23,7 +23,14 @@ export default function Hotels() {
 
   if (loading) {
     return (
-      <Box py={6} display="flex" justifyContent="center">
+      <Box
+        py={6}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        width="100%"
+      >
         <CircularProgress />
       </Box>
     );
@@ -31,7 +38,7 @@ export default function Hotels() {
 
   if (error) {
     return (
-      <Box py={6}>
+      <Box py={6} width="100%">
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
@@ -40,21 +47,42 @@ export default function Hotels() {
   }
 
   return (
-    <Box component="section" py={6}>
-      <Typography variant="h4" gutterBottom>
+    <Box
+      component="section"
+      py={6}
+      sx={{
+        minHeight: "auto",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1, // Чтобы раздел занимал всё доступное пространство
+      }}
+    >
+      <Typography variant="h4" gutterBottom align="center">
         Available Hotels
       </Typography>
 
       {hotels.length > 0 ? (
-        <Grid container spacing={3}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 2,
+            overflowY: "auto", // Для прокрутки карточек
+            maxHeight: "80vh", // Ограничиваем высоту для карточек, чтобы они могли прокручиваться
+            width: "100%",
+            padding: 2,
+          }}
+        >
           {hotels.map((hotel) => (
-            <Grid item xs={12} sm={6} md={4} key={hotel.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={hotel.id}>
               <HotelCard hotel={hotel} />
             </Grid>
           ))}
-        </Grid>
+        </Box>
       ) : (
-        <Box mt={4}>
+        <Box mt={4} width="100%">
           <Typography variant="h6" color="text.secondary" align="center">
             No hotels available at the moment.
           </Typography>

@@ -30,7 +30,14 @@ export default function Main() {
 
   if (loading) {
     return (
-      <Box py={6} display="flex" justifyContent="center">
+      <Box
+        py={6}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        width="100%"
+      >
         <CircularProgress />
       </Box>
     );
@@ -38,7 +45,7 @@ export default function Main() {
 
   if (error) {
     return (
-      <Box py={6}>
+      <Box py={6} width="100%">
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
@@ -47,15 +54,36 @@ export default function Main() {
   }
 
   return (
-    <Box component="section" py={6} display="flex" justifyContent="center">
-      <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 500 }}>
-        <Typography variant="h4" gutterBottom align="center">
-          Book a Hotel
-        </Typography>
+    <Box
+      component="section"
+      py={6}
+      sx={{
+        width: "100%",
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Typography variant="h4" gutterBottom align="center">
+        Book a Hotel
+      </Typography>
+
+      <Paper
+        elevation={3}
+        sx={{
+          width: "100%",
+          p: 4,
+        }}
+      >
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            width: "100%",
+          }}
         >
           <Controller
             name="destination"
@@ -83,7 +111,7 @@ export default function Main() {
               </TextField>
             )}
           />
-          <Button type="submit" variant="contained" size="large" sx={{ mt: 2 }}>
+          <Button type="submit" variant="contained" size="large">
             Search Hotels
           </Button>
         </Box>

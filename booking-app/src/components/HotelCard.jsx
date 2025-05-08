@@ -10,7 +10,7 @@ import {
 import { Link } from "react-router-dom";
 
 export default function HotelCard({ hotel }) {
-  const defaultImage = "..//../public/image/default-image.jpg";
+  const defaultImage = "/image/default-image.jpg";
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -31,7 +31,11 @@ export default function HotelCard({ hotel }) {
           height="180"
           image={hotel.image || defaultImage}
           alt={hotel.name}
-          sx={{ objectFit: "cover" }}
+          sx={{
+            objectFit: "cover",
+            borderTopLeftRadius: 3,
+            borderTopRightRadius: 3,
+          }}
         />
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h6" component="div" color="white">
@@ -41,7 +45,7 @@ export default function HotelCard({ hotel }) {
             {hotel.description || "No description available."}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ justifyContent: "center" }}>
           <Button
             size="small"
             component={Link}
@@ -50,7 +54,13 @@ export default function HotelCard({ hotel }) {
             sx={{
               borderColor: "#fff",
               color: "#fff",
-              "&:hover": { borderColor: "#ccc" },
+              "&:hover": {
+                borderColor: "#ccc",
+                backgroundColor: "#333",
+              },
+              "&.Mui-focusVisible": {
+                outline: "2px solid #fff",
+              },
             }}
           >
             View Details

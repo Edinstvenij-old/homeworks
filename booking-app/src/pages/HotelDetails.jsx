@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Container, Typography, Paper, Button, Box } from "@mui/material";
+import { Typography, Paper, Button, Box } from "@mui/material";
 
 export default function HotelDetails() {
   const { id } = useParams();
@@ -11,7 +11,7 @@ export default function HotelDetails() {
 
   if (!hotel) {
     return (
-      <Container sx={{ mt: 4 }}>
+      <Box sx={{ mt: 4, px: 2 }}>
         <Typography variant="h6" align="center" color="error">
           Hotel not found
         </Typography>
@@ -20,13 +20,13 @@ export default function HotelDetails() {
             Back
           </Button>
         </Box>
-      </Container>
+      </Box>
     );
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 6 }}>
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 3 }}>
+    <Box sx={{ mt: 6, px: 2 }}>
+      <Paper elevation={4} sx={{ p: 4, borderRadius: 3, width: "100%" }}>
         <Typography variant="h4" gutterBottom>
           {hotel.name || hotel.title}
         </Typography>
@@ -46,6 +46,6 @@ export default function HotelDetails() {
           Back
         </Button>
       </Paper>
-    </Container>
+    </Box>
   );
 }
