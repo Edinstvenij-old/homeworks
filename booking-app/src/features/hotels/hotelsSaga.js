@@ -8,24 +8,25 @@ import {
   fetchHotelsFailure,
 } from "./hotelsSlice";
 import { fetchDestinations, fetchHotels } from "../../api/hotelsApi";
-import { push } from "redux-first-history";
 
 function* loadDestinations() {
   try {
-    const { data } = yield call(fetchDestinations);
-    yield put(fetchDestinationsSuccess(data));
+    const response = yield call(fetchDestinations);
+    yield put(fetchDestinationsSuccess(response.data));
   } catch (error) {
-    yield put(fetchDestinationsFailure(error.message));
+    yield put(
+      fetchDestinationsFailure(error.message || "Failed to load destinations")
+    );
   }
 }
 
 function* loadHotels(action) {
   try {
-    const { data } = yield call(fetchHotels, action.payload);
-    yield put(fetchHotelsSuccess(data));
-    yield put(push("/hotels"));
+    const destinationId = action.payload; // получаем destinationId из action
+    const response = yield call(fetchHotels, destinationId || ""); // Если destinationId отсутствует, получаем все отели
+    yield put(fetchHotelsSuccess(response.data));
   } catch (error) {
-    yield put(fetchHotelsFailure(error.message));
+    yield put(fetchHotelsFailure(error.message || "Failed to load hotels"));
   }
 }
 

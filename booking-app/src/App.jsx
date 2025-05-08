@@ -1,16 +1,26 @@
+import { Route, Routes } from "react-router-dom";
+import Main from "./pages/Main";
+import About from "./pages/About";
+import Hotels from "./pages/Hotels";
+import HotelDetails from "./pages/HotelDetails";
+import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
-import AppRouter from "./router/AppRouter";
-import { Provider } from "react-redux";
-import { store, appHistory } from "./app/store";
-import { HistoryRouter } from "redux-first-history/rr6";
+import Footer from "./components/Footer";
 
-export default function App() {
+function App() {
   return (
-    <Provider store={store}>
-      <HistoryRouter history={appHistory}>
-        <Header />
-        <AppRouter />
-      </HistoryRouter>
-    </Provider>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/hotels" element={<Hotels />} />
+        <Route path="/hotels/:id" element={<HotelDetails />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </>
   );
 }
+
+export default App;

@@ -1,16 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  destinations: [],
+  hotels: [],
+  loading: false,
+  error: null,
+};
+
 const hotelsSlice = createSlice({
   name: "hotels",
-  initialState: {
-    destinations: [],
-    hotels: [],
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
+    // Загрузка списка городов
     fetchDestinationsRequest: (state) => {
       state.loading = true;
+      state.error = null; // сброс ошибки
     },
     fetchDestinationsSuccess: (state, action) => {
       state.destinations = action.payload;
@@ -20,8 +24,11 @@ const hotelsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
+
+    // Загрузка отелей по городу (destinationId)
     fetchHotelsRequest: (state, action) => {
       state.loading = true;
+      state.error = null; // сброс ошибки
     },
     fetchHotelsSuccess: (state, action) => {
       state.hotels = action.payload;
