@@ -76,7 +76,6 @@ export default function Main() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
         backgroundImage: `url('/image/fon-mail.avif')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -88,7 +87,7 @@ export default function Main() {
         variant="h4"
         gutterBottom
         align="center"
-        sx={{ color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}
+        sx={{ color: "#fff", textShadow: "3px 3px 2px rgba(0,0,0,0.7)" }}
       >
         Book a Hotel
       </Typography>
