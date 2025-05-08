@@ -22,11 +22,11 @@ export default function Header() {
           <Button component={NavLink} to="/" sx={linkStyle}>
             Main
           </Button>
-          <Button component={NavLink} to="/about" sx={linkStyle}>
-            About
-          </Button>
           <Button component={NavLink} to="/hotels" sx={linkStyle}>
             Hotels
+          </Button>
+          <Button component={NavLink} to="/about" sx={linkStyle}>
+            About
           </Button>
         </Toolbar>
       </AppBar>

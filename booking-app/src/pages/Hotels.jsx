@@ -65,13 +65,12 @@ export default function Hotels() {
         gutterBottom
         align="center"
         sx={{
-          color: "#ffeb3b",
-          textShadow: "3px 3px 1px rgba(0,0,0,0.8)",
+          color: "#f0f0f0",
+          textShadow: "1px 1px 3px #ffeb3b",
         }}
       >
         Available Hotels
       </Typography>
-
       {hotels.length > 0 ? (
         <Grid
           container
@@ -88,14 +87,15 @@ export default function Hotels() {
           {hotels.map((hotel) => (
             <Grid
               key={hotel.id}
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
               sx={{
                 display: "flex",
                 justifyContent: "center",
+              }}
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 4,
+                lg: 3,
               }}
             >
               <HotelCard hotel={hotel} />

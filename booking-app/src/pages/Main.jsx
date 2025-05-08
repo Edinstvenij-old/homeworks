@@ -17,7 +17,7 @@ export default function Main() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { destinations, loading, error } = useSelector((state) => state.hotels);
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, register } = useForm();
 
   useEffect(() => {
     dispatch(fetchDestinationsRequest());
@@ -25,7 +25,20 @@ export default function Main() {
 
   const onSubmit = (data) => {
     if (!data.destination) return;
-    navigate(`/hotels?destinationId=${data.destination}`);
+
+    // Формируем параметры для URL
+    const params = new URLSearchParams();
+    params.append("destinationId", data.destination);
+
+    if (data.city) params.append("city", data.city);
+    if (data.checkIn) params.append("checkIn", data.checkIn);
+    if (data.checkOut) params.append("checkOut", data.checkOut);
+    if (data.guests) params.append("guests", data.guests);
+    if (data.priceFrom) params.append("priceFrom", data.priceFrom);
+    if (data.priceTo) params.append("priceTo", data.priceTo);
+
+    // Перенаправляем на страницу с результатами
+    navigate(`/hotels?${params.toString()}`);
   };
 
   if (loading) {
@@ -99,6 +112,7 @@ export default function Main() {
             width: "100%",
           }}
         >
+          {/* Поле для выбора направления */}
           <Controller
             name="destination"
             control={control}
@@ -125,6 +139,49 @@ export default function Main() {
               </TextField>
             )}
           />
+
+          {/* Даты заезда и выезда */}
+          <Box display="flex" gap={2}>
+            <TextField
+              label="Check-in"
+              type="date"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              {...register("checkIn")}
+            />
+            <TextField
+              label="Check-out"
+              type="date"
+              fullWidth
+              InputLabelProps={{ shrink: true }}
+              {...register("checkOut")}
+            />
+          </Box>
+
+          {/* Количество гостей */}
+          <TextField
+            label="Guests"
+            type="number"
+            fullWidth
+            {...register("guests")}
+          />
+
+          {/* Фильтрация по цене */}
+          <Box display="flex" gap={2}>
+            <TextField
+              label="Price From"
+              type="number"
+              fullWidth
+              {...register("priceFrom")}
+            />
+            <TextField
+              label="Price To"
+              type="number"
+              fullWidth
+              {...register("priceTo")}
+            />
+          </Box>
+
           <Button type="submit" variant="contained" size="large">
             Search Hotels
           </Button>
