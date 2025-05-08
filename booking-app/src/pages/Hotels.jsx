@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Grid,
   Container,
@@ -14,22 +14,18 @@ import { useLocation } from "react-router-dom";
 export default function Hotels() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { hotels = [], loading, error } = useSelector((state) => state.hotels);
-  const [selectedDestination, setSelectedDestination] = useState(null);
+  const { hotels, loading, error } = useSelector((state) => state.hotels);
 
   useEffect(() => {
-    const destinationId = location.state?.destinationId;
+    const searchParams = new URLSearchParams(location.search);
+    const destinationId = searchParams.get("destinationId");
 
-    setSelectedDestination(destinationId || null);
-    dispatch(fetchHotelsRequest(destinationId || null));
-  }, [dispatch, location.state]);
-
-  // Фильтрация отелей, если есть destinationId
-  const filteredHotels = selectedDestination
-    ? hotels.filter(
-        (hotel) => String(hotel.destinationId) === String(selectedDestination)
-      )
-    : hotels;
+    if (destinationId) {
+      dispatch(fetchHotelsRequest(destinationId)); // Загружаем отели по ID
+    } else {
+      dispatch(fetchHotelsRequest()); // Загружаем все отели
+    }
+  }, [dispatch, location.search]);
 
   if (loading) {
     return (
@@ -58,9 +54,9 @@ export default function Hotels() {
         Available Hotels
       </Typography>
 
-      {filteredHotels.length > 0 ? (
+      {hotels.length > 0 ? (
         <Grid container spacing={3}>
-          {filteredHotels.map((hotel) => (
+          {hotels.map((hotel) => (
             <Grid item xs={12} sm={6} md={4} key={hotel.id}>
               <HotelCard hotel={hotel} />
             </Grid>

@@ -5,16 +5,17 @@ const initialState = {
   hotels: [],
   loading: false,
   error: null,
+  selectedDestinationId: null,
 };
 
 const hotelsSlice = createSlice({
   name: "hotels",
   initialState,
   reducers: {
-    // Загрузка списка городов
+    // Загрузка направлений
     fetchDestinationsRequest: (state) => {
       state.loading = true;
-      state.error = null; // сброс ошибки
+      state.error = null;
     },
     fetchDestinationsSuccess: (state, action) => {
       state.destinations = action.payload;
@@ -25,10 +26,12 @@ const hotelsSlice = createSlice({
       state.loading = false;
     },
 
-    // Загрузка отелей по городу (destinationId)
+    // Загрузка отелей
     fetchHotelsRequest: (state, action) => {
       state.loading = true;
-      state.error = null; // сброс ошибки
+      state.error = null;
+      state.selectedDestinationId = action.payload ?? null;
+      state.hotels = []; // очищаем старые отели перед загрузкой новых
     },
     fetchHotelsSuccess: (state, action) => {
       state.hotels = action.payload;

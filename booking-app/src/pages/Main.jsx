@@ -27,8 +27,8 @@ export default function Main() {
   const onSubmit = (data) => {
     if (!data.destination) return;
 
-    // Переход с передачей destinationId через state
-    navigate("/hotels", { state: { destinationId: data.destination } });
+    // Переход с передачей destinationId через URL параметры
+    navigate(`/hotels?destinationId=${data.destination}`);
   };
 
   if (loading) {
