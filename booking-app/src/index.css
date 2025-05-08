@@ -31,9 +31,9 @@ body {
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
-  height: 100vh; /* Обеспечиваем, чтобы тело страницы занимало весь экран */
-  width: 100vw; /* Страница растягивается по ширине */
-  overflow: hidden; /* Чтобы убрать ненужные полосы прокрутки */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 h1 {

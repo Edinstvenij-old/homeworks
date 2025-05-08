@@ -6,12 +6,11 @@ export default function About() {
       component="section"
       py={6}
       sx={{
-        width: "100vh",
+        width: "100vw",
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        margin: "0 auto",
       }}
     >
       <Typography variant="h4" gutterBottom align="center">
@@ -22,7 +21,7 @@ export default function About() {
         elevation={3}
         sx={{
           p: 4,
-          width: "100%",
+          width: "60%",
           maxWidth: 1200,
           mx: 2,
         }}

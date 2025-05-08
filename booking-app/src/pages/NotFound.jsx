@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function NotFound() {
   return (
-    <Container sx={{ textAlign: "center", mt: 10 }}>
+    <Container sx={{ textAlign: "center", mt: 10, width: "100vw" }}>
       <Typography variant="h2" color="error" gutterBottom>
         404
       </Typography>

@@ -52,10 +52,10 @@ export default function Hotels() {
       py={6}
       sx={{
         minHeight: "auto",
-        width: "100%",
+        width: "100vw",
         display: "flex",
         flexDirection: "column",
-        flexGrow: 1, // Чтобы раздел занимал всё доступное пространство
+        flexGrow: 1,
       }}
     >
       <Typography variant="h4" gutterBottom align="center">
@@ -69,8 +69,8 @@ export default function Hotels() {
             flexWrap: "wrap",
             justifyContent: "center",
             gap: 2,
-            overflowY: "auto", // Для прокрутки карточек
-            maxHeight: "80vh", // Ограничиваем высоту для карточек, чтобы они могли прокручиваться
+            overflowY: "auto",
+            maxHeight: "80vh",
             width: "100%",
             padding: 2,
           }}

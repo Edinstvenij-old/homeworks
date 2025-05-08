@@ -58,10 +58,11 @@ export default function Main() {
       component="section"
       py={6}
       sx={{
-        width: "100%",
+        width: "100vw",
         flexGrow: 1,
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Typography variant="h4" gutterBottom align="center">
@@ -71,7 +72,7 @@ export default function Main() {
       <Paper
         elevation={3}
         sx={{
-          width: "100%",
+          width: "50%",
           p: 4,
         }}
       >
