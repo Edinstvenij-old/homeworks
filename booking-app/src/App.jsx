@@ -1,20 +1,16 @@
-import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Hotels from "./pages/Hotels";
-import HotelDetail from "./pages/HotelDetail";
+import AppRouter from "./router/AppRouter";
+import { Provider } from "react-redux";
+import { store, appHistory } from "./app/store";
+import { HistoryRouter } from "redux-first-history/rr6";
 
 export default function App() {
   return (
-    <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/hotels" element={<Hotels />} />
-        <Route path="/hotels/:hotelId" element={<HotelDetail />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </>
+    <Provider store={store}>
+      <HistoryRouter history={appHistory}>
+        <Header />
+        <AppRouter />
+      </HistoryRouter>
+    </Provider>
   );
 }

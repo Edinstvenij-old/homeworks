@@ -1,17 +1,20 @@
-import { Link } from "react-router-dom";
-import { AppBar, Toolbar, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Header() {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Button color="inherit" component={Link} to="/">
-          Home
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          Booking App
+        </Typography>
+        <Button color="inherit" component={RouterLink} to="/">
+          Main
         </Button>
-        <Button color="inherit" component={Link} to="/about">
+        <Button color="inherit" component={RouterLink} to="/about">
           About
         </Button>
-        <Button color="inherit" component={Link} to="/hotels">
+        <Button color="inherit" component={RouterLink} to="/hotels">
           Hotels
         </Button>
       </Toolbar>
