@@ -59,21 +59,34 @@ export default function Main() {
       py={6}
       sx={{
         width: "100vw",
-        flexGrow: 1,
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
+        backgroundImage: `url('/image/fon-mail.avif')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
       }}
     >
-      <Typography variant="h4" gutterBottom align="center">
+      <Typography
+        variant="h4"
+        gutterBottom
+        align="center"
+        sx={{ color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}
+      >
         Book a Hotel
       </Typography>
 
       <Paper
-        elevation={3}
+        elevation={6}
         sx={{
-          width: "50%",
+          width: "90%",
+          maxWidth: 600,
           p: 4,
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
         }}
       >
         <Box

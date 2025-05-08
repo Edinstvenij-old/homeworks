@@ -7,23 +7,39 @@ export default function About() {
       py={6}
       sx={{
         width: "100vw",
-        flexGrow: 1,
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "flex-start", // Поднять вверх
+        backgroundImage: `url('/image/fon-about.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed",
+        pt: 10, // Внутренний отступ сверху
       }}
     >
-      <Typography variant="h4" gutterBottom align="center">
+      <Typography
+        variant="h4"
+        gutterBottom
+        align="center"
+        sx={{
+          color: "#fff",
+          textShadow: "2px 2px 6px rgba(0,0,0,0.7)",
+        }}
+      >
         About This App
       </Typography>
 
       <Paper
-        elevation={3}
+        elevation={6}
         sx={{
           p: 4,
-          width: "60%",
+          width: "80%",
           maxWidth: 1200,
           mx: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
         }}
       >
         <Typography variant="body1">

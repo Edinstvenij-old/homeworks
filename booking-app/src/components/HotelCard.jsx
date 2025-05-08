@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  CardMedia,
   Typography,
   CardActions,
   Button,
@@ -13,60 +12,121 @@ export default function HotelCard({ hotel }) {
   const defaultImage = "/image/default-image.jpg";
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
-      <Card
+    <Card
+      sx={{
+        width: 420,
+        height: 490,
+        display: "flex",
+        flexDirection: "column",
+        borderRadius: 3,
+        boxShadow: "0 4px 12px rgba(255, 255, 0, 0.2)",
+        bgcolor: "grey.900",
+        color: "grey.100",
+        overflow: "hidden",
+        "&:hover": {
+          boxShadow: "0 6px 20px rgba(255, 255, 0, 0.8)",
+        },
+      }}
+    >
+      <Box
         sx={{
-          width: 320,
-          height: 420,
-          display: "flex",
-          flexDirection: "column",
-          borderRadius: 3,
-          boxShadow: 6,
-          backgroundColor: "#1e1e1e",
-          color: "#fff",
+          height: 180,
+          overflow: "hidden",
         }}
       >
-        <CardMedia
+        <Box
           component="img"
-          height="180"
-          image={hotel.image || defaultImage}
+          src={hotel.image || defaultImage}
           alt={hotel.name}
           sx={{
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
-            borderTopLeftRadius: 3,
-            borderTopRightRadius: 3,
+            display: "block",
           }}
         />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography gutterBottom variant="h6" component="div" color="white">
-            {hotel.name}
-          </Typography>
-          <Typography variant="body2" color="gray">
-            {hotel.description || "No description available."}
-          </Typography>
-        </CardContent>
-        <CardActions sx={{ justifyContent: "center" }}>
-          <Button
-            size="small"
-            component={Link}
-            to={`/hotels/${hotel.id}`}
-            variant="outlined"
-            sx={{
-              borderColor: "#fff",
-              color: "#fff",
-              "&:hover": {
-                borderColor: "#ccc",
-                backgroundColor: "#333",
-              },
-              "&.Mui-focusVisible": {
-                outline: "2px solid #fff",
-              },
-            }}
-          >
-            View Details
-          </Button>
-        </CardActions>
-      </Card>
-    </Box>
+      </Box>
+
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography
+          variant="h6"
+          component="div"
+          noWrap
+          sx={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            color: "grey.100",
+          }}
+        >
+          {hotel.name}
+        </Typography>
+
+        {/* Описание отеля */}
+        <Typography
+          variant="body2"
+          sx={{
+            color: "grey.300",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            mt: 1,
+          }}
+        >
+          {hotel.description && hotel.description.trim() !== ""
+            ? hotel.description
+            : "No description available"}{" "}
+        </Typography>
+
+        {/* Адрес отеля */}
+        <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
+          {hotel.address
+            ? `Address: ${hotel.address}`
+            : "Address: Not available"}
+        </Typography>
+
+        {/* Город */}
+        <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
+          {hotel.city ? `City: ${hotel.city}` : "City: Not available"}
+        </Typography>
+
+        {/* Оценка отеля */}
+        <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
+          {hotel.hotel_rating
+            ? `Rating: ${hotel.hotel_rating}`
+            : "Rating: Not available"}
+        </Typography>
+
+        {/* Номер телефона */}
+        <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
+          {hotel.phone_number
+            ? `Phone: ${hotel.phone_number}`
+            : "Phone: Not available"}
+        </Typography>
+      </CardContent>
+
+      <CardActions sx={{ justifyContent: "center", pb: 2 }}>
+        <Button
+          size="small"
+          component={Link}
+          to={`/hotels/${hotel.id}`}
+          variant="outlined"
+          sx={{
+            borderColor: "grey.100",
+            color: "grey.100",
+            "&:hover": {
+              borderColor: "grey.300",
+              backgroundColor: "grey.800",
+            },
+            "&.Mui-focusVisible": {
+              outline: "2px solid #fff",
+            },
+          }}
+        >
+          View Details
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

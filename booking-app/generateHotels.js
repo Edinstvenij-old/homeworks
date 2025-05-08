@@ -1,6 +1,7 @@
-import fs from "fs"; // Используем import вместо require
+import fs from "fs";
 
-const destinations = [
+// ← твои destinations (города)
+const destination = [
   {
     id: 1,
     value: 70,
@@ -9,11 +10,6 @@ const destinations = [
   {
     id: 2,
     value: 149,
-    label: "Boston",
-  },
-  {
-    id: 3,
-    value: 5034,
     label: "Boston",
   },
   {
@@ -113,7 +109,7 @@ const hotels = [
     id: 5018105,
     name: "Woogo Central Park - Tempo Apartments",
     address: "240 West 73rd Street",
-    city: "New York",
+    city: "Miami",
     state: null,
     country_code: "US",
     hotel_rating: 4,
@@ -124,7 +120,7 @@ const hotels = [
     id: 11003176,
     name: "Amolite Hotel",
     address: "Avenida Curitiba, 811",
-    city: "New York",
+    city: "Atlanta",
     state: null,
     country_code: "BR",
     hotel_rating: 0,
@@ -135,7 +131,7 @@ const hotels = [
     id: 747134,
     name: "Redford Hotel",
     address: "136 Ludlow Street",
-    city: "New York",
+    city: "Ocoee",
     state: "NY",
     country_code: "US",
     hotel_rating: 3.5,
@@ -157,7 +153,7 @@ const hotels = [
     id: 797074,
     name: "Studio Lux Times Square",
     address: "between 9 Avenue and 8 Avenue",
-    city: "New York",
+    city: "Miami",
     state: "NY",
     country_code: "US",
     hotel_rating: 2.5,
@@ -190,7 +186,7 @@ const hotels = [
     id: 260469,
     name: "The Ridge Hotel",
     address: "151 East Houston Street",
-    city: "New York",
+    city: "Los Angeles",
     state: "NY",
     country_code: "US",
     hotel_rating: 3,
@@ -223,7 +219,7 @@ const hotels = [
     id: 792811,
     name: "Parker New York, A Hyatt Affiliate Property",
     address: "119 West 56th Street",
-    city: "New York",
+    city: "Washington",
     state: "NY",
     country_code: "US",
     hotel_rating: 4.5,
@@ -278,7 +274,7 @@ const hotels = [
     id: 776932,
     name: "Freehand New York",
     address: "23 Lexington Ave",
-    city: "New York",
+    city: "Gotha",
     state: "NY",
     country_code: "US",
     hotel_rating: 4,
@@ -311,7 +307,7 @@ const hotels = [
     id: 802583,
     name: "The Dominick",
     address: "246 Spring Street",
-    city: "New York",
+    city: "Polk City",
     state: "NY",
     country_code: "US",
     hotel_rating: 5,
@@ -366,7 +362,7 @@ const hotels = [
     id: 677300,
     name: "Vibrant 1BR in Fenway by Sonder",
     address: "Beacon Street and Park dr",
-    city: "Boston",
+    city: "Los Angeles",
     state: "MA",
     country_code: "US",
     hotel_rating: 4,
@@ -377,7 +373,7 @@ const hotels = [
     id: 820605,
     name: "Unique 1BR in Financial District by Sonder",
     address: "120 Milk St, Unit 801",
-    city: "Boston",
+    city: "Los Angeles",
     state: "MA",
     country_code: "US",
     hotel_rating: null,
@@ -388,7 +384,7 @@ const hotels = [
     id: 731189,
     name: "Charming 2BR in South End by Sonder",
     address: "Columbia Road & G Street",
-    city: "Boston",
+    city: "Orlando area",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -410,7 +406,7 @@ const hotels = [
     id: 677341,
     name: "Classic 3BR in Allston by Sonder",
     address: "Brainerd Road and Harvard St",
-    city: "Boston",
+    city: "Edgewood",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -421,7 +417,7 @@ const hotels = [
     id: 677347,
     name: "Posh 2BR in Allston by Sonder",
     address: "Western Avenue and N Harvard",
-    city: "Boston",
+    city: "Montverde",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -454,7 +450,7 @@ const hotels = [
     id: 822534,
     name: "Playful 1BR in Fenway by Sonder",
     address: "Commonwealth Avenue",
-    city: "Boston",
+    city: "St. Cloud",
     state: "MA",
     country_code: "US",
     hotel_rating: null,
@@ -465,7 +461,7 @@ const hotels = [
     id: 793847,
     name: "Stunning 1 BR In Allston by Sonder",
     address: "75 Braintree St",
-    city: "Boston",
+    city: "Miami",
     state: "MA",
     country_code: "US",
     hotel_rating: 4,
@@ -476,7 +472,7 @@ const hotels = [
     id: 677396,
     name: "Sonder - St. Mary's",
     address: "Beacon Street and Park dr",
-    city: "Boston",
+    city: "Haines City",
     state: "MA",
     country_code: "US",
     hotel_rating: 4,
@@ -487,7 +483,7 @@ const hotels = [
     id: 677411,
     name: "Bright 2BR in Downtown Crossing by Sonder",
     address: "Milk Street and Batterymarch st",
-    city: "Boston",
+    city: "Celebration",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -498,7 +494,7 @@ const hotels = [
     id: 677410,
     name: "Simple 1BR in Theater District by Sonder",
     address: "Warrenton Street and Stuart St",
-    city: "Boston",
+    city: "San Francisco Bay",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -542,7 +538,7 @@ const hotels = [
     id: 801610,
     name: "Playful 2BR in South End by Sonder",
     address: "Albany Street",
-    city: "Boston",
+    city: "Walt Disney World® Resort",
     state: "MA",
     country_code: "US",
     hotel_rating: 4,
@@ -619,7 +615,7 @@ const hotels = [
     id: 677470,
     name: "Central 3BR in South End by Sonder",
     address: "Massachusetts Avenue and Washington st",
-    city: "Boston",
+    city: "Poinciana",
     state: "MA",
     country_code: "US",
     hotel_rating: 4,
@@ -696,7 +692,7 @@ const hotels = [
     id: 705227,
     name: "Charming 1BR in Seaport by Sonder",
     address: "D Street",
-    city: "Boston",
+    city: "Windermere",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -729,7 +725,7 @@ const hotels = [
     id: 677527,
     name: "Modern 3BR in Brighton by Sonder",
     address: "Larose Place and Monastery rd",
-    city: "Boston",
+    city: "Winter Garden",
     state: "MA",
     country_code: "US",
     hotel_rating: 3.5,
@@ -892,22 +888,28 @@ const hotels = [
   },
 ];
 
-// Назначим destinationId по совпадению названия города
-const hotelsWithDestId = hotels.map((hotel) => {
-  const matchedDestination = destinations.find(
+// Функция выбора случайного города
+const getRandomDestinationId = () => {
+  const randomIndex = Math.floor(Math.random() * destination.length);
+  return destination[randomIndex].id;
+};
+
+// Назначим destinationId каждому отелю
+const hotelsWithDestination = hotels.map((hotel) => {
+  const matched = destination.find(
     (dest) => dest.label.toLowerCase() === hotel.city?.toLowerCase()
   );
 
   return {
     ...hotel,
-    destinationId: matchedDestination?.id || null,
+    destinationId: matched ? matched.id : getRandomDestinationId(),
   };
 });
 
-// Сохраним результат в файл db.json
+// Сохраняем в db.json
 fs.writeFileSync(
   "db.json",
-  JSON.stringify({ hotels: hotelsWithDestId, destinations }, null, 2)
+  JSON.stringify({ destination, hotels: hotelsWithDestination }, null, 2)
 );
 
-console.log("Данные успешно обновлены в db.json!");
+console.log("✅ Отели успешно распределены по городам и сохранены в db.json");

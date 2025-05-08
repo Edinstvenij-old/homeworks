@@ -11,11 +11,6 @@
       "label": "Boston"
     },
     {
-      "id": 3,
-      "value": 5034,
-      "label": "Boston"
-    },
-    {
       "id": 4,
       "value": 34501,
       "label": "Celebration"
@@ -111,37 +106,37 @@
       "id": 5018105,
       "name": "Woogo Central Park - Tempo Apartments",
       "address": "240 West 73rd Street",
-      "city": "New York",
+      "city": "Miami",
       "state": null,
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": "18005740835",
       "website": null,
-      "destinationId": 11
+      "destinationId": 9
     },
     {
       "id": 11003176,
       "name": "Amolite Hotel",
       "address": "Avenida Curitiba, 811",
-      "city": "New York",
+      "city": "Atlanta",
       "state": null,
       "country_code": "BR",
       "hotel_rating": 0,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 1
     },
     {
       "id": 747134,
       "name": "Redford Hotel",
       "address": "136 Ludlow Street",
-      "city": "New York",
+      "city": "Ocoee",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": "212260414",
       "website": null,
-      "destinationId": 11
+      "destinationId": 12
     },
     {
       "id": 720550,
@@ -159,13 +154,13 @@
       "id": 797074,
       "name": "Studio Lux Times Square",
       "address": "between 9 Avenue and 8 Avenue",
-      "city": "New York",
+      "city": "Miami",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 2.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 9
     },
     {
       "id": 742987,
@@ -195,13 +190,13 @@
       "id": 260469,
       "name": "The Ridge Hotel",
       "address": "151 East Houston Street",
-      "city": "New York",
+      "city": "Los Angeles",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 3,
       "phone_number": "1 212 777-0012",
       "website": null,
-      "destinationId": 11
+      "destinationId": 8
     },
     {
       "id": 740399,
@@ -231,13 +226,13 @@
       "id": 792811,
       "name": "Parker New York, A Hyatt Affiliate Property",
       "address": "119 West 56th Street",
-      "city": "New York",
+      "city": "Washington",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 4.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 19
     },
     {
       "id": 804220,
@@ -291,13 +286,13 @@
       "id": 776932,
       "name": "Freehand New York",
       "address": "23 Lexington Ave",
-      "city": "New York",
+      "city": "Gotha",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": "121-247-51920",
       "website": "https://freehandhotels.com/new-york/rooms/",
-      "destinationId": 11
+      "destinationId": 6
     },
     {
       "id": 741741,
@@ -327,13 +322,13 @@
       "id": 802583,
       "name": "The Dominick",
       "address": "246 Spring Street",
-      "city": "New York",
+      "city": "Polk City",
       "state": "NY",
       "country_code": "US",
       "hotel_rating": 5,
       "phone_number": "+1 212 842 5500",
       "website": null,
-      "destinationId": 11
+      "destinationId": 15
     },
     {
       "id": 5018106,
@@ -387,37 +382,37 @@
       "id": 677300,
       "name": "Vibrant 1BR in Fenway by Sonder",
       "address": "Beacon Street and Park dr",
-      "city": "Boston",
+      "city": "Los Angeles",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 8
     },
     {
       "id": 820605,
       "name": "Unique 1BR in Financial District by Sonder",
       "address": "120 Milk St, Unit 801",
-      "city": "Boston",
+      "city": "Los Angeles",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": null,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 8
     },
     {
       "id": 731189,
       "name": "Charming 2BR in South End by Sonder",
       "address": "Columbia Road & G Street",
-      "city": "Boston",
+      "city": "Orlando area",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 13
     },
     {
       "id": 721848,
@@ -435,25 +430,25 @@
       "id": 677341,
       "name": "Classic 3BR in Allston by Sonder",
       "address": "Brainerd Road and Harvard St",
-      "city": "Boston",
+      "city": "Edgewood",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 5
     },
     {
       "id": 677347,
       "name": "Posh 2BR in Allston by Sonder",
       "address": "Western Avenue and N Harvard",
-      "city": "Boston",
+      "city": "Montverde",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 10
     },
     {
       "id": 810445,
@@ -483,61 +478,61 @@
       "id": 822534,
       "name": "Playful 1BR in Fenway by Sonder",
       "address": "Commonwealth Avenue",
-      "city": "Boston",
+      "city": "St. Cloud",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": null,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 17
     },
     {
       "id": 793847,
       "name": "Stunning 1 BR In Allston by Sonder",
       "address": "75 Braintree St",
-      "city": "Boston",
+      "city": "Miami",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 9
     },
     {
       "id": 677396,
       "name": "Sonder - St. Mary's",
       "address": "Beacon Street and Park dr",
-      "city": "Boston",
+      "city": "Haines City",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 7
     },
     {
       "id": 677411,
       "name": "Bright 2BR in Downtown Crossing by Sonder",
       "address": "Milk Street and Batterymarch st",
-      "city": "Boston",
+      "city": "Celebration",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 4
     },
     {
       "id": 677410,
       "name": "Simple 1BR in Theater District by Sonder",
       "address": "Warrenton Street and Stuart St",
-      "city": "Boston",
+      "city": "San Francisco Bay",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 16
     },
     {
       "id": 677425,
@@ -579,13 +574,13 @@
       "id": 801610,
       "name": "Playful 2BR in South End by Sonder",
       "address": "Albany Street",
-      "city": "Boston",
+      "city": "Walt Disney World® Resort",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 18
     },
     {
       "id": 677429,
@@ -663,13 +658,13 @@
       "id": 677470,
       "name": "Central 3BR in South End by Sonder",
       "address": "Massachusetts Avenue and Washington st",
-      "city": "Boston",
+      "city": "Poinciana",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 14
     },
     {
       "id": 677476,
@@ -747,13 +742,13 @@
       "id": 705227,
       "name": "Charming 1BR in Seaport by Sonder",
       "address": "D Street",
-      "city": "Boston",
+      "city": "Windermere",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 20
     },
     {
       "id": 696618,
@@ -783,13 +778,13 @@
       "id": 677527,
       "name": "Modern 3BR in Brighton by Sonder",
       "address": "Larose Place and Monastery rd",
-      "city": "Boston",
+      "city": "Winter Garden",
       "state": "MA",
       "country_code": "US",
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 21
     },
     {
       "id": 677528,
@@ -960,5 +955,4 @@
       "destinationId": 2
     }
   ]
-  
 }
