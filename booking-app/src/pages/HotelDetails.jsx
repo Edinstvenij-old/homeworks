@@ -13,7 +13,7 @@ import {
   Divider,
   Link,
 } from "@mui/material";
-import { fetchHotelsRequest } from "../features/hotels/hotelsSlice";
+import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
 
 export default function HotelDetails() {
   const { id } = useParams();

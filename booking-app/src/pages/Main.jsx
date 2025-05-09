@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDestinationsRequest } from "../features/hotels/hotelsSlice";
+import { fetchDestinationsRequest } from "../store/features/hotels/hotelsSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function Main() {

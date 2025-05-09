@@ -10,7 +10,7 @@ const sagaMiddleware = createSagaMiddleware();
 const { createReduxHistory, routerMiddleware, routerReducer } =
   createReduxHistoryContext({ history });
 
-export const store = configureStore({
+export const appStore = configureStore({
   reducer: {
     router: routerReducer,
     hotels: hotelsReducer,
@@ -20,4 +20,4 @@ export const store = configureStore({
 });
 
 sagaMiddleware.run(rootSaga);
-export const appHistory = createReduxHistory(store);
+export const appHistory = createReduxHistory(appStore);

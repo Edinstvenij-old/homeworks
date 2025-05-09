@@ -4,9 +4,9 @@ import fs from "fs";
 const data = JSON.parse(fs.readFileSync("db.json", "utf-8"));
 const { hotels, destination } = data;
 
-// Функция генерации случайной цены с двумя знаками после запятой от 100 до 500
+// Функция генерации случайной цены от 100 до 500, кратной 10
 const getRandomPrice = () => {
-  return parseFloat((Math.random() * (500 - 100) + 100).toFixed(2));
+  return Math.floor(Math.random() * (50 - 10) + 10) * 10; // Генерируем кратные 10 числа
 };
 
 // Добавим цену каждому отелю

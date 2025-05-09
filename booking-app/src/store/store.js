@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import hotelsReducer from "../features/hotels/hotelsSlice";
-import rootSaga from "../features/hotels/hotelsSaga";
+import hotelsReducer from "./features/hotels/hotelsSlice";
+import rootSaga from "./features/hotels/hotelsSaga";
 
 const sagaMiddleware = createSagaMiddleware();
 

@@ -5,7 +5,7 @@ import {
   CardActions,
   Button,
   Box,
-  Rating, // Добавить импорт Rating
+  Rating,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -89,7 +89,6 @@ export default function HotelCard({ hotel }) {
           {hotel.city ? `City: ${hotel.city}` : "City: Not available"}
         </Typography>
 
-        {/* Добавляем компонент Rating для отображения звезд */}
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
           {hotel.hotel_rating ? (
             <>
@@ -99,7 +98,7 @@ export default function HotelCard({ hotel }) {
                 precision={0.5}
                 size="small"
               />
-              <span>{hotel.hotel_rating}</span> {/* Показываем рейтинг */}
+              <span>{hotel.hotel_rating}</span>
             </>
           ) : (
             "Rating: Not available"

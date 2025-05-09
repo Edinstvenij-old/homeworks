@@ -7,7 +7,7 @@ import {
   fetchHotelsSuccess,
   fetchHotelsFailure,
 } from "./hotelsSlice";
-import { fetchDestinations, fetchHotels } from "../../api/hotelsApi";
+import { fetchDestinations, fetchHotels } from "../../../api/hotelsApi";
 
 function* loadDestinations() {
   try {

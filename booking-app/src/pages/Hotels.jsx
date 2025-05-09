@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { Grid, Typography, CircularProgress, Box } from "@mui/material";
 import HotelCard from "../components/HotelCard";
-import { fetchHotelsRequest } from "../features/hotels/hotelsSlice";
+import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
 import { useLocation } from "react-router-dom";
 
 export default function Hotels() {
@@ -58,7 +58,7 @@ export default function Hotels() {
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        overflow: "hidden", // Скрываем обе полосы прокрутки
+        overflow: "hidden",
       }}
     >
       <Typography
