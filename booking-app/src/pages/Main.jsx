@@ -72,7 +72,8 @@ export default function Main() {
       py={6}
       sx={{
         width: "100vw",
-        minHeight: "100vh",
+        minHeight: "100%",
+        flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -167,17 +168,53 @@ export default function Main() {
 
           {/* Фильтрация по цене */}
           <Box display="flex" gap={2}>
-            <TextField
-              label="Price From"
-              type="number"
-              fullWidth
-              {...register("priceFrom")}
+            <Controller
+              name="priceFrom"
+              control={control}
+              defaultValue=""
+              rules={{
+                min: {
+                  value: 0,
+                  message: "Minimum price cannot be negative",
+                },
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  label="Price From"
+                  type="number"
+                  fullWidth
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  {...field}
+                />
+              )}
             />
-            <TextField
-              label="Price To"
-              type="number"
-              fullWidth
-              {...register("priceTo")}
+            <Controller
+              name="priceTo"
+              control={control}
+              defaultValue=""
+              rules={{
+                min: {
+                  value: 0,
+                  message: "Maximum price cannot be negative",
+                },
+                validate: (value) =>
+                  !value ||
+                  !control._formValues.priceFrom ||
+                  parseFloat(value) >=
+                    parseFloat(control._formValues.priceFrom) ||
+                  "Maximum price must be greater than or equal to minimum",
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  label="Price To"
+                  type="number"
+                  fullWidth
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  {...field}
+                />
+              )}
             />
           </Box>
 

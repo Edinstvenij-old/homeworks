@@ -1,36 +1,39 @@
 import { Box } from "@mui/material";
 import Header from "./Header";
 import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <Box
       display="flex"
       flexDirection="column"
       minHeight="100vh"
       width="100%"
-      bgcolor="background.default"
+      sx={{
+        backgroundColor: "#3f3f3f",
+      }}
     >
-      <Box component="header" width="100%" sx={{ flexShrink: 0 }}>
-        <Header />
-      </Box>
+      <Header />
 
       <Box
         component="main"
         sx={{
           flexGrow: 1,
+          width: "100%",
           display: "flex",
           flexDirection: "column",
-          width: "100%",
-          margin: "0 auto",
+          overflowY: "auto",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
-        {children}
+        <Outlet />
       </Box>
 
-      <Box component="footer" width="100%" sx={{ flexShrink: 0 }}>
-        <Footer />
-      </Box>
+      <Footer />
     </Box>
   );
 };

@@ -53,11 +53,12 @@ export default function Hotels() {
       py={6}
       sx={{
         backgroundColor: "#3f3f3f",
-        minHeight: "100vh",
+        minHeight: "100%",
         width: "100vw",
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
+        overflow: "hidden", // Скрываем обе полосы прокрутки
       }}
     >
       <Typography
@@ -82,6 +83,7 @@ export default function Hotels() {
             maxHeight: "80vh",
             width: "100%",
             padding: 5,
+            overflowX: "hidden",
           }}
         >
           {hotels.map((hotel) => (

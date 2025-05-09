@@ -112,7 +112,8 @@
       "hotel_rating": 4,
       "phone_number": "18005740835",
       "website": null,
-      "destinationId": 9
+      "destinationId": 9,
+      "price": 426.09
     },
     {
       "id": 11003176,
@@ -124,7 +125,8 @@
       "hotel_rating": 0,
       "phone_number": null,
       "website": null,
-      "destinationId": 1
+      "destinationId": 1,
+      "price": 150.37
     },
     {
       "id": 747134,
@@ -136,7 +138,8 @@
       "hotel_rating": 3.5,
       "phone_number": "212260414",
       "website": null,
-      "destinationId": 12
+      "destinationId": 12,
+      "price": 423.04
     },
     {
       "id": 720550,
@@ -148,7 +151,8 @@
       "hotel_rating": 3,
       "phone_number": "1 212 2191018",
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 444.06
     },
     {
       "id": 797074,
@@ -160,7 +164,8 @@
       "hotel_rating": 2.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 9
+      "destinationId": 9,
+      "price": 453.46
     },
     {
       "id": 742987,
@@ -172,7 +177,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 370.04
     },
     {
       "id": 743452,
@@ -184,7 +190,8 @@
       "hotel_rating": 3.5,
       "phone_number": "1-212-398-2700",
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 274.1
     },
     {
       "id": 260469,
@@ -196,7 +203,8 @@
       "hotel_rating": 3,
       "phone_number": "1 212 777-0012",
       "website": null,
-      "destinationId": 8
+      "destinationId": 8,
+      "price": 116.91
     },
     {
       "id": 740399,
@@ -208,7 +216,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 320.76
     },
     {
       "id": 5018104,
@@ -220,7 +229,8 @@
       "hotel_rating": 3,
       "phone_number": "XX",
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 328.35
     },
     {
       "id": 792811,
@@ -232,7 +242,8 @@
       "hotel_rating": 4.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 19
+      "destinationId": 19,
+      "price": 200.96
     },
     {
       "id": 804220,
@@ -244,7 +255,8 @@
       "hotel_rating": 2.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 270.51
     },
     {
       "id": 5018107,
@@ -256,7 +268,8 @@
       "hotel_rating": 3,
       "phone_number": "17186985000",
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 366.69
     },
     {
       "id": 700390,
@@ -268,7 +281,8 @@
       "hotel_rating": 4.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 197.84
     },
     {
       "id": 742946,
@@ -280,7 +294,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 442.36
     },
     {
       "id": 776932,
@@ -292,7 +307,8 @@
       "hotel_rating": 4,
       "phone_number": "121-247-51920",
       "website": "https://freehandhotels.com/new-york/rooms/",
-      "destinationId": 6
+      "destinationId": 6,
+      "price": 116.74
     },
     {
       "id": 741741,
@@ -304,7 +320,8 @@
       "hotel_rating": 2,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 137.51
     },
     {
       "id": 716815,
@@ -316,7 +333,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 445.19
     },
     {
       "id": 802583,
@@ -328,7 +346,8 @@
       "hotel_rating": 5,
       "phone_number": "+1 212 842 5500",
       "website": null,
-      "destinationId": 15
+      "destinationId": 15,
+      "price": 130.01
     },
     {
       "id": 5018106,
@@ -340,7 +359,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 202.73
     },
     {
       "id": 751736,
@@ -352,7 +372,8 @@
       "hotel_rating": 3,
       "phone_number": "703-261-5677",
       "website": null,
-      "destinationId": 11
+      "destinationId": 11,
+      "price": 240.02
     },
     {
       "id": 386689,
@@ -364,7 +385,8 @@
       "hotel_rating": 2.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 321.33
     },
     {
       "id": 567484,
@@ -376,7 +398,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 336.03
     },
     {
       "id": 677300,
@@ -388,7 +411,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 8
+      "destinationId": 8,
+      "price": 223.23
     },
     {
       "id": 820605,
@@ -400,7 +424,8 @@
       "hotel_rating": null,
       "phone_number": null,
       "website": null,
-      "destinationId": 8
+      "destinationId": 8,
+      "price": 175.72
     },
     {
       "id": 731189,
@@ -412,7 +437,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 13
+      "destinationId": 13,
+      "price": 433.8
     },
     {
       "id": 721848,
@@ -424,7 +450,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 486.64
     },
     {
       "id": 677341,
@@ -436,7 +463,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 5
+      "destinationId": 5,
+      "price": 479.68
     },
     {
       "id": 677347,
@@ -448,7 +476,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 10
+      "destinationId": 10,
+      "price": 172.55
     },
     {
       "id": 810445,
@@ -460,7 +489,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 273.52
     },
     {
       "id": 677372,
@@ -472,7 +502,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 459.76
     },
     {
       "id": 822534,
@@ -484,7 +515,8 @@
       "hotel_rating": null,
       "phone_number": null,
       "website": null,
-      "destinationId": 17
+      "destinationId": 17,
+      "price": 476.41
     },
     {
       "id": 793847,
@@ -496,7 +528,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 9
+      "destinationId": 9,
+      "price": 130.37
     },
     {
       "id": 677396,
@@ -508,7 +541,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 7
+      "destinationId": 7,
+      "price": 352.64
     },
     {
       "id": 677411,
@@ -520,7 +554,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 4
+      "destinationId": 4,
+      "price": 265.96
     },
     {
       "id": 677410,
@@ -532,7 +567,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 16
+      "destinationId": 16,
+      "price": 401.52
     },
     {
       "id": 677425,
@@ -544,7 +580,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 373.71
     },
     {
       "id": 677426,
@@ -556,7 +593,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 447.62
     },
     {
       "id": 721859,
@@ -568,7 +606,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 428.34
     },
     {
       "id": 801610,
@@ -580,7 +619,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 18
+      "destinationId": 18,
+      "price": 279.4
     },
     {
       "id": 677429,
@@ -592,7 +632,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 414.51
     },
     {
       "id": 677433,
@@ -604,7 +645,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 272.82
     },
     {
       "id": 677449,
@@ -616,7 +658,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 385.52
     },
     {
       "id": 677450,
@@ -628,7 +671,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 370.85
     },
     {
       "id": 677452,
@@ -640,7 +684,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 408.15
     },
     {
       "id": 677455,
@@ -652,7 +697,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 363.59
     },
     {
       "id": 677470,
@@ -664,7 +710,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 14
+      "destinationId": 14,
+      "price": 494.95
     },
     {
       "id": 677476,
@@ -676,7 +723,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 153.63
     },
     {
       "id": 677477,
@@ -688,7 +736,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 334.81
     },
     {
       "id": 677480,
@@ -700,7 +749,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 392.67
     },
     {
       "id": 677481,
@@ -712,7 +762,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 388.73
     },
     {
       "id": 677519,
@@ -724,7 +775,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 183.44
     },
     {
       "id": 677520,
@@ -736,7 +788,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 368.25
     },
     {
       "id": 705227,
@@ -748,7 +801,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 20
+      "destinationId": 20,
+      "price": 286.49
     },
     {
       "id": 696618,
@@ -760,7 +814,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 436.71
     },
     {
       "id": 677526,
@@ -772,7 +827,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 390.51
     },
     {
       "id": 677527,
@@ -784,7 +840,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 21
+      "destinationId": 21,
+      "price": 301.8
     },
     {
       "id": 677528,
@@ -796,7 +853,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 289.58
     },
     {
       "id": 677537,
@@ -808,7 +866,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 101.21
     },
     {
       "id": 696614,
@@ -820,7 +879,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 167.04
     },
     {
       "id": 677694,
@@ -832,7 +892,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 479.65
     },
     {
       "id": 677550,
@@ -844,7 +905,8 @@
       "hotel_rating": 3,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 388.22
     },
     {
       "id": 787996,
@@ -856,7 +918,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 455.5
     },
     {
       "id": 731262,
@@ -868,7 +931,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 429.97
     },
     {
       "id": 677559,
@@ -880,7 +944,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 233.16
     },
     {
       "id": 677565,
@@ -892,7 +957,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 283.75
     },
     {
       "id": 677571,
@@ -904,7 +970,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 460.16
     },
     {
       "id": 724715,
@@ -916,7 +983,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 368.44
     },
     {
       "id": 677574,
@@ -928,7 +996,8 @@
       "hotel_rating": 4,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 198.8
     },
     {
       "id": 677577,
@@ -940,7 +1009,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 192.35
     },
     {
       "id": 757401,
@@ -952,7 +1022,8 @@
       "hotel_rating": 3.5,
       "phone_number": null,
       "website": null,
-      "destinationId": 2
+      "destinationId": 2,
+      "price": 468.5
     }
   ]
 }

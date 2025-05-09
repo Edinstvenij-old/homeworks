@@ -7,17 +7,18 @@ export default function About() {
       py={6}
       sx={{
         width: "100vw",
-        minHeight: "100vh",
+        minHeight: "100%",
+        flexGrow: 1,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start", // Поднять вверх
+        justifyContent: "flex-start",
         backgroundImage: `url('/image/fon-about.jpg')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "fixed",
-        pt: 10, // Внутренний отступ сверху
+        pt: 10,
       }}
     >
       <Typography

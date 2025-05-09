@@ -5,6 +5,7 @@ import {
   CardActions,
   Button,
   Box,
+  Rating, // Добавить импорт Rating
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -62,7 +63,6 @@ export default function HotelCard({ hotel }) {
           {hotel.name}
         </Typography>
 
-        {/* Описание отеля */}
         <Typography
           variant="body2"
           sx={{
@@ -76,33 +76,49 @@ export default function HotelCard({ hotel }) {
         >
           {hotel.description && hotel.description.trim() !== ""
             ? hotel.description
-            : "No description available"}{" "}
+            : "No description available"}
         </Typography>
 
-        {/* Адрес отеля */}
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
           {hotel.address
             ? `Address: ${hotel.address}`
             : "Address: Not available"}
         </Typography>
 
-        {/* Город */}
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
           {hotel.city ? `City: ${hotel.city}` : "City: Not available"}
         </Typography>
 
-        {/* Оценка отеля */}
+        {/* Добавляем компонент Rating для отображения звезд */}
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
-          {hotel.hotel_rating
-            ? `Rating: ${hotel.hotel_rating}`
-            : "Rating: Not available"}
+          {hotel.hotel_rating ? (
+            <>
+              <Rating
+                value={parseFloat(hotel.hotel_rating) || 0}
+                readOnly
+                precision={0.5}
+                size="small"
+              />
+              <span>{hotel.hotel_rating}</span> {/* Показываем рейтинг */}
+            </>
+          ) : (
+            "Rating: Not available"
+          )}
         </Typography>
 
-        {/* Номер телефона */}
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
           {hotel.phone_number
             ? `Phone: ${hotel.phone_number}`
             : "Phone: Not available"}
+        </Typography>
+
+        {/* Цена */}
+        <Typography
+          variant="body1"
+          color="warning.main"
+          sx={{ mt: 2, fontWeight: "bold" }}
+        >
+          {hotel.price ? `Price: $${hotel.price}` : "Price: Not available"}
         </Typography>
       </CardContent>
 

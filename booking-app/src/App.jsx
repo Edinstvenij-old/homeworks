@@ -1,46 +1,20 @@
 import { Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
 import Main from "./pages/Main";
 import About from "./pages/About";
 import Hotels from "./pages/Hotels";
 import HotelDetails from "./pages/HotelDetails";
 import NotFound from "./pages/NotFound";
-import Layout from "./components/Layout"; // Импортируем Layout
 
 function App() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Layout>
-            <Main />
-          </Layout>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <Layout>
-            <About />
-          </Layout>
-        }
-      />
-      <Route
-        path="/hotels"
-        element={
-          <Layout>
-            <Hotels />
-          </Layout>
-        }
-      />
-      <Route
-        path="/hotels/:id"
-        element={
-          <Layout>
-            <HotelDetails />
-          </Layout>
-        }
-      />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Main />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/hotels" element={<Hotels />} />
+        <Route path="/hotels/:id" element={<HotelDetails />} />
+      </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
