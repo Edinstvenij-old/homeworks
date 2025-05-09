@@ -88,7 +88,6 @@ export default function Hotels() {
       >
         Available Hotels
       </Typography>
-
       {filteredHotels.length > 0 ? (
         <Grid
           container
@@ -105,14 +104,14 @@ export default function Hotels() {
         >
           {filteredHotels.map((hotel) => (
             <Grid
-              item
               key={hotel.id}
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
               sx={{ display: "flex", justifyContent: "center" }}
-            >
+              size={{
+                xs: 12,
+                sm: 6,
+                md: 4,
+                lg: 3
+              }}>
               <HotelCard hotel={hotel} />
             </Grid>
           ))}
