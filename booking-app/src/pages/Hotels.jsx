@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Grid, Typography, CircularProgress, Box } from "@mui/material";
 import HotelCard from "../components/HotelCard";
 import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
@@ -10,16 +10,32 @@ export default function Hotels() {
   const location = useLocation();
   const { hotels, loading, error } = useSelector((state) => state.hotels);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const destinationId = searchParams.get("destinationId");
+  const searchParams = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
 
-    if (destinationId) {
-      dispatch(fetchHotelsRequest(destinationId));
-    } else {
-      dispatch(fetchHotelsRequest());
-    }
-  }, [dispatch, location.search]);
+  const destinationId = searchParams.get("destinationId");
+  const city = searchParams.get("city");
+  const priceFrom = parseFloat(searchParams.get("priceFrom")) || 0;
+  const priceTo = parseFloat(searchParams.get("priceTo")) || Infinity;
+
+  useEffect(() => {
+    // Можно передавать destinationId, если сервер умеет фильтровать
+    dispatch(fetchHotelsRequest(destinationId));
+  }, [dispatch, destinationId]);
+
+  const filteredHotels = useMemo(() => {
+    return hotels.filter((hotel) => {
+      const matchDestination =
+        !destinationId || hotel.destinationId === +destinationId;
+      const matchCity =
+        !city || hotel.city?.toLowerCase().includes(city.toLowerCase());
+      const matchPrice = hotel.price >= priceFrom && hotel.price <= priceTo;
+
+      return matchDestination && matchCity && matchPrice;
+    });
+  }, [hotels, destinationId, city, priceFrom, priceTo]);
 
   if (loading) {
     return (
@@ -72,7 +88,8 @@ export default function Hotels() {
       >
         Available Hotels
       </Typography>
-      {hotels.length > 0 ? (
+
+      {filteredHotels.length > 0 ? (
         <Grid
           container
           spacing={2}
@@ -86,19 +103,15 @@ export default function Hotels() {
             overflowX: "hidden",
           }}
         >
-          {hotels.map((hotel) => (
+          {filteredHotels.map((hotel) => (
             <Grid
+              item
               key={hotel.id}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-              size={{
-                xs: 12,
-                sm: 6,
-                md: 4,
-                lg: 3,
-              }}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              sx={{ display: "flex", justifyContent: "center" }}
             >
               <HotelCard hotel={hotel} />
             </Grid>
@@ -107,7 +120,7 @@ export default function Hotels() {
       ) : (
         <Box mt={4} width="100%">
           <Typography variant="h6" color="text.secondary" align="center">
-            No hotels available at the moment.
+            No hotels found matching your criteria.
           </Typography>
         </Box>
       )}
