@@ -6,7 +6,7 @@ const { hotels, destination } = data;
 
 // Функция генерации случайной цены от 100 до 500, кратной 10
 const getRandomPrice = () => {
-  return Math.floor(Math.random() * (50 - 10) + 10) * 10; // Генерируем кратные 10 числа
+  return Math.floor(Math.random() * (50 - 10) + 10) * 10;
 };
 
 // Добавим цену каждому отелю
