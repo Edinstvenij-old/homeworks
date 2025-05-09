@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: null,
   selectedDestinationId: null,
+  priceRange: { min: null, max: null }, // min/max для фильтрации
 };
 
 const hotelsSlice = createSlice({
@@ -13,31 +14,39 @@ const hotelsSlice = createSlice({
   initialState,
   reducers: {
     // Загрузка направлений
-    fetchDestinationsRequest: (state) => {
+    fetchDestinationsRequest(state) {
       state.loading = true;
       state.error = null;
     },
-    fetchDestinationsSuccess: (state, action) => {
+    fetchDestinationsSuccess(state, action) {
       state.destinations = action.payload;
       state.loading = false;
     },
-    fetchDestinationsFailure: (state, action) => {
+    fetchDestinationsFailure(state, action) {
       state.error = action.payload;
       state.loading = false;
     },
 
-    // Загрузка отелей
-    fetchHotelsRequest: (state, action) => {
+    // Загрузка отелей с фильтрами
+    fetchHotelsRequest(state, action) {
       state.loading = true;
       state.error = null;
-      state.selectedDestinationId = action.payload ?? null;
-      state.hotels = []; // очищаем старые отели перед загрузкой новых
+      state.hotels = [];
+
+      const {
+        destinationId = null,
+        price_gte = null,
+        price_lte = null,
+      } = action.payload || {};
+
+      state.selectedDestinationId = destinationId;
+      state.priceRange = { min: price_gte, max: price_lte }; // сохраняем min и max цены
     },
-    fetchHotelsSuccess: (state, action) => {
+    fetchHotelsSuccess(state, action) {
       state.hotels = action.payload;
       state.loading = false;
     },
-    fetchHotelsFailure: (state, action) => {
+    fetchHotelsFailure(state, action) {
       state.error = action.payload;
       state.loading = false;
     },
