@@ -32,13 +32,10 @@ export default function Main() {
   const onSubmit = (data) => {
     if (!data.destination) return;
 
-    // Формируем параметры для URL
     const params = new URLSearchParams();
 
-    // Обязательно передаем destinationId
     params.append("destinationId", data.destination);
 
-    // Добавляем фильтры только если они указаны
     if (data.city) params.append("city", data.city);
     if (data.checkIn) params.append("checkIn", data.checkIn);
     if (data.checkOut) params.append("checkOut", data.checkOut);
@@ -46,14 +43,12 @@ export default function Main() {
     if (data.priceFrom) params.append("priceFrom", data.priceFrom);
     if (data.priceTo) params.append("priceTo", data.priceTo);
 
-    // Перенаправляем на страницу с результатами
     navigate(`/hotels?${params.toString()}`);
   };
 
   useEffect(() => {
     if (destinations && destinations.length > 0) {
-      // Устанавливаем значение по умолчанию для направления (например, первое в списке)
-      setValue("destination", destinations[0].id); // Это можно сделать, если хочешь задать начальное значение
+      setValue("destination", destinations[0].id);
     }
   }, [destinations, setValue]);
 
@@ -128,19 +123,18 @@ export default function Main() {
             width: "100%",
           }}
         >
-          {/* Поле для выбора направления */}
           <Controller
             name="destination"
             control={control}
-            defaultValue="" // Если нужно значение по умолчанию, задайте его
+            defaultValue=""
             rules={{ required: "Destination is required" }}
             render={({ field, fieldState }) => (
               <TextField
                 select
                 label="Destination"
                 fullWidth
-                error={!!fieldState.error} // Если ошибка существует
-                helperText={fieldState?.error?.message} // Отображаем сообщение ошибки
+                error={!!fieldState.error}
+                helperText={fieldState?.error?.message}
                 {...field}
               >
                 {destinations.length > 0 ? (
@@ -156,7 +150,6 @@ export default function Main() {
             )}
           />
 
-          {/* Даты заезда и выезда */}
           <Box display="flex" gap={2}>
             <TextField
               label="Check-in"
@@ -166,8 +159,8 @@ export default function Main() {
               {...register("checkIn", {
                 required: "Check-in date is required",
               })}
-              error={!!errors.checkIn} // Проверяем наличие ошибки для этого поля
-              helperText={errors.checkIn?.message} // Отображаем сообщение ошибки
+              error={!!errors.checkIn}
+              helperText={errors.checkIn?.message}
             />
             <TextField
               label="Check-out"
@@ -177,12 +170,11 @@ export default function Main() {
               {...register("checkOut", {
                 required: "Check-out date is required",
               })}
-              error={!!errors.checkOut} // Проверяем наличие ошибки для этого поля
-              helperText={errors.checkOut?.message} // Отображаем сообщение ошибки
+              error={!!errors.checkOut}
+              helperText={errors.checkOut?.message}
             />
           </Box>
 
-          {/* Количество гостей */}
           <TextField
             label="Guests"
             type="number"
@@ -190,11 +182,10 @@ export default function Main() {
             {...register("guests", {
               required: "Number of guests is required",
             })}
-            error={!!errors.guests} // Проверяем наличие ошибки для этого поля
-            helperText={errors.guests?.message} // Отображаем сообщение ошибки
+            error={!!errors.guests}
+            helperText={errors.guests?.message}
           />
 
-          {/* Фильтрация по цене */}
           <Box display="flex" gap={2}>
             <Controller
               name="priceFrom"
@@ -211,8 +202,8 @@ export default function Main() {
                   label="Price From"
                   type="number"
                   fullWidth
-                  error={!!fieldState.error} // Проверяем наличие ошибки для этого поля
-                  helperText={fieldState?.error?.message} // Отображаем сообщение ошибки
+                  error={!!fieldState.error}
+                  helperText={fieldState?.error?.message}
                   {...field}
                 />
               )}
@@ -238,8 +229,8 @@ export default function Main() {
                   label="Price To"
                   type="number"
                   fullWidth
-                  error={!!fieldState.error} // Проверяем наличие ошибки для этого поля
-                  helperText={fieldState?.error?.message} // Отображаем сообщение ошибки
+                  error={!!fieldState.error}
+                  helperText={fieldState?.error?.message}
                   {...field}
                 />
               )}

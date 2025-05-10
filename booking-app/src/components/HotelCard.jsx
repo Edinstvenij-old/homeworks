@@ -111,7 +111,6 @@ export default function HotelCard({ hotel }) {
             : "Phone: Not available"}
         </Typography>
 
-        {/* Цена */}
         <Typography
           variant="body1"
           color="warning.main"

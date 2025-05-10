@@ -9,7 +9,6 @@ import {
 } from "./hotelsSlice";
 import { fetchDestinations, fetchHotels } from "../../../api/hotelsApi";
 
-// Загрузка направлений
 function* loadDestinations() {
   try {
     const response = yield call(fetchDestinations);
@@ -25,7 +24,6 @@ function* loadDestinations() {
   }
 }
 
-// Загрузка отелей с фильтрами
 function* loadHotels(action) {
   try {
     const { destinationId, priceRange } = action.payload || {};
@@ -35,7 +33,6 @@ function* loadHotels(action) {
       price_lte: priceRange?.max || null,
     };
 
-    // Проверяем, что filters это объект
     if (typeof filters !== "object" || filters === null) {
       throw new Error("Filters must be an object");
     }
@@ -53,7 +50,6 @@ function* loadHotels(action) {
   }
 }
 
-// Корневая сага
 export default function* rootSaga() {
   yield all([
     takeLatest(fetchDestinationsRequest.type, loadDestinations),
