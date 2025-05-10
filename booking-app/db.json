@@ -1,6 +1,11 @@
 {
   "destination": [
     {
+      "id": 11,
+      "value": 54,
+      "label": "New York"
+    },
+    {
       "id": 1,
       "value": 70,
       "label": "Atlanta"
@@ -44,11 +49,6 @@
       "id": 10,
       "value": 18421,
       "label": "Montverde"
-    },
-    {
-      "id": 11,
-      "value": 54,
-      "label": "New York"
     },
     {
       "id": 12,

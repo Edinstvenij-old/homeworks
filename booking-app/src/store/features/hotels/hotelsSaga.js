@@ -26,15 +26,19 @@ function* loadDestinations() {
 
 function* loadHotels(action) {
   try {
-    const { destinationId, priceRange } = action.payload || {};
-    const filters = {
-      destinationId,
-      price_gte: priceRange?.min || null,
-      price_lte: priceRange?.max || null,
-    };
+    const { destinationId = null, priceRange = {} } = action.payload || {};
+    const { min = null, max = null } = priceRange;
 
-    if (typeof filters !== "object" || filters === null) {
-      throw new Error("Filters must be an object");
+    const filters = {};
+
+    if (destinationId) {
+      filters.destinationId = destinationId;
+    }
+    if (min !== null) {
+      filters.price_gte = min;
+    }
+    if (max !== null) {
+      filters.price_lte = max;
     }
 
     const response = yield call(fetchHotels, filters);

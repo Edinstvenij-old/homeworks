@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "../Header";
+import Footer from "../Footer";
 import { Outlet } from "react-router-dom";
 
 const Layout = () => {
@@ -10,9 +10,7 @@ const Layout = () => {
       flexDirection="column"
       minHeight="100vh"
       width="100%"
-      sx={{
-        backgroundColor: "#3f3f3f",
-      }}
+      sx={{ backgroundColor: "#3f3f3f" }}
     >
       <Header />
 
