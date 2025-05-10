@@ -20,7 +20,7 @@ export default function Header() {
             Booking App
           </Typography>
           <Button component={NavLink} to="/" sx={linkStyle}>
-            Main
+            Home
           </Button>
           <Button component={NavLink} to="/hotels" sx={linkStyle}>
             Hotels

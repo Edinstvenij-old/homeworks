@@ -1,6 +1,5 @@
 import fs from "fs";
 
-// ← твои destinations (города)
 const destination = [
   {
     id: 1,

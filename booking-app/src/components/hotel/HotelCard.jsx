@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 
 export default function HotelCard({ hotel }) {
   const defaultImage = "/image/default-image.jpg";
+  const rating = Number(hotel.hotel_rating);
+  const isRatingValid = !isNaN(rating) && rating > 0;
 
   return (
     <Card
@@ -29,16 +31,11 @@ export default function HotelCard({ hotel }) {
         },
       }}
     >
-      <Box
-        sx={{
-          height: 180,
-          overflow: "hidden",
-        }}
-      >
+      <Box sx={{ height: 180, overflow: "hidden" }}>
         <Box
           component="img"
           src={hotel.image || defaultImage}
-          alt={hotel.name}
+          alt={hotel.name || "Hotel image"}
           sx={{
             width: "100%",
             height: "100%",
@@ -51,7 +48,6 @@ export default function HotelCard({ hotel }) {
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography
           variant="h6"
-          component="div"
           noWrap
           sx={{
             whiteSpace: "nowrap",
@@ -74,7 +70,7 @@ export default function HotelCard({ hotel }) {
             mt: 1,
           }}
         >
-          {hotel.description && hotel.description.trim() !== ""
+          {hotel.description?.trim()
             ? hotel.description
             : "No description available"}
         </Typography>
@@ -90,15 +86,10 @@ export default function HotelCard({ hotel }) {
         </Typography>
 
         <Typography variant="body2" color="grey.400" sx={{ mt: 1 }}>
-          {hotel.hotel_rating ? (
+          {isRatingValid ? (
             <>
-              <Rating
-                value={parseFloat(hotel.hotel_rating) || 0}
-                readOnly
-                precision={0.5}
-                size="small"
-              />
-              <span>{hotel.hotel_rating}</span>
+              <Rating value={rating} readOnly precision={0.5} size="small" />
+              <span style={{ marginLeft: 4 }}>{rating}</span>
             </>
           ) : (
             "Rating: Not available"

@@ -1,42 +1,49 @@
 import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
+  Box,
   Button,
-  MenuItem,
-  TextField,
   Typography,
   Paper,
-  Box,
   CircularProgress,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDestinationsRequest } from "../store/features/hotels/hotelsSlice";
 import { useNavigate } from "react-router-dom";
+import DestinationSelect from "../components/main/DestinationSelect";
+import DateRangeFields from "../components/main/DateRangeFields";
+import GuestField from "../components/main/GuestField";
+import PriceRangeFields from "../components/main/PriceRangeFields";
 
 export default function Main() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { destinations, loading, error } = useSelector((state) => state.hotels);
+
   const {
     control,
-    handleSubmit,
     register,
+    handleSubmit,
     setValue,
     formState: { errors },
+    watch,
   } = useForm();
 
   useEffect(() => {
     dispatch(fetchDestinationsRequest());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (destinations?.length > 0) {
+      setValue("destination", destinations[0].id);
+    }
+  }, [destinations, setValue]);
+
   const onSubmit = (data) => {
     if (!data.destination) return;
 
     const params = new URLSearchParams();
-
     params.append("destinationId", data.destination);
-
-    if (data.city) params.append("city", data.city);
     if (data.checkIn) params.append("checkIn", data.checkIn);
     if (data.checkOut) params.append("checkOut", data.checkOut);
     if (data.guests) params.append("guests", data.guests);
@@ -46,12 +53,6 @@ export default function Main() {
     navigate(`/hotels?${params.toString()}`);
   };
 
-  useEffect(() => {
-    if (destinations && destinations.length > 0) {
-      setValue("destination", destinations[0].id);
-    }
-  }, [destinations, setValue]);
-
   if (loading) {
     return (
       <Box
@@ -60,7 +61,6 @@ export default function Main() {
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
-        width="100%"
       >
         <CircularProgress />
       </Box>
@@ -69,7 +69,7 @@ export default function Main() {
 
   if (error) {
     return (
-      <Box py={6} width="100%">
+      <Box py={6}>
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
@@ -116,127 +116,12 @@ export default function Main() {
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            width: "100%",
-          }}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
-          <Controller
-            name="destination"
-            control={control}
-            defaultValue=""
-            rules={{ required: "Destination is required" }}
-            render={({ field, fieldState }) => (
-              <TextField
-                select
-                label="Destination"
-                fullWidth
-                error={!!fieldState.error}
-                helperText={fieldState?.error?.message}
-                {...field}
-              >
-                {destinations.length > 0 ? (
-                  destinations.map((dest) => (
-                    <MenuItem key={dest.id} value={dest.id}>
-                      {dest.label}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem disabled>No destinations found</MenuItem>
-                )}
-              </TextField>
-            )}
-          />
-
-          <Box display="flex" gap={2}>
-            <TextField
-              label="Check-in"
-              type="date"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              {...register("checkIn", {
-                required: "Check-in date is required",
-              })}
-              error={!!errors.checkIn}
-              helperText={errors.checkIn?.message}
-            />
-            <TextField
-              label="Check-out"
-              type="date"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              {...register("checkOut", {
-                required: "Check-out date is required",
-              })}
-              error={!!errors.checkOut}
-              helperText={errors.checkOut?.message}
-            />
-          </Box>
-
-          <TextField
-            label="Guests"
-            type="number"
-            fullWidth
-            {...register("guests", {
-              required: "Number of guests is required",
-            })}
-            error={!!errors.guests}
-            helperText={errors.guests?.message}
-          />
-
-          <Box display="flex" gap={2}>
-            <Controller
-              name="priceFrom"
-              control={control}
-              defaultValue=""
-              rules={{
-                min: {
-                  value: 0,
-                  message: "Minimum price cannot be negative",
-                },
-              }}
-              render={({ field, fieldState }) => (
-                <TextField
-                  label="Price From"
-                  type="number"
-                  fullWidth
-                  error={!!fieldState.error}
-                  helperText={fieldState?.error?.message}
-                  {...field}
-                />
-              )}
-            />
-            <Controller
-              name="priceTo"
-              control={control}
-              defaultValue=""
-              rules={{
-                min: {
-                  value: 0,
-                  message: "Maximum price cannot be negative",
-                },
-                validate: (value) =>
-                  !value ||
-                  !control._formValues.priceFrom ||
-                  parseFloat(value) >=
-                    parseFloat(control._formValues.priceFrom) ||
-                  "Maximum price must be greater than or equal to minimum",
-              }}
-              render={({ field, fieldState }) => (
-                <TextField
-                  label="Price To"
-                  type="number"
-                  fullWidth
-                  error={!!fieldState.error}
-                  helperText={fieldState?.error?.message}
-                  {...field}
-                />
-              )}
-            />
-          </Box>
-
+          <DestinationSelect control={control} destinations={destinations} />
+          <DateRangeFields register={register} errors={errors} />
+          <GuestField register={register} errors={errors} />
+          <PriceRangeFields control={control} errors={errors} watch={watch} />
           <Button type="submit" variant="contained" size="large">
             Search Hotels
           </Button>

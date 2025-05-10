@@ -1,12 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useMemo } from "react";
-import { Grid, Typography, CircularProgress, Box } from "@mui/material";
-import HotelCard from "../components/HotelCard";
+import { Grid, Typography, CircularProgress, Box, Button } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import HotelCard from "../components/hotel/HotelCard";
 import { fetchHotelsRequest } from "../store/features/hotels/hotelsSlice";
-import { useLocation } from "react-router-dom";
 
 export default function Hotels() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const { hotels, loading, error } = useSelector((state) => state.hotels);
 
@@ -15,26 +16,33 @@ export default function Hotels() {
     [location.search]
   );
 
-  const destinationId = searchParams.get("destinationId");
-  const city = searchParams.get("city");
+  const destinationIdParam = searchParams.get("destinationId");
+  const cityFilter = searchParams.get("city");
   const priceFrom = parseFloat(searchParams.get("priceFrom")) || 0;
   const priceTo = parseFloat(searchParams.get("priceTo")) || Infinity;
 
+  const destinationId = destinationIdParam
+    ? parseInt(destinationIdParam)
+    : null;
+
   useEffect(() => {
-    dispatch(fetchHotelsRequest(destinationId));
-  }, [dispatch, destinationId]);
+    dispatch(
+      fetchHotelsRequest({
+        destinationId,
+        priceRange: {
+          min: isFinite(priceFrom) ? priceFrom : null,
+          max: isFinite(priceTo) ? priceTo : null,
+        },
+      })
+    );
+  }, [dispatch, destinationId, priceFrom, priceTo]);
 
   const filteredHotels = useMemo(() => {
     return hotels.filter((hotel) => {
-      const matchDestination =
-        !destinationId || hotel.destinationId === +destinationId;
-      const matchCity =
-        !city || hotel.city?.toLowerCase().includes(city.toLowerCase());
-      const matchPrice = hotel.price >= priceFrom && hotel.price <= priceTo;
-
-      return matchDestination && matchCity && matchPrice;
+      if (!cityFilter) return true;
+      return hotel.city?.toLowerCase().includes(cityFilter.toLowerCase());
     });
-  }, [hotels, destinationId, city, priceFrom, priceTo]);
+  }, [hotels, cityFilter]);
 
   if (loading) {
     return (
@@ -87,6 +95,7 @@ export default function Hotels() {
       >
         Available Hotels
       </Typography>
+
       {filteredHotels.length > 0 ? (
         <Grid
           container
@@ -104,22 +113,43 @@ export default function Hotels() {
           {filteredHotels.map((hotel) => (
             <Grid
               key={hotel.id}
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
               sx={{ display: "flex", justifyContent: "center" }}
-              size={{
-                xs: 12,
-                sm: 6,
-                md: 4,
-                lg: 3
-              }}>
+            >
               <HotelCard hotel={hotel} />
             </Grid>
           ))}
         </Grid>
       ) : (
-        <Box mt={4} width="100%">
-          <Typography variant="h6" color="text.secondary" align="center">
+        <Box
+          mt={4}
+          width="100%"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          gap={2}
+        >
+          <Typography
+            variant="h6"
+            color="#fff"
+            align="center"
+            sx={{ textShadow: "1px 1px 3px #ffeb3b" }}
+          >
             No hotels found matching your criteria.
           </Typography>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate("/")}
+            sx={{ color: "#fff" }}
+          >
+            Return to Home Page
+          </Button>
         </Box>
       )}
     </Box>

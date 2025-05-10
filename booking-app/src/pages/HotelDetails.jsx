@@ -29,7 +29,7 @@ export default function HotelDetails() {
     }
   }, [dispatch, hotels.length]);
 
-  if (loading) {
+  if (loading || (!hotel && hotels.length === 0)) {
     return (
       <Box
         sx={{
@@ -83,6 +83,9 @@ export default function HotelDetails() {
   ];
 
   const infoStyle = { mb: 1, color: "#212121" };
+  const ratingValue = isNaN(parseFloat(hotel.hotel_rating))
+    ? 0
+    : parseFloat(hotel.hotel_rating);
 
   return (
     <Box
@@ -172,7 +175,7 @@ export default function HotelDetails() {
                 <Link
                   href={hotel.website}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   underline="hover"
                 >
                   {hotel.website}
@@ -190,7 +193,7 @@ export default function HotelDetails() {
               </Typography>
               <Rating
                 name="read-only-rating"
-                value={parseFloat(hotel.hotel_rating) || 0}
+                value={ratingValue}
                 readOnly
                 precision={0.5}
                 size="large"

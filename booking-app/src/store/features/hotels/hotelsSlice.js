@@ -13,6 +13,7 @@ const hotelsSlice = createSlice({
   name: "hotels",
   initialState,
   reducers: {
+    // Destinations
     fetchDestinationsRequest(state) {
       state.loading = true;
       state.error = null;
@@ -25,20 +26,17 @@ const hotelsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-
+    // Hotels
     fetchHotelsRequest(state, action) {
       state.loading = true;
       state.error = null;
       state.hotels = [];
 
-      const {
-        destinationId = null,
-        price_gte = null,
-        price_lte = null,
-      } = action.payload || {};
+      const { destinationId = null, priceRange = { min: null, max: null } } =
+        action.payload || {};
 
       state.selectedDestinationId = destinationId;
-      state.priceRange = { min: price_gte, max: price_lte };
+      state.priceRange = priceRange;
     },
     fetchHotelsSuccess(state, action) {
       state.hotels = action.payload;
