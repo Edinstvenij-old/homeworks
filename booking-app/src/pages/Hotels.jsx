@@ -21,7 +21,6 @@ export default function Hotels() {
   const priceTo = parseFloat(searchParams.get("priceTo")) || Infinity;
 
   useEffect(() => {
-    // Можно передавать destinationId, если сервер умеет фильтровать
     dispatch(fetchHotelsRequest(destinationId));
   }, [dispatch, destinationId]);
 

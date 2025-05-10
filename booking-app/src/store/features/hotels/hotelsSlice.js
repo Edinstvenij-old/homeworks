@@ -6,14 +6,13 @@ const initialState = {
   loading: false,
   error: null,
   selectedDestinationId: null,
-  priceRange: { min: null, max: null }, // min/max для фильтрации
+  priceRange: { min: null, max: null },
 };
 
 const hotelsSlice = createSlice({
   name: "hotels",
   initialState,
   reducers: {
-    // Загрузка направлений
     fetchDestinationsRequest(state) {
       state.loading = true;
       state.error = null;
@@ -27,7 +26,6 @@ const hotelsSlice = createSlice({
       state.loading = false;
     },
 
-    // Загрузка отелей с фильтрами
     fetchHotelsRequest(state, action) {
       state.loading = true;
       state.error = null;
@@ -40,7 +38,7 @@ const hotelsSlice = createSlice({
       } = action.payload || {};
 
       state.selectedDestinationId = destinationId;
-      state.priceRange = { min: price_gte, max: price_lte }; // сохраняем min и max цены
+      state.priceRange = { min: price_gte, max: price_lte };
     },
     fetchHotelsSuccess(state, action) {
       state.hotels = action.payload;
